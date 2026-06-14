@@ -29,6 +29,14 @@
   "logo": "https://dayaminsights.com/favicon.svg"
 }
 </script>
+<!-- Google Analytics 4 — replace G-XXXXXXXXXX with the real Measurement ID before go-live -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-XXXXXXXXXX');
+</script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
@@ -1512,6 +1520,24 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   } else {
     steps.forEach(function(el){ el.classList.add('active'); });
   }
+
+  // CTA / contact-intent tracking: fire a GA4 lead event on any primary
+  // button or mailto/WhatsApp link click. Safe no-op if gtag isn't loaded.
+  document.addEventListener('click', function(e){
+    var link = e.target.closest('a');
+    if (!link) return;
+    var href = link.getAttribute('href') || '';
+    var isContact = href.indexOf('mailto:') === 0 || href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1;
+    var isPrimary = link.classList.contains('btn-primary');
+    if (!isContact && !isPrimary) return;
+    if (typeof window.gtag === 'function'){
+      window.gtag('event', 'generate_lead', {
+        method: href.indexOf('wa.me') !== -1 || href.indexOf('whatsapp') !== -1 ? 'whatsapp'
+              : href.indexOf('mailto:') === 0 ? 'email' : 'cta_click',
+        label: (link.textContent || '').trim().slice(0, 60)
+      });
+    }
+  }, true);
 })();
 </script>
 </body>
