@@ -138,20 +138,32 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 .hero-glow .glow-orb{position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(70px);animation:float 11s ease-in-out infinite}
 .hero-glow .glow-orb.ga{top:-8%;left:4%;background:radial-gradient(circle,rgba(79,125,255,.28),transparent 70%)}
 .hero-glow .glow-orb.gb{bottom:-12%;right:6%;width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,.24),transparent 70%);animation-duration:13s;animation-delay:-4s}
-.glow-chip{position:absolute;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:var(--accent-3);background:linear-gradient(165deg,rgba(22,30,54,.9),rgba(10,15,31,.9));border:1px solid transparent;background-clip:padding-box;box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(6px);animation:cardFloat 8s ease-in-out infinite}
-.glow-chip::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(148,163,184,.4),rgba(148,163,184,.04) 40%,rgba(148,163,184,.22));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.glow-chip svg{width:26px;height:26px;position:relative;z-index:1}
+.glow-chip,.path-chip{position:absolute;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:var(--accent-3);background:linear-gradient(165deg,rgba(22,30,54,.9),rgba(10,15,31,.9));border:1px solid transparent;background-clip:padding-box;box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(6px);animation:cardFloat 8s ease-in-out infinite}
+.glow-chip::before,.path-chip::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(148,163,184,.4),rgba(148,163,184,.04) 40%,rgba(148,163,184,.22));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.glow-chip svg,.path-chip svg{width:26px;height:26px;position:relative;z-index:1}
 .glow-chip.c1{top:8%;left:8%;animation-delay:0s}
 .glow-chip.c2{top:14%;right:10%;color:var(--accent-2);box-shadow:0 0 32px -6px rgba(139,92,246,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-2.6s}
 .glow-chip.c3{bottom:18%;left:6%;color:var(--accent);box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-5.2s}
 .glow-chip.c4{bottom:10%;right:8%;animation-delay:-1.3s}
 .glow-chip.c5{top:42%;left:1%;width:46px;height:46px;border-radius:12px;color:var(--good);box-shadow:0 0 28px -6px rgba(52,211,153,.5),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-3.8s}
 .glow-chip.c5 svg{width:22px;height:22px}
-.glow-chip.mini{width:18px;height:18px;border-radius:6px;background:linear-gradient(165deg,var(--accent),var(--accent-2));box-shadow:0 0 20px -2px rgba(139,92,246,.7)}
-.glow-chip.mini::before{display:none}
+.glow-chip.mini,.path-chip.mini{width:18px;height:18px;border-radius:6px;background:linear-gradient(165deg,var(--accent),var(--accent-2));box-shadow:0 0 20px -2px rgba(139,92,246,.7)}
+.glow-chip.mini::before,.path-chip.mini::before{display:none}
 .glow-chip.c6{top:30%;right:1%;animation-delay:-6.4s}
 .glow-chip.c7{bottom:36%;left:18%;background:linear-gradient(165deg,var(--accent-3),var(--accent));box-shadow:0 0 20px -2px rgba(34,211,238,.7);animation-delay:-1.9s}
-@media(prefers-reduced-motion:reduce){.glow-chip,.hero-glow .glow-orb{animation:none;translate:none!important}}
+@media(prefers-reduced-motion:reduce){.glow-chip,.path-chip,.hero-glow .glow-orb{animation:none;translate:none!important}}
+
+/* Decorative scroll path: faint line along the right margin with chips positioned
+   along it via JS (SVGGeometryElement.getPointAtLength), based on scroll progress */
+.scroll-path-layer{position:fixed;inset:0;z-index:1;pointer-events:none}
+.scroll-path-layer svg{position:absolute;inset:0;width:100%;height:100%}
+.scroll-path-layer path{stroke:var(--line-strong);stroke-width:.15;vector-effect:non-scaling-stroke;opacity:.4}
+.path-chip{width:40px;height:40px;border-radius:11px;margin:-20px 0 0 -20px;animation:cardFloat 7s ease-in-out infinite;will-change:transform}
+.path-chip.mini{margin:-9px 0 0 -9px}
+.path-chip svg{width:20px;height:20px}
+.path-chip.pc2{color:var(--accent-2);box-shadow:0 0 28px -6px rgba(139,92,246,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-2.4s}
+.path-chip.pc3{animation-delay:-4.8s}
+@media(max-width:1240px),(prefers-reduced-motion:reduce){.scroll-path-layer{display:none}}
 
 /* ===== Hero service cards grid ===== */
 .hero-visual{position:absolute;top:0;bottom:0;right:0;width:53.5%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: positioned over the eventual right-column area (not centered over the text) and out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
@@ -547,6 +559,16 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 <div class="bg-field"></div>
 <div class="grid-lines"></div>
 <div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
+
+<!-- Decorative scroll path: glow chips drift down the right margin as the page scrolls -->
+<div class="scroll-path-layer" aria-hidden="true">
+  <svg id="scrollPathSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
+    <path id="scrollPath" d="M92,0 C100,12 84,26 91,40 C98,54 85,68 92,82 C97,91 90,96 92,100" fill="none"/>
+  </svg>
+  <span class="path-chip pc1"><svg viewBox="0 0 24 24" fill="none"><path class="rise-line" d="M2 16l6-5 5 3 7-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="rise-dot" cx="20" cy="5" r="2" fill="currentColor"/></svg></span>
+  <span class="path-chip pc2"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l8-7 8 7M5 10v9h4v-5h6v5h4v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3l6 2.4v3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+  <span class="path-chip pc3 mini"></span>
+</div>
 
 <!-- NAV -->
 <header class="nav">
@@ -1340,6 +1362,23 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   var orbs = document.querySelectorAll('.glow-orb');
   var ticking = false;
 
+  // Decorative scroll-path chips: travel down #scrollPath as the page scrolls,
+  // each with a staggered offset along the path's length.
+  var scrollPath = document.getElementById('scrollPath');
+  var pathChips = document.querySelectorAll('.path-chip');
+  var pathChipOffsets = [0, -0.08, -0.16];
+  var pathLength = scrollPath ? scrollPath.getTotalLength() : 0;
+
+  function updatePathChips(t){
+    if (!scrollPath || !pathLength) return;
+    pathChips.forEach(function(chip, i){
+      var chipT = Math.min(1, Math.max(0, t + pathChipOffsets[i]));
+      var pt = scrollPath.getPointAtLength(chipT * pathLength);
+      chip.style.left = pt.x + '%';
+      chip.style.top = pt.y + '%';
+    });
+  }
+
   function onFrame(){
     var y = window.scrollY;
     nav.classList.toggle('scrolled', y > 8);
@@ -1347,6 +1386,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     var max = document.documentElement.scrollHeight - window.innerHeight;
     var pct = max > 0 ? (y / max) * 100 : 0;
     scrollBar.style.width = pct + '%';
+    updatePathChips(max > 0 ? y / max : 0);
 
     if (!reduce){
       orbs.forEach(function(orb){
