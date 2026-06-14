@@ -128,7 +128,7 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 .hero-copy{max-width:1100px;margin:0 auto;text-align:center}
 .hero-copy .sub{max-width:620px;margin-left:auto;margin-right:auto}
 .hero-copy .hero-cta,.hero-copy .hero-meta{justify-content:center}
-.hero h1{font-size:clamp(44px,8.4vw,108px)}
+.hero h1{font-size:clamp(40px,6vw,84px);line-height:1.02;letter-spacing:-.04em} /* shrunk + tightened so the full two-line headline + narrative fit one 100vh viewport without clipping; JS morphs these back toward live values on scroll */
 .hero-visual{opacity:0;transform:scale(.9);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
 
 /* ===== Hero service cards grid ===== */
@@ -1211,7 +1211,9 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     var snap = p > 0.5;
 
     // Numeric interpolation
-    heroH1.style.fontSize = lerp(108, 52, p).toFixed(1) + 'px';
+    heroH1.style.fontSize = lerp(84, 52, p).toFixed(1) + 'px';
+    heroH1.style.lineHeight = lerp(1.02, 1.1, p).toFixed(3);
+    heroH1.style.letterSpacing = lerp(-0.04, -0.032, p).toFixed(4) + 'em';
     heroVisual.style.opacity = lerp(0, 1, p).toFixed(3);
     heroVisual.style.transform = 'scale(' + lerp(0.9, 1, p).toFixed(3) + ')';
 
