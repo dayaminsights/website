@@ -1186,6 +1186,52 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 (function(){
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+  // ===== Hero scroll-morph =====
+  var heroStage = document.querySelector('.hero-morph-stage');
+  var heroSection = heroStage ? heroStage.querySelector('.hero') : null;
+  var heroGrid = heroSection ? heroSection.querySelector('.hero-grid') : null;
+  var heroCopy = heroSection ? heroSection.querySelector('.hero-copy') : null;
+  var heroH1 = heroSection ? heroSection.querySelector('.hero h1') : null;
+  var heroSub = heroSection ? heroSection.querySelector('.hero-copy .sub') : null;
+  var heroCta = heroSection ? heroSection.querySelector('.hero-copy .hero-cta') : null;
+  var heroMeta = heroSection ? heroSection.querySelector('.hero-copy .hero-meta') : null;
+  var heroVisual = heroSection ? heroSection.querySelector('.hero-visual') : null;
+
+  var heroMorphEnabled = !reduce && window.matchMedia('(min-width:1001px)').matches
+    && heroStage && heroSection && heroGrid && heroCopy && heroH1 && heroVisual;
+
+  function lerp(a, b, t){ return a + (b - a) * t; }
+
+  function applyHeroMorph(progress){
+    var p = Math.max(0, Math.min(1, progress));
+    var snap = p > 0.5;
+
+    // Numeric interpolation
+    heroH1.style.fontSize = lerp(108, 52, p).toFixed(1) + 'px';
+    heroVisual.style.opacity = lerp(0, 1, p).toFixed(3);
+    heroVisual.style.transform = 'scale(' + lerp(0.9, 1, p).toFixed(3) + ')';
+
+    // Discrete snaps at midpoint
+    heroGrid.style.gridTemplateColumns = snap ? '1fr 1.15fr' : '1fr';
+    heroCopy.style.maxWidth = snap ? 'none' : '1100px';
+    heroCopy.style.margin = snap ? '0' : '0 auto';
+    heroCopy.style.textAlign = snap ? 'left' : 'center';
+    if (heroSub){
+      heroSub.style.maxWidth = snap ? '480px' : '620px';
+      heroSub.style.marginLeft = snap ? '0' : 'auto';
+      heroSub.style.marginRight = snap ? '0' : 'auto';
+    }
+    if (heroCta) heroCta.style.justifyContent = snap ? 'flex-start' : 'center';
+    if (heroMeta) heroMeta.style.justifyContent = snap ? 'flex-start' : 'center';
+    heroVisual.style.pointerEvents = snap ? 'auto' : 'none';
+  }
+
+  function heroMorphProgress(){
+    var rect = heroStage.getBoundingClientRect();
+    var scrolled = -rect.top; // 0 when stage top is at viewport top; grows as user scrolls
+    return scrolled / window.innerHeight; // 0 -> 1 over the first 100vh of stage scroll
+  }
+
   // Sticky nav background, scroll progress bar, parallax — batched in one rAF
   var nav = document.querySelector('header.nav');
   var scrollBar = document.getElementById('scrollBar');
@@ -1207,13 +1253,38 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
         orb.style.translate = '0 ' + shift.toFixed(1) + 'px';
       });
     }
+
+    if (heroMorphEnabled){
+      applyHeroMorph(heroMorphProgress());
+    }
     ticking = false;
   }
   function onScroll(){
     if (!ticking){ requestAnimationFrame(onFrame); ticking = true; }
   }
   onFrame();
+  if (heroMorphEnabled){
+    applyHeroMorph(heroMorphProgress());
+  }
   window.addEventListener('scroll', onScroll, {passive:true});
+
+  window.addEventListener('resize', function(){
+    var nowEnabled = !reduce && window.matchMedia('(min-width:1001px)').matches
+      && heroStage && heroSection && heroGrid && heroCopy && heroH1 && heroVisual;
+    if (nowEnabled !== heroMorphEnabled){
+      heroMorphEnabled = nowEnabled;
+      if (!heroMorphEnabled){
+        // Clear inline styles so CSS (mobile/reduced-motion overrides) takes over
+        [heroGrid, heroCopy, heroSub, heroCta, heroMeta, heroH1, heroVisual].forEach(function(el){
+          if (el) el.removeAttribute('style');
+        });
+      } else {
+        applyHeroMorph(heroMorphProgress());
+      }
+    } else if (heroMorphEnabled){
+      applyHeroMorph(heroMorphProgress());
+    }
+  }, {passive:true});
 
   // Footer year
   document.getElementById('yr').textContent = new Date().getFullYear();
