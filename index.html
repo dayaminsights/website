@@ -107,7 +107,7 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
   .hero-morph-stage .hero-copy .sub{max-width:480px;margin-left:0;margin-right:0}
   .hero-morph-stage .hero-copy .hero-cta,.hero-morph-stage .hero-copy .hero-meta{justify-content:flex-start}
   .hero-morph-stage .hero h1{font-size:clamp(30px,4.6vw,52px)}
-  .hero-morph-stage .hero-visual{opacity:1;transform:none;pointer-events:auto}
+  .hero-morph-stage .hero-visual{position:static;inset:auto;opacity:1;transform:none;pointer-events:auto}
 }
 
 /* ===== Hero ===== */
@@ -132,7 +132,7 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 .hero-visual{opacity:0;transform:scale(.9);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
 
 /* ===== Hero service cards grid ===== */
-.hero-visual{position:relative;display:grid;grid-template-columns:repeat(2,1fr);gap:14px}
+.hero-visual{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
 .hero-visual .glow-orb{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(79,125,255,.35),transparent 70%);filter:blur(50px);top:-60px;right:-50px;animation:float 9s ease-in-out infinite;pointer-events:none;z-index:0}
 .hero-visual .glow-orb.b{background:radial-gradient(circle,rgba(139,92,246,.3),transparent 70%);top:auto;bottom:-70px;left:-50px;right:auto;animation-duration:11s;animation-delay:-3s}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(18px)}}
@@ -1230,6 +1230,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     if (heroCta) heroCta.style.justifyContent = snap ? 'flex-start' : 'center';
     if (heroMeta) heroMeta.style.justifyContent = snap ? 'flex-start' : 'center';
     heroVisual.style.pointerEvents = snap ? 'auto' : 'none';
+    heroVisual.style.position = snap ? 'relative' : 'absolute';
   }
 
   function heroMorphProgress(){
