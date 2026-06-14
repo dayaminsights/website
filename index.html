@@ -1197,8 +1197,12 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   var heroMeta = heroSection ? heroSection.querySelector('.hero-copy .hero-meta') : null;
   var heroVisual = heroSection ? heroSection.querySelector('.hero-visual') : null;
 
-  var heroMorphEnabled = !reduce && window.matchMedia('(min-width:1001px)').matches
-    && heroStage && heroSection && heroGrid && heroCopy && heroH1 && heroVisual;
+  function computeHeroMorphEnabled(){
+    return !reduce && window.matchMedia('(min-width:1001px)').matches
+      && heroStage && heroSection && heroGrid && heroCopy && heroH1 && heroVisual;
+  }
+
+  var heroMorphEnabled = computeHeroMorphEnabled();
 
   function lerp(a, b, t){ return a + (b - a) * t; }
 
@@ -1263,14 +1267,10 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     if (!ticking){ requestAnimationFrame(onFrame); ticking = true; }
   }
   onFrame();
-  if (heroMorphEnabled){
-    applyHeroMorph(heroMorphProgress());
-  }
   window.addEventListener('scroll', onScroll, {passive:true});
 
   window.addEventListener('resize', function(){
-    var nowEnabled = !reduce && window.matchMedia('(min-width:1001px)').matches
-      && heroStage && heroSection && heroGrid && heroCopy && heroH1 && heroVisual;
+    var nowEnabled = computeHeroMorphEnabled();
     if (nowEnabled !== heroMorphEnabled){
       heroMorphEnabled = nowEnabled;
       if (!heroMorphEnabled){
