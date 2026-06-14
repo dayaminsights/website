@@ -1,0 +1,9 @@
+# Local-only working files — never deploy to GitHub Pages
+index.wireframes-backup.html
+mockups/
+
+# Temporary audit/verification harness
+tmp_serve.js
+tmp_check.js
+tmp_*.png
+node_modules/
