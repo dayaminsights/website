@@ -31,7 +31,7 @@
   --shadow:0 24px 60px -24px rgba(2,6,20,.85);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:88px}
 body{
   background:var(--bg);
   color:var(--text);
@@ -94,10 +94,10 @@ header.nav.scrolled{background:rgba(7,11,22,.72);backdrop-filter:blur(14px) satu
 .section-head.center{margin:0 auto;text-align:center}
 h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;line-height:1.12;margin:18px 0 14px}
 .section-head p{color:var(--muted);font-size:17px}
-.pad{padding:clamp(72px,10vw,128px) 0}
+.pad{padding:clamp(56px,7vw,96px) 0}
 
 /* ===== Hero scroll-morph stage ===== */
-.hero-morph-stage{position:relative;height:200vh}
+.hero-morph-stage{position:relative;height:270vh}
 .hero-morph-stage .hero{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(24px,4vw,48px) 0} /* reduced from live padding so centered content clears the sticky nav and fits 100vh */
 @media(prefers-reduced-motion:reduce),(max-width:1000px){
   .hero-morph-stage{height:auto}
@@ -107,7 +107,8 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
   .hero-morph-stage .hero-copy .sub{max-width:480px;margin-left:0;margin-right:0}
   .hero-morph-stage .hero-copy .hero-cta,.hero-morph-stage .hero-copy .hero-meta{justify-content:flex-start}
   .hero-morph-stage .hero h1{font-size:clamp(30px,4.6vw,52px)}
-  .hero-morph-stage .hero-visual{position:static;inset:auto;opacity:1;transform:none;pointer-events:auto}
+  .hero-morph-stage .hero-visual{position:static;inset:auto;width:auto;opacity:1;transform:none;pointer-events:auto}
+  .hero-morph-stage .hero-glow{display:none}
 }
 
 /* ===== Hero ===== */
@@ -125,14 +126,35 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 
 /* Hero morph: STATE_A defaults (Mockup-A look, before scroll) */
 .hero-grid{grid-template-columns:1fr}
-.hero-copy{max-width:1100px;margin:0 auto;text-align:center}
-.hero-copy .sub{max-width:620px;margin-left:auto;margin-right:auto}
-.hero-copy .hero-cta,.hero-copy .hero-meta{justify-content:center}
-.hero h1{font-size:clamp(34px,5vw,72px);line-height:1.04;letter-spacing:-.038em} /* shrunk + tightened so the full two-line headline + narrative fit one 100vh viewport without clipping; JS morphs these back toward live values on scroll */
+.hero-copy{max-width:1100px;margin:0 auto;text-align:left;transition:max-width .2s var(--ease),margin .2s var(--ease)}
+.hero-copy .sub{max-width:620px;margin-left:auto;margin-right:auto;transition:max-width .2s var(--ease),margin .2s var(--ease)}
+.hero-copy .hero-cta,.hero-copy .hero-meta{justify-content:flex-start}
+.hero h1{font-size:clamp(38px,5.4vw,78px);line-height:1.03;letter-spacing:-.04em} /* JS morphs these back toward live values on scroll; verify no clipping under sticky nav at this size */
+.hero-morph-stage .hero h1,.hero-morph-stage .hero-cta,.hero-morph-stage .hero-meta,.hero-morph-stage .hero-copy .eyebrow,.hero-morph-stage .hero-copy .tagline{transition-property:opacity} /* drop the .reveal transform transition so per-frame JS translateX isn't eased/laggy during the morph */
 .hero-visual{opacity:0;transform:scale(.9);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
 
+/* Floating glow chips around the centered STATE_A headline; fade out as the morph proceeds */
+.hero-glow{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.6;transition:opacity .3s var(--ease)}
+.hero-glow .glow-orb{position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(70px);animation:float 11s ease-in-out infinite}
+.hero-glow .glow-orb.ga{top:-8%;left:4%;background:radial-gradient(circle,rgba(79,125,255,.28),transparent 70%)}
+.hero-glow .glow-orb.gb{bottom:-12%;right:6%;width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,.24),transparent 70%);animation-duration:13s;animation-delay:-4s}
+.glow-chip{position:absolute;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:var(--accent-3);background:linear-gradient(165deg,rgba(22,30,54,.9),rgba(10,15,31,.9));border:1px solid transparent;background-clip:padding-box;box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(6px);animation:cardFloat 8s ease-in-out infinite}
+.glow-chip::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(148,163,184,.4),rgba(148,163,184,.04) 40%,rgba(148,163,184,.22));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.glow-chip svg{width:26px;height:26px;position:relative;z-index:1}
+.glow-chip.c1{top:8%;left:8%;animation-delay:0s}
+.glow-chip.c2{top:14%;right:10%;color:var(--accent-2);box-shadow:0 0 32px -6px rgba(139,92,246,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-2.6s}
+.glow-chip.c3{bottom:18%;left:6%;color:var(--accent);box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-5.2s}
+.glow-chip.c4{bottom:10%;right:8%;animation-delay:-1.3s}
+.glow-chip.c5{top:42%;left:1%;width:46px;height:46px;border-radius:12px;color:var(--good);box-shadow:0 0 28px -6px rgba(52,211,153,.5),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-3.8s}
+.glow-chip.c5 svg{width:22px;height:22px}
+.glow-chip.mini{width:18px;height:18px;border-radius:6px;background:linear-gradient(165deg,var(--accent),var(--accent-2));box-shadow:0 0 20px -2px rgba(139,92,246,.7)}
+.glow-chip.mini::before{display:none}
+.glow-chip.c6{top:30%;right:1%;animation-delay:-6.4s}
+.glow-chip.c7{bottom:36%;left:18%;background:linear-gradient(165deg,var(--accent-3),var(--accent));box-shadow:0 0 20px -2px rgba(34,211,238,.7);animation-delay:-1.9s}
+@media(prefers-reduced-motion:reduce){.glow-chip,.hero-glow .glow-orb{animation:none;translate:none!important}}
+
 /* ===== Hero service cards grid ===== */
-.hero-visual{position:absolute;inset:0;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
+.hero-visual{position:absolute;top:0;bottom:0;right:0;width:53.5%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: positioned over the eventual right-column area (not centered over the text) and out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
 .hero-visual .glow-orb{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(79,125,255,.35),transparent 70%);filter:blur(50px);top:-60px;right:-50px;animation:float 9s ease-in-out infinite;pointer-events:none;z-index:0}
 .hero-visual .glow-orb.b{background:radial-gradient(circle,rgba(139,92,246,.3),transparent 70%);top:auto;bottom:-70px;left:-50px;right:auto;animation-duration:11s;animation-delay:-3s}
 @keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(18px)}}
@@ -555,10 +577,21 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 <!-- HERO -->
 <div class="hero-morph-stage">
 <section class="hero wrap" id="top">
+  <div class="hero-glow" id="heroGlow" aria-hidden="true">
+    <span class="glow-orb ga"></span>
+    <span class="glow-orb gb"></span>
+    <span class="glow-chip c1"><svg viewBox="0 0 24 24" fill="none"><path class="rise-line" d="M2 16l6-5 5 3 7-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="rise-dot" cx="20" cy="5" r="2" fill="currentColor"/></svg></span>
+    <span class="glow-chip c2"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l8-7 8 7M5 10v9h4v-5h6v5h4v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3l6 2.4v3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+    <span class="glow-chip c3"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V10m5 9V5m5 14v-7m5 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+    <span class="glow-chip c4"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="13" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M12 7V3m-4 9h.01M16 12h.01M9 16h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
+    <span class="glow-chip c5"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m15.1-7.1l-2.1 2.1M9 15l-2.1 2.1m10.2 0L15 15M9 9L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></span>
+    <span class="glow-chip c6 mini"></span>
+    <span class="glow-chip c7 mini"></span>
+  </div>
   <div class="hero-grid">
   <div class="hero-copy">
     <span class="eyebrow reveal"><span class="dot"></span>For growing businesses</span>
-    <h1 class="reveal" data-d="1">Stop losing time and money to manual work.<br><span class="grad">Start growing with AI.</span></h1>
+    <h1 class="reveal" data-d="1">Stop losing time and money to manual work.<br>Start growing with <span class="grad">DAYAM</span></h1>
     <p class="sub reveal" data-d="2">Websites, marketing, dashboards, automation &amp; AI assistants — everything you need to look professional online, get more customers, see your numbers clearly, and save time on daily tasks. All from one team.</p>
     <p class="tagline reveal" data-d="2">One team. Five things your business needs. Zero confusion.</p>
     <div class="hero-cta reveal" data-d="3">
@@ -1192,10 +1225,13 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   var heroGrid = heroSection ? heroSection.querySelector('.hero-grid') : null;
   var heroCopy = heroSection ? heroSection.querySelector('.hero-copy') : null;
   var heroH1 = heroSection ? heroSection.querySelector('.hero h1') : null;
+  var heroEyebrow = heroSection ? heroSection.querySelector('.hero-copy .eyebrow') : null;
+  var heroTagline = heroSection ? heroSection.querySelector('.hero-copy .tagline') : null;
   var heroSub = heroSection ? heroSection.querySelector('.hero-copy .sub') : null;
   var heroCta = heroSection ? heroSection.querySelector('.hero-copy .hero-cta') : null;
   var heroMeta = heroSection ? heroSection.querySelector('.hero-copy .hero-meta') : null;
   var heroVisual = heroSection ? heroSection.querySelector('.hero-visual') : null;
+  var heroGlow = heroSection ? heroSection.querySelector('.hero-glow') : null;
 
   function computeHeroMorphEnabled(){
     return !reduce && window.matchMedia('(min-width:1001px)').matches
@@ -1206,31 +1242,90 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
   function lerp(a, b, t){ return a + (b - a) * t; }
 
+  // .hero-cta / .hero-meta are flush-left (justify-content:flex-start) at all
+  // times; at progress 0 they're slid right by this amount so their button/stat
+  // group APPEARS centered within .hero-copy, then slide to 0 as progress -> 1.
+  // Content widths are fixed, so these are measured once (on init/resize).
+  var heroCtaCenterOffset = 0;
+  var heroMetaCenterOffset = 0;
+
+  function rowGroupCenterOffset(row){
+    if (!row || !row.firstElementChild || !row.lastElementChild) return 0;
+    var rowRect = row.getBoundingClientRect();
+    var groupWidth = row.lastElementChild.getBoundingClientRect().right - row.firstElementChild.getBoundingClientRect().left;
+    return Math.max(0, (rowRect.width - groupWidth) / 2);
+  }
+
+  function measureHeroMorphOffsets(){
+    if (!heroMorphEnabled) return;
+    heroCtaCenterOffset = rowGroupCenterOffset(heroCta);
+    heroMetaCenterOffset = rowGroupCenterOffset(heroMeta);
+  }
+
   function applyHeroMorph(progress){
     var p = Math.max(0, Math.min(1, progress));
     var snap = p > 0.5;
+    var slide = 1 - p; // 1 -> 0 across the whole range
 
     // Numeric interpolation
-    heroH1.style.fontSize = lerp(72, 52, p).toFixed(1) + 'px';
-    heroH1.style.lineHeight = lerp(1.04, 1.1, p).toFixed(3);
-    heroH1.style.letterSpacing = lerp(-0.038, -0.032, p).toFixed(4) + 'em';
-    heroVisual.style.opacity = lerp(0, 1, p).toFixed(3);
-    heroVisual.style.transform = 'scale(' + lerp(0.9, 1, p).toFixed(3) + ')';
+    heroH1.style.fontSize = lerp(78, 52, p).toFixed(1) + 'px';
+    heroH1.style.lineHeight = lerp(1.03, 1.1, p).toFixed(3);
+    heroH1.style.letterSpacing = lerp(-0.04, -0.032, p).toFixed(4) + 'em';
+    // Cards fade/slide in faster than the overall morph (done by p=0.7) so
+    // they're fully visible with room to spare before the stage finishes.
+    var visualP = Math.min(1, p / 0.7);
+    heroVisual.style.opacity = lerp(0, 1, visualP).toFixed(3);
+    heroVisual.style.transform = 'translateX(' + lerp(60, 0, visualP).toFixed(1) + 'px) scale(' + lerp(0.9, 1, visualP).toFixed(3) + ')';
 
-    // Discrete snaps at midpoint
+    // Atmospheric glow behind the centered headline fades out early (gone by p=0.4)
+    // so it doesn't linger behind the live 2-col layout.
+    if (heroGlow) heroGlow.style.opacity = lerp(0.6, 0, Math.min(1, p / 0.4)).toFixed(3);
+
+    // h1 is flush-left at all times; slide it right so it appears centered at
+    // progress 0, sliding to its natural (flush-left) position by progress 1.
+    // h1 is a block element (full container width), so measure its actual
+    // rendered text via Range to get the widest line's width, not the box width.
+    var h1LineRange = document.createRange();
+    h1LineRange.selectNodeContents(heroH1);
+    var h1Rect = h1LineRange.getBoundingClientRect();
+    var copyWidth = heroCopy.getBoundingClientRect().width;
+    var h1CenterOffset = Math.max(0, (copyWidth - h1Rect.width) / 2);
+    heroH1.style.transform = 'translateX(' + (h1CenterOffset * slide).toFixed(2) + 'px)';
+
+    // Same slide-to-flush-left treatment for the CTA buttons and stats row.
+    if (heroCta) heroCta.style.transform = 'translateX(' + (heroCtaCenterOffset * slide).toFixed(2) + 'px)';
+    if (heroMeta) heroMeta.style.transform = 'translateX(' + (heroMetaCenterOffset * slide).toFixed(2) + 'px)';
+
+    // Eyebrow badge (inline-flex, content-sized) and tagline (block, measured via
+    // Range like h1) get the same centered-at-0 -> flush-left-at-1 treatment.
+    if (heroEyebrow){
+      var eyebrowRect = heroEyebrow.getBoundingClientRect();
+      var eyebrowOffset = Math.max(0, (copyWidth - eyebrowRect.width) / 2);
+      heroEyebrow.style.transform = 'translateX(' + (eyebrowOffset * slide).toFixed(2) + 'px)';
+    }
+    if (heroTagline){
+      var taglineRange = document.createRange();
+      taglineRange.selectNodeContents(heroTagline);
+      var taglineRect = taglineRange.getBoundingClientRect();
+      var taglineOffset = Math.max(0, (copyWidth - taglineRect.width) / 2);
+      heroTagline.style.transform = 'translateX(' + (taglineOffset * slide).toFixed(2) + 'px)';
+    }
+
+    // Discrete snaps at midpoint (CSS transition on max-width/margin eases these)
     heroGrid.style.gridTemplateColumns = snap ? '1fr 1.15fr' : '1fr';
     heroCopy.style.maxWidth = snap ? 'none' : '1100px';
     heroCopy.style.margin = snap ? '0' : '0 auto';
-    heroCopy.style.textAlign = snap ? 'left' : 'center';
     if (heroSub){
       heroSub.style.maxWidth = snap ? '480px' : '620px';
       heroSub.style.marginLeft = snap ? '0' : 'auto';
       heroSub.style.marginRight = snap ? '0' : 'auto';
     }
-    if (heroCta) heroCta.style.justifyContent = snap ? 'flex-start' : 'center';
-    if (heroMeta) heroMeta.style.justifyContent = snap ? 'flex-start' : 'center';
     heroVisual.style.pointerEvents = snap ? 'auto' : 'none';
     heroVisual.style.position = snap ? 'relative' : 'absolute';
+    heroVisual.style.top = snap ? 'auto' : '0';
+    heroVisual.style.bottom = snap ? 'auto' : '0';
+    heroVisual.style.right = snap ? 'auto' : '0';
+    heroVisual.style.width = snap ? 'auto' : '53.5%';
   }
 
   function heroMorphProgress(){
@@ -1269,6 +1364,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   function onScroll(){
     if (!ticking){ requestAnimationFrame(onFrame); ticking = true; }
   }
+  measureHeroMorphOffsets();
   onFrame();
   window.addEventListener('scroll', onScroll, {passive:true});
 
@@ -1278,13 +1374,15 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
       heroMorphEnabled = nowEnabled;
       if (!heroMorphEnabled){
         // Clear inline styles so CSS (mobile/reduced-motion overrides) takes over
-        [heroGrid, heroCopy, heroSub, heroCta, heroMeta, heroH1, heroVisual].forEach(function(el){
+        [heroGrid, heroCopy, heroSub, heroCta, heroMeta, heroH1, heroVisual, heroEyebrow, heroTagline, heroGlow].forEach(function(el){
           if (el) el.removeAttribute('style');
         });
       } else {
+        measureHeroMorphOffsets();
         applyHeroMorph(heroMorphProgress());
       }
     } else if (heroMorphEnabled){
+      measureHeroMorphOffsets();
       applyHeroMorph(heroMorphProgress());
     }
   }, {passive:true});
