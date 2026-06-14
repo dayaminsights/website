@@ -102,13 +102,20 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 @media(prefers-reduced-motion:reduce),(max-width:1000px){
   .hero-morph-stage{height:auto}
   .hero-morph-stage .hero{position:static;height:auto;overflow:visible;padding:clamp(56px,8vw,96px) 0 clamp(60px,8vw,104px)}
-  .hero-morph-stage .hero-grid{grid-template-columns:1fr 1.15fr;gap:48px}
   .hero-morph-stage .hero-copy{max-width:none;margin:0;text-align:left}
   .hero-morph-stage .hero-copy .sub{max-width:480px;margin-left:0;margin-right:0}
   .hero-morph-stage .hero-copy .hero-cta,.hero-morph-stage .hero-copy .hero-meta{justify-content:flex-start}
   .hero-morph-stage .hero h1{font-size:clamp(30px,4.6vw,52px)}
   .hero-morph-stage .hero-visual{position:static;inset:auto;width:auto;opacity:1;transform:none;pointer-events:auto}
   .hero-morph-stage .hero-glow{display:none}
+}
+/* Reduced-motion users on DESKTOP get the live 2-col layout statically */
+@media(prefers-reduced-motion:reduce) and (min-width:1001px){
+  .hero-morph-stage .hero-grid{grid-template-columns:1fr 1.15fr;gap:48px}
+}
+/* Mobile: force the hero into a single stacked column (copy above cards) */
+@media(max-width:1000px){
+  .hero-morph-stage .hero-grid{grid-template-columns:1fr;gap:40px}
 }
 
 /* ===== Hero ===== */
