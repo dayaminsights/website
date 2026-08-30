@@ -558,6 +558,23 @@ a.service-card{cursor:pointer}
 .cta-band .btn-ghost:hover{background:rgba(247,247,245,.08);border-color:var(--on-panel)}
 .cta-band :focus-visible{outline-color:var(--focus-invert)}
 .cta-sub{margin-top:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--on-panel-muted)}
+/* ===== Contact form (inside the inverted panel) ===== */
+.contact-form{max-width:560px;margin:var(--sp-7) auto 0;text-align:left;display:flex;flex-direction:column;gap:var(--sp-4)}
+.cf-row{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-4)}
+.cf-field{display:flex;flex-direction:column;gap:var(--sp-2)}
+.cf-field > span{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--on-panel-muted)}
+.cf-field > span em{font-style:normal;text-transform:none;letter-spacing:0}
+.cf-field input,.cf-field textarea{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--on-panel);background:var(--panel-2);border:1px solid var(--line-invert);border-radius:var(--r-sm);padding:12px 14px;min-height:44px;width:100%;transition:border-color var(--t-fast) var(--ease)}
+.cf-field textarea{resize:vertical;min-height:88px}
+.cf-field input::placeholder,.cf-field textarea::placeholder{color:var(--on-panel-muted);opacity:.7}
+.cf-field input:hover,.cf-field textarea:hover{border-color:rgba(247,247,245,.28)}
+.cf-field input:focus-visible,.cf-field textarea:focus-visible{outline:2px solid var(--focus-invert);outline-offset:2px;border-color:transparent}
+.cf-submit{align-self:flex-start;margin-top:var(--sp-2)}
+.cf-note{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--on-panel-muted);margin:0}
+.cta-alt{margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line-invert)}
+.cta-alt-label{display:block;font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--on-panel-muted);margin-bottom:var(--sp-3)}
+.cta-alt-links{display:flex;flex-wrap:wrap;justify-content:center;gap:var(--sp-3) var(--sp-6)}
+.cta-alt-links a{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--accent-on-panel);text-decoration:underline;text-underline-offset:3px;padding:var(--sp-2) 0}
 
 /* ===== Footer ===== */
 footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-8) 0 var(--sp-7);background:var(--bg-2)}
@@ -598,6 +615,9 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .foot-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:760px){
+  .cf-row{grid-template-columns:1fr}
+  .contact-form{margin-top:var(--sp-6)}
+  .cf-submit{align-self:stretch}
   .founder-grid{grid-template-columns:1fr;gap:var(--sp-5)}
   .founder-photo{max-width:180px}
   /* Both desktop CTAs are hidden at this width: brand + two buttons + toggle
@@ -1293,15 +1313,49 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 </section>
 
 <!-- CTA -->
+<!-- CONTACT -->
 <section class="pad wrap band" id="cta" aria-labelledby="h-cta">
-  <div class="cta-band reveal">
-    <h2 id="h-cta">Let's find the inefficiency that's costing you the most.</h2>
-    <p>A 30-minute consultation. We'll map where you're losing time and money — and show you what automating it is worth. No pitch, no obligation.</p>
-    <div class="hero-cta">
-      <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20book%20a%20free%20consultation." target="_blank" rel="noopener" class="btn btn-primary">Chat on WhatsApp <span class="arrow">→</span></a>
-      <a href="mailto:dayaminsights@gmail.com?subject=Book%20a%20consultation" class="btn btn-ghost">Or email us</a>
+  <div class="cta-band reveal" id="contact">
+    <span class="eyebrow"><span class="dot"></span>No pitch, no obligation</span>
+    <h2 id="h-cta">Tell us what's eating your week.</h2>
+    <p>Send this and we'll reply with the one process worth automating first, roughly what it would cost, and how long it would take. If the answer is "you don't need us yet", we'll say that instead.</p>
+
+    <form class="contact-form" action="FORM_ENDPOINT" method="POST" data-sentinel="form-endpoint">
+      <div class="cf-row">
+        <label class="cf-field">
+          <span>Your name</span>
+          <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label class="cf-field">
+          <span>Business name</span>
+          <input type="text" name="business" required autocomplete="organization">
+        </label>
+      </div>
+      <div class="cf-row">
+        <label class="cf-field">
+          <span>Phone or WhatsApp</span>
+          <input type="tel" name="phone" required autocomplete="tel" inputmode="tel">
+        </label>
+        <label class="cf-field">
+          <span>Email <em>(optional)</em></span>
+          <input type="email" name="email" autocomplete="email">
+        </label>
+      </div>
+      <label class="cf-field">
+        <span>What takes the most time right now?</span>
+        <textarea name="message" rows="3" required placeholder="e.g. we re-type every order into three different sheets"></textarea>
+      </label>
+      <button type="submit" class="btn btn-primary cf-submit">Send it <span class="arrow">&rarr;</span></button>
+      <p class="cf-note">We reply within one working day. We don't add you to a mailing list.</p>
+    </form>
+
+    <div class="cta-alt">
+      <span class="cta-alt-label">Or reach us directly</span>
+      <div class="cta-alt-links">
+        <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener">WhatsApp <span data-sentinel="phone">+91 78776 40693</span></a>
+        <a href="mailto:dayaminsights@gmail.com"><span data-sentinel="contact-email">dayaminsights@gmail.com</span></a>
+      </div>
     </div>
-    <div class="cta-sub mono">Typically reply within one business day · dayaminsights@gmail.com</div>
   </div>
 </section>
 
@@ -1657,6 +1711,29 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     window.addEventListener('resize', function(){
       if (window.innerWidth > 760 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
     }, {passive:true});
+  }
+
+
+  // ===== Contact form =====
+  // Until a real endpoint is pasted into action=, intercept the submit and
+  // hand the visitor to WhatsApp with their message pre-filled, so the form
+  // is never a dead end in the interim.
+  var contactForm = document.querySelector('.contact-form');
+  if (contactForm){
+    contactForm.addEventListener('submit', function(e){
+      if (typeof window.gtag === 'function'){
+        window.gtag('event', 'generate_lead', { method: 'form' });
+      }
+      var action = contactForm.getAttribute('action') || '';
+      if (action.indexOf('FORM_ENDPOINT') === -1) return; // real endpoint: let it post
+      e.preventDefault();
+      var d = new FormData(contactForm);
+      var text = 'Hi Dayam Insights, I am ' + (d.get('name') || '') +
+                 ' from ' + (d.get('business') || '') + '. ' +
+                 (d.get('message') || '') +
+                 ' You can reach me on ' + (d.get('phone') || '') + '.';
+      window.open('https://wa.me/917877640693?text=' + encodeURIComponent(text), '_blank', 'noopener');
+    });
   }
 
 })();
