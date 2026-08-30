@@ -568,16 +568,6 @@ a.service-card{cursor:pointer}
 .prob .pic svg{width:21px;height:21px;color:var(--muted)}
 .prob h3{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;letter-spacing:-.005em;margin-bottom:var(--sp-2)}
 .prob p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted)}
-.prob .fix{margin-top:auto;padding-top:var(--sp-4);border-top:1px solid var(--line);display:flex;flex-direction:column;gap:var(--sp-2)}
-.prob .fix-tag{display:inline-flex;align-items:center;gap:var(--sp-1);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
-.prob .fix-tag svg{width:13px;height:13px;flex:0 0 auto}
-.prob .fix p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--ink-2);line-height:1.5;min-height:3em}
-/* Stacked, not inline-with-wrap: label lengths differ enough that flex-wrap
-   resolved differently per card, so two stats sat beside their label and two
-   below it. */
-.prob .fix .stat-row{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
-.prob .fix .stat{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:700;letter-spacing:-.012em;color:var(--ink);font-variant-numeric:tabular-nums}
-.prob .fix .stat-label{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2)}
 
 /* ===== Process ===== */
 .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:var(--sp-7);position:relative}
@@ -607,16 +597,11 @@ a.service-card{cursor:pointer}
 .tech-item .td{width:8px;height:8px;border-radius:2px;background:var(--accent);flex:0 0 auto}
 
 /* ===== Why ===== */
-.why-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:20px;margin-top:var(--sp-7)}
-.why{display:flex;gap:var(--sp-4);padding:var(--sp-5);border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
-.why .wic{width:48px;height:48px;flex:0 0 auto;border-radius:var(--r-md);display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line)}
-.why .wic svg{width:22px;height:22px;color:var(--accent)}
-.why h3{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;letter-spacing:-.005em;margin-bottom:var(--sp-2)}
-.why p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted)}
 /* ===== Founder ===== */
 .founder-grid{display:grid;grid-template-columns:260px 1fr;gap:var(--sp-7);align-items:start}
 .founder-photo-slot{aspect-ratio:1;border-radius:var(--r-md);display:grid;place-items:center;background:var(--surface-sunken);border:1px solid var(--line);font-family:var(--font-mono);font-size:var(--fs-label);color:var(--muted-2);text-align:center;padding:var(--sp-4)}
 .founder-copy p{font-size:var(--fs-body);color:var(--muted);max-width:var(--maxw-text)}
+.founder-copy p + p{margin-top:var(--sp-4)}
 .founder-bio{margin-top:var(--sp-4)}
 .founder-id{margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--line)}
 .founder-id b{display:block;font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink)}
@@ -718,7 +703,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .nav-links,.nav-cta .btn-ghost,.nav-cta .btn-primary{display:none}
   .nav-toggle{display:grid;place-items:center}
   .nav-inner{gap:var(--sp-3)}
-  .why-grid{grid-template-columns:1fr}
   .prob-grid{grid-template-columns:1fr}
   .tech-groups{grid-template-columns:1fr}
   .proc-grid{grid-template-columns:1fr}
@@ -876,19 +860,19 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
         <div class="dash-body">
           <div class="dash-kpis">
             <div class="dk">
-              <span class="dk-label">Today's sales</span>
-              <b data-count="48200" data-prefix="&#8377;" data-suffix="">&#8377;0</b>
-              <span class="dk-delta good">&#9650; 12% vs last week</span>
+              <span class="dk-label">This month</span>
+              <b data-count="1240000" data-prefix="&#8377;" data-suffix="">&#8377;0</b>
+              <span class="dk-delta good">&#9650; 18% vs last month</span>
             </div>
             <div class="dk">
               <span class="dk-label">Orders</span>
-              <b data-count="186" data-suffix="">0</b>
-              <span class="dk-delta good">&#9650; 8%</span>
+              <b data-count="1847" data-suffix="">0</b>
+              <span class="dk-delta good">&#9650; 9%</span>
             </div>
             <div class="dk">
-              <span class="dk-label">Low stock</span>
-              <b data-count="5" data-suffix="">0</b>
-              <span class="dk-delta warn">Needs reorder</span>
+              <span class="dk-label">Repeat buyers</span>
+              <b data-count="34" data-suffix="%">0%</b>
+              <span class="dk-delta good">&#9650; 6%</span>
             </div>
           </div>
           <div class="dash-chart">
@@ -936,41 +920,21 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M9 5h6m-6 14h6M7 5v14M17 5v14M4 9h16M4 15h16" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
       <h3>You're stuck updating spreadsheets every day</h3>
       <p>Every order gets typed into one Excel sheet, then copied into another for stock, then another for invoicing — by hand, every time.</p>
-      <div class="fix">
-        <span class="fix-tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>What we do</span>
-        <p>One system updates your orders, stock and invoices automatically — type it once.</p>
-        <div class="stat-row"><span class="stat mono" data-count="40" data-suffix="%">0%</span><span class="stat-label">less time on manual data entry</span></div>
-      </div>
     </div>
     <div class="prob reveal" data-d="2">
       <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="2" stroke="currentColor" stroke-width="1.9"/><path d="M4 9h16M9 4v16" stroke="currentColor" stroke-width="1.9"/></svg></span>
       <h3>One typo and your numbers are wrong</h3>
       <p>A copy-paste mistake means the wrong stock count, a wrong invoice, or an order that goes missing — and no one notices until a customer complains.</p>
-      <div class="fix">
-        <span class="fix-tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>What we do</span>
-        <p>Connected data means the same number everywhere — entered once, correct everywhere.</p>
-        <div class="stat-row"><span class="stat mono" data-count="0" data-suffix="">0</span><span class="stat-label">copy-paste errors between sheets</span></div>
-      </div>
     </div>
     <div class="prob reveal" data-d="3">
       <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
       <h3>You find out what sold last month — next month</h3>
       <p>By the time you see which products made money and which didn't, it's too late to do anything about it. So you keep guessing.</p>
-      <div class="fix">
-        <span class="fix-tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>What we do</span>
-        <p>A live dashboard shows sales, stock and cash the moment they happen — not next month.</p>
-        <div class="stat-row"><span class="stat mono" data-count="100" data-suffix="%">0%</span><span class="stat-label">visibility, updated daily</span></div>
-      </div>
     </div>
     <div class="prob reveal" data-d="4">
       <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 20V13m5 7V10m5 10V7m5 13V4M3 20h18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
       <h3>Every new order means more work — not more profit</h3>
       <p>Right now, growing your business means hiring someone new just to keep up. With the right setup, more orders shouldn't mean more headaches.</p>
-      <div class="fix">
-        <span class="fix-tag"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 13l4 4L19 7" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/></svg>What we do</span>
-        <p>Automation and AI take on the extra workload, around the clock — no new hires.</p>
-        <div class="stat-row"><span class="stat mono" data-count="24" data-suffix="/7">0</span><span class="stat-label">workflows running, no new hires</span></div>
-      </div>
     </div>
   </div>
 </section>
@@ -1283,19 +1247,19 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       <div class="num mono">01</div>
       <h3>Audit</h3>
       <p>We map where time, money and data are leaking across your operation.</p>
-      <span class="ptag mono">Week 1–2</span>
+      <span class="ptag mono">Week 1</span>
     </div>
     <div class="proc reveal" data-d="2">
       <div class="num mono">02</div>
       <h3>Architect</h3>
       <p>We design the data, automation and tooling that removes the biggest bottleneck.</p>
-      <span class="ptag mono">Week 2–4</span>
+      <span class="ptag mono">Week 1–2</span>
     </div>
     <div class="proc reveal" data-d="3">
       <div class="num mono">03</div>
       <h3>Automate</h3>
       <p>We build and connect it — dashboards live, workflows running, nothing re-keyed.</p>
-      <span class="ptag mono">Week 4–8</span>
+      <span class="ptag mono">Week 2–6</span>
     </div>
     <div class="proc reveal" data-d="4">
       <div class="num mono">04</div>
@@ -1337,35 +1301,8 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 </section>
 
 
-<!-- WHY -->
-<section class="pad wrap" id="why" aria-labelledby="h-why">
-  <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>Why Dayam Insights</span>
-    <h2 class="title" id="h-why">A partner measured by your numbers.</h2>
-    <p>We're not here to deliver a project and disappear. We're here to make your business run leaner and decide faster.</p>
-  </div>
-  <div class="why-grid">
-    <div class="why reveal" data-d="1">
-      <span class="wic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M12 2l8 4v6c0 5-3.5 8-8 10-4.5-2-8-5-8-10V6l8-4z" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/><path d="M9 12l2 2 4-4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <div><h3>We start where it pays back</h3><p>We fix the costliest inefficiency first, so you see real savings before you commit to the next phase.</p></div>
-    </div>
-    <div class="why reveal" data-d="2">
-      <span class="wic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="2"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-      <div><h3>One team, every layer</h3><p>Data, automation, AI and software under one roof — no juggling four vendors who blame each other.</p></div>
-    </div>
-    <div class="why reveal" data-d="3">
-      <span class="wic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 17l6-6 4 4 8-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M21 7v5h-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <div><h3>Built to scale, not to lock you in</h3><p>Clean, documented systems your own team can run. You own the result — we just make it work.</p></div>
-    </div>
-    <div class="why reveal" data-d="4">
-      <span class="wic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M12 3v18M5 21V9m14 12V6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-      <div><h3>Plain language, real numbers</h3><p>We talk in hours saved, cost reduced and margin gained — not jargon. You always know the return.</p></div>
-    </div>
-  </div>
-</section>
-
 <!-- FOUNDER -->
-<section class="pad wrap band" id="founder" aria-labelledby="h-founder">
+<section class="pad wrap" id="founder" aria-labelledby="h-founder">
   <div class="founder-grid reveal">
     <div class="founder-photo">
       <div class="founder-photo-slot" data-sentinel="founder-photo">FOUNDER_PHOTO</div>
@@ -1374,6 +1311,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       <span class="eyebrow"><span class="dot"></span>Who you'll be working with</span>
       <h2 class="title" id="h-founder">You'll deal with the person who builds it.</h2>
       <p>No account manager, no handover to a junior team. The person who scopes your project is the person who builds it, and the person who picks up the phone six months later.</p>
+      <p>Dashboards, automation, AI and the website all come from the same place, so there is no juggling four vendors who blame each other when something breaks.</p>
       <p class="founder-bio"><span data-sentinel="founder-bio">FOUNDER_BIO — two or three sentences: what you did before this, the kinds of businesses you have worked with, and why you started Dayam Insights.</span></p>
       <div class="founder-id">
         <b><span data-sentinel="founder-name">FOUNDER_NAME</span></b>
@@ -1385,7 +1323,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 </section>
 
 <!-- TECH -->
-<section class="pad wrap" id="tech" aria-labelledby="h-tech">
+<section class="pad wrap band" id="tech" aria-labelledby="h-tech">
   <div class="section-head center reveal-scale">
     <span class="eyebrow"><span class="dot"></span>Under the hood</span>
     <h2 class="title" id="h-tech">We work with what you already use.</h2>
@@ -1429,7 +1367,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 
 <!-- CTA -->
 <!-- FAQ -->
-<section class="pad wrap band" id="faq" aria-labelledby="h-faq">
+<section class="pad wrap" id="faq" aria-labelledby="h-faq">
   <div class="section-head center reveal">
     <span class="eyebrow"><span class="dot"></span>Before you ask</span>
     <h2 class="title" id="h-faq">The questions we get every week.</h2>
@@ -1471,7 +1409,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 </section>
 
 <!-- CONTACT -->
-<section class="pad wrap" id="cta" aria-labelledby="h-cta">
+<section class="pad wrap band" id="cta" aria-labelledby="h-cta">
   <div class="cta-band reveal" id="contact">
     <span class="eyebrow"><span class="dot"></span>No pitch, no obligation</span>
     <h2 id="h-cta">Tell us what's eating your week.</h2>
