@@ -195,6 +195,16 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .btn .arrow{transition:transform var(--t-fast) var(--ease)}
 .btn:hover .arrow{transform:translateX(3px)}
 .nav-toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:var(--r-md);width:44px;height:44px;color:var(--ink);cursor:pointer}
+/* ===== Mobile menu ===== */
+.nav-toggle .nt-close{display:none}
+.nav-toggle[aria-expanded="true"] .nt-open{display:none}
+.nav-toggle[aria-expanded="true"] .nt-close{display:block}
+.mobile-menu{position:fixed;top:72px;left:0;right:0;bottom:0;z-index:99;background:var(--bg);border-top:1px solid var(--line);padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-5);overflow-y:auto}
+.mm-links{display:flex;flex-direction:column}
+.mm-links a{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);padding:var(--sp-4) 0;border-bottom:1px solid var(--line);min-height:44px;display:flex;align-items:center}
+.mm-cta{display:flex;flex-direction:column;gap:var(--sp-3);margin-top:auto;padding-top:var(--sp-5)}
+.mm-cta .btn{width:100%}
+@media(min-width:761px){.mobile-menu{display:none!important}}
 
 /* ===== Section scaffolding ===== */
 .eyebrow{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:7px 14px;border:1px solid var(--accent-line);border-radius:var(--r-pill);background:var(--accent-soft)}
@@ -676,12 +686,26 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     <div class="nav-cta">
       <a href="#results" class="btn btn-ghost">See results</a>
       <a href="#cta" class="btn btn-primary">Book a consultation <span class="arrow">→</span></a>
-      <a class="nav-toggle" href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20book%20a%20free%20consultation." target="_blank" rel="noopener" aria-label="Chat with us on WhatsApp">
-        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M20 11.5a8.4 8.4 0 0 1-12.3 7.4L4 20l1.2-3.6A8.5 8.5 0 1 1 20 11.5z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M9 9.5c0 3 2.5 5.5 5.5 5.5.6 0 1-.5 1-1l-.1-.6a.6.6 0 0 0-.5-.5l-1.4-.2a.6.6 0 0 0-.5.2l-.4.5c-.8-.4-1.5-1-1.9-1.9l.5-.4a.6.6 0 0 0 .2-.5l-.2-1.4a.6.6 0 0 0-.5-.5L9.6 8.5c-.5 0-1 .4-1 1z" fill="currentColor"/></svg>
-      </a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="nt-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="nt-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
     </div>
   </div>
 </header>
+
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <nav class="mm-links" aria-label="Main">
+    <a href="#problem">The problem</a>
+    <a href="#intelligence">What we do</a>
+    <a href="#process">How it works</a>
+    <a href="#results">Results</a>
+    <a href="#faq">FAQ</a>
+  </nav>
+  <div class="mm-cta">
+    <a href="#contact" class="btn btn-primary">Show me what to automate first <span class="arrow">&rarr;</span></a>
+    <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener" class="btn btn-ghost">Chat on WhatsApp</a>
+  </div>
+</div>
 
 <main id="main">
 
@@ -1603,6 +1627,38 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       });
     }
   }, true);
+
+  // ===== Mobile menu =====
+  var navToggle = document.getElementById('navToggle');
+  var mobileMenu = document.getElementById('mobileMenu');
+  if (navToggle && mobileMenu){
+    var setMenu = function(open){
+      navToggle.setAttribute('aria-expanded', String(open));
+      navToggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      mobileMenu.hidden = !open;
+      // Stop the page scrolling behind a full-height open menu.
+      document.body.style.overflow = open ? 'hidden' : '';
+    };
+    navToggle.addEventListener('click', function(){
+      setMenu(navToggle.getAttribute('aria-expanded') !== 'true');
+    });
+    // Any in-page link closes the menu before the scroll happens.
+    mobileMenu.addEventListener('click', function(e){
+      if (e.target.closest('a')) setMenu(false);
+    });
+    document.addEventListener('keydown', function(e){
+      if (e.key === 'Escape' && navToggle.getAttribute('aria-expanded') === 'true'){
+        setMenu(false);
+        navToggle.focus();
+      }
+    });
+    // Crossing back to desktop width with the menu open would otherwise
+    // strand body{overflow:hidden} on a desktop layout.
+    window.addEventListener('resize', function(){
+      if (window.innerWidth > 760 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
+    }, {passive:true});
+  }
+
 })();
 </script>
 </body>
