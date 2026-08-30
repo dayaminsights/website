@@ -170,7 +170,7 @@ h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;l
 .hero-copy .hero-cta,.hero-copy .hero-meta{justify-content:flex-start}
 .hero h1{font-size:clamp(38px,5.4vw,78px);line-height:1.03;letter-spacing:-.04em} /* JS morphs these back toward live values on scroll; verify no clipping under sticky nav at this size */
 .hero-morph-stage .hero h1,.hero-morph-stage .hero-cta,.hero-morph-stage .hero-meta,.hero-morph-stage .hero-copy .eyebrow,.hero-morph-stage .hero-copy .tagline{transition-property:opacity} /* drop the .reveal transform transition so per-frame JS translateX isn't eased/laggy during the morph */
-.hero-visual{opacity:0;transform:scale(.9);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
+.hero-visual{opacity:0;transform:translateX(60px);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
 
 /* Floating glow chips around the centered STATE_A headline; fade out as the morph proceeds */
 .hero-glow{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.6;transition:opacity .3s var(--ease)}
@@ -1334,7 +1334,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     // they're fully visible with room to spare before the stage finishes.
     var visualP = Math.min(1, p / 0.7);
     heroVisual.style.opacity = lerp(0, 1, visualP).toFixed(3);
-    heroVisual.style.transform = 'translateX(' + lerp(60, 0, visualP).toFixed(1) + 'px) scale(' + lerp(0.9, 1, visualP).toFixed(3) + ')';
+    heroVisual.style.transform = 'translateX(' + lerp(60, 0, visualP).toFixed(1) + 'px)';
 
     // Atmospheric glow behind the centered headline fades out early (gone by p=0.4)
     // so it doesn't linger behind the live 2-col layout.
@@ -1384,7 +1384,19 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
     heroVisual.style.top = snap ? 'auto' : '0';
     heroVisual.style.bottom = snap ? 'auto' : '0';
     heroVisual.style.right = snap ? 'auto' : '0';
-    heroVisual.style.width = snap ? 'auto' : '53.5%';
+
+    // Cards stay the same px size for the whole morph -- no shrink animation.
+    // At the snap point position flips to relative/auto so the cards take
+    // their place in .hero-grid's row (and inherit its vertical centering);
+    // before that, fix the width to match that same grid-cell size so there's
+    // no size change at all, just the position/opacity/slide-in.
+    if (snap){
+      heroVisual.style.width = 'auto';
+    } else {
+      var containerWidth = heroSection.getBoundingClientRect().width; // .hero has 0 horizontal padding
+      var endWidth = (containerWidth - 48) * 1.15 / 2.15; // .hero-grid's 1.15fr column, 48px gap
+      heroVisual.style.width = endWidth.toFixed(1) + 'px';
+    }
   }
 
   function heroMorphProgress(){
