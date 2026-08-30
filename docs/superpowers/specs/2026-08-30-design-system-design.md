@@ -47,9 +47,10 @@ Pure white page. A near-white band for alternation. A near-black panel for inver
 | Token | Hex | Use |
 |---|---|---|
 | `--bg` | `#FFFFFF` | Page ground |
-| `--bg-2` | `#F7F7F5` | Alternating section bands — very slightly warm, so it reads as chosen paper rather than grey |
+| `--bg-2` | `#F0EFEA` | Alternating section bands. Measured against white at **1.15 : 1** — perceptible as a band without reading as a stripe. An earlier `#F7F7F5` measured 1.07 : 1, below the threshold of perception on most screens, so the alternation existed in the CSS but not to the eye. |
 | `--surface` | `#FFFFFF` | Cards. On a band they separate by border; on white they separate by border plus `--shadow-sm` |
 | `--surface-sunken` | `#F2F2EF` | Inset wells, mockup interiors, code, table headers |
+| `--placeholder` | `#DCDBD5` | Wireframe placeholder bars inside mockups. `--surface-sunken` measured 1.12 : 1 against the white mockup interior, so the bars representing page content were invisible. |
 | `--panel` | `#111315` | **Inverted panel** — CTA band, dashboard mockups, one showcase section |
 | `--panel-2` | `#1B1E21` | Raised surface *inside* an inverted panel |
 
@@ -70,7 +71,7 @@ Pure white page. A near-white band for alternation. A near-black panel for inver
 | `--ink` | `#111315` | **18.62 : 1** ✓ | Headings, primary copy, stat values |
 | `--ink-2` | `#3A3E44` | **10.76 : 1** ✓ | Sub-headings, emphasised body |
 | `--muted` | `#555B63` | **6.85 : 1** ✓ | Body copy, descriptions |
-| `--muted-2` | `#6E747C` | **4.72 : 1** ✓ | Captions, labels, footnotes — min 11px |
+| `--muted-2` | `#676D75` | **5.22 : 1** on white, **4.54 : 1** on `--bg-2` ✓ | Captions, labels, footnotes — min 11px |
 
 A light ground compresses the usable grey range: everything from `--muted` down sits between 4.5 : 1 and 7 : 1, so there are four ink levels rather than the five a dark ground allows. This is a real constraint of the direction, not an oversight — do not add a fifth by inventing a lighter grey, because it will fail AA.
 
@@ -125,9 +126,10 @@ Blue is the only cool hue in an otherwise warm-and-achromatic system, so a focus
 :root{
   /* ground */
   --bg:#FFFFFF;
-  --bg-2:#F7F7F5;
+  --bg-2:#F0EFEA;
   --surface:#FFFFFF;
   --surface-sunken:#F2F2EF;
+  --placeholder:#DCDBD5;
   --panel:#111315;
   --panel-2:#1B1E21;
 
@@ -140,7 +142,7 @@ Blue is the only cool hue in an otherwise warm-and-achromatic system, so a focus
   --ink:#111315;
   --ink-2:#3A3E44;
   --muted:#555B63;
-  --muted-2:#6E747C;
+  --muted-2:#676D75;
 
   /* on inverted panel */
   --on-panel:#F7F7F5;
@@ -282,13 +284,25 @@ The current file uses `54px` in five places and `26px`/`30px`/`18px` ad hoc. All
 - Wide content scrolls inside its own `overflow-x:auto` container.
 - Full-bleed panels use `margin-inline:calc(50% - 50vw); width:100vw` on a container with `overflow-x:clip`, **not** the current `left:50%;transform:translateX(-50%)` hack. This lets `body{overflow-x:hidden}` be removed, which currently masks a real overflow and risks breaking `position:sticky`.
 
-**Section rhythm.** With a white ground the page needs a visible alternation or it becomes an undifferentiated scroll. The pattern is:
+**Section rhythm.** With a white ground the page needs a visible alternation or it becomes an undifferentiated scroll. Sections alternate strictly:
 
-```
-white  →  white  →  bg-2 band  →  white  →  PANEL (inverted)  →  white  →  bg-2 band  →  PANEL (final CTA)
-```
+| # | Section | Ground |
+|---|---|---|
+| 1 | `#top` hero | white |
+| 2 | `#problem` | **band** |
+| 3 | `#process` | white |
+| 4 | `#results` | **band** |
+| 5 | `#tech` | white |
+| 6 | `#growth` | **band** |
+| 7 | `#intelligence` | white — so the inverted dashboard and pipeline mockups inside it read at full strength |
+| 8 | `#why` | **band** |
+| 9 | `#cta` | white, containing the inverted panel |
 
-Two inverted panels maximum. A third stops being emphasis.
+The band is applied with a `.band` utility whose `::before` goes full-bleed via `margin-inline:calc(50% - 50vw)`, plus a hairline top and bottom rule. The rule is what makes the boundary land: the two grounds are deliberately close in value, so the line does the work the colour cannot.
+
+Two inverted panels maximum. A third stops being emphasis. Currently there is one full inverted section — the final CTA — plus the two inverted mockups inside `#intelligence`.
+
+**This was the single largest miss of the first implementation pass.** The rhythm was specified here but no task applied it, so nine sections shipped as three perceived zones: five consecutive white sections, one merged band where `.web-show + .web-show` deliberately removed the divider between `#growth` and `#intelligence`, then two more white. Compounding it, `--bg-2` was too light to see. Both are fixed.
 
 **Breakpoints** — unchanged: `1000px` grids collapse and the hero morph disables; `760px` mobile layout and the nav collapses to a menu.
 
@@ -512,7 +526,7 @@ A white ground with no blur, no backdrop-filter and no infinite animation is mat
 | `--line:rgba(148,163,184,.14)` | `--line:#E4E4E0` | Solid, not alpha — cleaner on white |
 | `--text:#eef2fb` | `--ink:#111315` | |
 | `--muted:#9aa6c2` | `--muted:#555B63` | |
-| `--muted-2:#6b7794` | `--muted-2:#6E747C` | **Was 4.40 : 1 — AA failure** |
+| `--muted-2:#6b7794` | `--muted-2:#676D75` | **Was 4.40 : 1 — AA failure.** Measured at baseline as 4.39 : 1. |
 | `--accent:#4f7dff` | `--accent:#A94F26` | Rust |
 | `--accent-2:#8b5cf6` | *removed* | |
 | `--accent-3:#22d3ee` | *removed* | |
