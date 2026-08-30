@@ -162,20 +162,20 @@ h1,h2,h3,h4,h5,.btn,.eyebrow,.nav-links a,.brand,th,label,button{font-family:var
 section{position:relative}
 
 /* ===== Scroll progress ===== */
-.scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:rgba(148,163,184,.08);pointer-events:none}
-.scroll-progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent-3),var(--accent),var(--accent-2));box-shadow:0 0 12px rgba(79,125,255,.6);transition:width .08s linear}
+.scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:transparent;pointer-events:none}
+.scroll-progress i{display:block;height:100%;width:0%;background:var(--accent);transition:width .08s linear}
 
 /* ===== Nav ===== */
-header.nav{position:sticky;top:0;z-index:100;transition:background .3s var(--ease),border-color .3s var(--ease),backdrop-filter .3s}
-header.nav.scrolled{background:rgba(7,11,22,.72);backdrop-filter:blur(14px) saturate(140%);border-bottom:1px solid var(--line)}
+header.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:1px solid transparent;transition:border-color var(--t-base) var(--ease),box-shadow var(--t-base) var(--ease)}
+header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
-.brand{display:flex;align-items:center;gap:11px;font-weight:700;letter-spacing:-.02em;font-size:18px}
-.brand .glyph{width:34px;height:34px;border-radius:9px;background:linear-gradient(135deg,var(--accent),var(--accent-2));display:grid;place-items:center;box-shadow:0 6px 20px -6px rgba(79,125,255,.7)}
+.brand{display:flex;align-items:center;gap:var(--sp-3);font-family:var(--font-ui);font-weight:700;letter-spacing:-.02em;font-size:var(--fs-h4);color:var(--ink)}
+.brand .glyph{width:34px;height:34px;border-radius:var(--r-sm);background:var(--ink);display:grid;place-items:center}
 .brand .glyph svg{width:18px;height:18px}
-.nav-links{display:flex;align-items:center;gap:30px}
-.nav-links a{color:var(--muted);font-size:14.5px;font-weight:500;transition:color .2s}
-.nav-links a:hover{color:var(--text)}
-.nav-cta{display:flex;align-items:center;gap:14px}
+.nav-links{display:flex;align-items:center;gap:var(--sp-6)}
+.nav-links a{color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:500;transition:color var(--t-fast) var(--ease)}
+.nav-links a:hover{color:var(--ink)}
+.nav-cta{display:flex;align-items:center;gap:var(--sp-3)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);font-family:var(--font-ui);font-weight:600;font-size:var(--fs-small);border-radius:var(--r-md);padding:13px 22px;min-height:44px;cursor:pointer;border:1px solid transparent;white-space:nowrap;text-decoration:none;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
 .btn:active{transform:translateY(1px)}
 .btn-primary{background:var(--ink);color:var(--bg)}
@@ -522,32 +522,24 @@ a.service-card:focus-visible{outline:2px solid var(--accent-3);outline-offset:3p
 .cta-sub{margin-top:var(--sp-4);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--on-panel-muted)}
 
 /* ===== Footer ===== */
-footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding:56px 0 40px}
-.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:40px}
-.foot-brand p{color:var(--muted);font-size:14px;margin-top:16px;max-width:300px}
-.foot-col h5{font-size:12.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted-2);margin-bottom:16px}
-.foot-col a{display:block;color:var(--muted);font-size:14px;margin-bottom:11px;transition:color .2s}
-.foot-col a:hover{color:var(--text)}
-.foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:48px;padding-top:26px;border-top:1px solid var(--line);font-size:13px;color:var(--muted-2);flex-wrap:wrap;gap:12px}
+footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-8) 0 var(--sp-7);background:var(--bg-2)}
+.foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--sp-7)}
+.foot-brand p{font-family:var(--font-ui);color:var(--muted);font-size:var(--fs-small);margin-top:var(--sp-4);max-width:300px}
+.foot-col h5{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:var(--sp-4)}
+.foot-col a{display:block;color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);padding:var(--sp-2) 0;transition:color var(--t-fast) var(--ease)}
+.foot-col a:hover{color:var(--ink)}
+.foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--muted-2);flex-wrap:wrap;gap:var(--sp-3)}
 
-/* ===== Reveal animation ===== */
-.reveal{opacity:0;transform:translateY(26px);transition:opacity .8s var(--ease),transform .8s var(--ease)}
-.reveal.in{opacity:1;transform:none}
-.reveal[data-d="1"]{transition-delay:.08s}
-.reveal[data-d="2"]{transition-delay:.16s}
-.reveal[data-d="3"]{transition-delay:.24s}
-.reveal[data-d="4"]{transition-delay:.32s}
-
-/* Reveal variants for scroll rhythm */
-.reveal-scale{opacity:0;transform:translateY(22px) scale(.97);transition:opacity .9s var(--ease),transform .9s var(--ease)}
-.reveal-scale.in{opacity:1;transform:none}
-.reveal-left{opacity:0;transform:translateX(-34px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
-.reveal-left.in{opacity:1;transform:none}
-.reveal-right{opacity:0;transform:translateX(34px);transition:opacity .85s var(--ease),transform .85s var(--ease)}
-.reveal-right.in{opacity:1;transform:none}
-@media(max-width:1000px){
-  .reveal-left,.reveal-right{transform:translateY(22px)}
-}
+/* ===== Reveal animation =====
+   All four variants collapse to one behaviour. The directional and scale
+   variants existed to manufacture scroll rhythm that the section grounds
+   now supply. Class names are kept so no markup changes. */
+.reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:0;transform:translateY(16px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
+.reveal.in,.reveal-scale.in,.reveal-left.in,.reveal-right.in{opacity:1;transform:none}
+.reveal[data-d="1"]{transition-delay:60ms}
+.reveal[data-d="2"]{transition-delay:120ms}
+.reveal[data-d="3"]{transition-delay:180ms}
+.reveal[data-d="4"]{transition-delay:180ms}
 
 /* ===== Responsive ===== */
 @media(max-width:1000px){
@@ -594,9 +586,13 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   .flow-row .fl-arrow{transform:rotate(90deg)}
   .flow-node{flex-direction:row;text-align:left;width:100%}
 }
+/* Positional motion goes; colour and opacity feedback stays. A blanket
+   transition:none also kills hover and focus feedback, which users with
+   vestibular sensitivity still need. */
 @media(prefers-reduced-motion:reduce){
-  *{animation:none!important;transition:none!important}
-  .reveal,.card-reveal{opacity:1;transform:none}
+  *{animation:none!important}
+  *{transition-duration:var(--t-fast)!important}
+  .reveal,.reveal-scale,.reveal-left,.reveal-right,.card-reveal{opacity:1!important;transform:none!important}
   html{scroll-behavior:auto}
 }
 </style>
