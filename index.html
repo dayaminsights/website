@@ -25,12 +25,41 @@
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Dayam Insights",
-  "url": "https://dayaminsights.com/",
-  "description": "Websites, marketing, dashboards, automation and AI assistants for SMEs, retailers, distributors, e-commerce and manufacturers.",
-  "email": "dayaminsights@gmail.com",
-  "logo": "https://dayaminsights.com/favicon.svg"
+  "@graph": [
+    {
+      "@type": "ProfessionalService",
+      "@id": "https://dayaminsights.com/#org",
+      "name": "Dayam Insights",
+      "url": "https://dayaminsights.com/",
+      "description": "Dashboards, workflow automation and AI assistants for Indian SMEs. We connect orders, stock and invoices into one system that updates itself.",
+      "email": "dayaminsights@gmail.com",
+      "telephone": "+91-78776-40693",
+      "logo": "https://dayaminsights.com/og-image.png",
+      "image": "https://dayaminsights.com/og-image.png",
+      "areaServed": { "@type": "Country", "name": "India" },
+      "serviceType": [
+        "Business intelligence dashboards",
+        "Workflow automation",
+        "AI assistants",
+        "Website and app development",
+        "Digital marketing"
+      ]
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://dayaminsights.com/#faq",
+      "mainEntity": [
+        { "@type": "Question", "name": "What does this cost?", "acceptedAnswer": { "@type": "Answer", "text": "It depends on how many systems have to talk to each other. We quote a fixed price before any work starts, so there is no meter running. If your budget and the scope do not meet, we will tell you on the first call." } },
+        { "@type": "Question", "name": "How long before I see something working?", "acceptedAnswer": { "@type": "Answer", "text": "Most first projects are live in four to six weeks. We start with the single process costing you the most time, so you get something working before committing to anything larger." } },
+        { "@type": "Question", "name": "Do I have to stop using Excel?", "acceptedAnswer": { "@type": "Answer", "text": "No. Most of our work connects the tools you already use rather than replacing them. Your team can keep entering data the way they do today; it just stops needing to be re-typed into three other places." } },
+        { "@type": "Question", "name": "My data is a mess. Some of it is on paper.", "acceptedAnswer": { "@type": "Answer", "text": "That is the normal starting point. Part of the first phase is getting what exists into one place and agreeing what each number means. You do not need to tidy anything up before talking to us." } },
+        { "@type": "Question", "name": "Do I need someone technical on my team?", "acceptedAnswer": { "@type": "Answer", "text": "No. Everything we build is meant to be run by the people already doing the job. We hand over written instructions in plain language and train whoever will be using it." } },
+        { "@type": "Question", "name": "What happens after it is built? Am I locked in?", "acceptedAnswer": { "@type": "Answer", "text": "Everything runs in accounts you own and you keep the logins. If you stop working with us, the dashboards and automations keep running." } },
+        { "@type": "Question", "name": "Do you work with businesses outside your city?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We work with businesses across India. Most of the work happens remotely, with visits where they are genuinely useful." } },
+        { "@type": "Question", "name": "What if I am not sure what I need?", "acceptedAnswer": { "@type": "Answer", "text": "That is the usual case. Describe the part of the week that frustrates you most and we will tell you whether it is worth automating, including when the honest answer is that it is not." } }
+      ]
+    }
+  ]
 }
 </script>
 <!-- Google Analytics 4 — paste the real Measurement ID in place of both
@@ -546,6 +575,16 @@ a.service-card{cursor:pointer}
 .founder-id b{display:block;font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink)}
 .founder-id > span{display:block;font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2);margin-top:var(--sp-1)}
 .founder-link{display:inline-block;margin-top:var(--sp-4);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
+/* ===== FAQ ===== */
+.faq-list{max-width:var(--maxw-text);margin:var(--sp-7) auto 0;border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line)}
+.faq-item summary{list-style:none;cursor:pointer;display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4);font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);padding:var(--sp-5) 0;min-height:44px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-item summary::after{content:"";flex:0 0 auto;width:11px;height:11px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform var(--t-base) var(--ease);margin-right:4px}
+.faq-item[open] summary::after{transform:rotate(-135deg)}
+.faq-item summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.faq-body{padding:0 0 var(--sp-5)}
+.faq-body p{font-size:var(--fs-body);color:var(--muted);margin:0}
 
 /* ===== CTA ===== */
 .cta-band{position:relative;border-radius:var(--r-lg);padding:clamp(40px,7vw,96px);text-align:center;background:var(--panel);color:var(--on-panel)}
@@ -1313,8 +1352,50 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 </section>
 
 <!-- CTA -->
+<!-- FAQ -->
+<section class="pad wrap band" id="faq" aria-labelledby="h-faq">
+  <div class="section-head center reveal">
+    <span class="eyebrow"><span class="dot"></span>Before you ask</span>
+    <h2 class="title" id="h-faq">The questions we get every week.</h2>
+  </div>
+  <div class="faq-list">
+    <details class="faq-item reveal" data-d="1">
+      <summary>What does this cost?</summary>
+      <div class="faq-body"><p>It depends on how many systems have to talk to each other, but most first projects sit between a dashboard for one part of the business and a full order-to-invoice automation. We quote a fixed price before any work starts, so there is no meter running. If your budget and the scope do not meet, we will tell you on the first call.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="2">
+      <summary>How long before I see something working?</summary>
+      <div class="faq-body"><p>Most first projects are live in <span data-sentinel="lead-time">4–6 WEEKS</span>. We deliberately start with the single process costing you the most time, so you get something working — and can judge whether we are worth continuing with — before committing to anything larger.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="3">
+      <summary>Do I have to stop using Excel?</summary>
+      <div class="faq-body"><p>No. Most of our work connects the tools you already use rather than replacing them. Your team can keep entering data the way they do today; the difference is that it stops needing to be re-typed into three other places.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="4">
+      <summary>My data is a mess. Some of it is on paper.</summary>
+      <div class="faq-body"><p>That is the normal starting point, not a problem. Part of the first phase is getting what exists into one place and agreeing what each number actually means. You do not need to tidy anything up before talking to us.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="1">
+      <summary>Do I need someone technical on my team?</summary>
+      <div class="faq-body"><p>No. Everything we build is meant to be run by the people already doing the job. We hand over written instructions in plain language, and we train whoever will be using it.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="2">
+      <summary>What happens after it is built? Am I locked in?</summary>
+      <div class="faq-body"><p>Everything runs in accounts you own, and you keep the logins. If you stop working with us, the dashboards and automations keep running. We offer ongoing support if you want it, but nothing breaks if you do not.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="3">
+      <summary>Do you work with businesses outside your city?</summary>
+      <div class="faq-body"><p>Yes. We are based in <span data-sentinel="city">CITY, STATE</span> and work with businesses across India. Most of the work happens remotely, with visits where they are genuinely useful.</p></div>
+    </details>
+    <details class="faq-item reveal" data-d="4">
+      <summary>What if I am not sure what I need?</summary>
+      <div class="faq-body"><p>That is the usual case, and it is what the first conversation is for. Describe the part of the week that frustrates you most and we will tell you whether it is worth automating — including when the honest answer is that it is not.</p></div>
+    </details>
+  </div>
+</section>
+
 <!-- CONTACT -->
-<section class="pad wrap band" id="cta" aria-labelledby="h-cta">
+<section class="pad wrap" id="cta" aria-labelledby="h-cta">
   <div class="cta-band reveal" id="contact">
     <span class="eyebrow"><span class="dot"></span>No pitch, no obligation</span>
     <h2 id="h-cta">Tell us what's eating your week.</h2>
