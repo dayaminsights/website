@@ -247,7 +247,6 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .hero{padding:clamp(56px,8vw,96px) 0 clamp(60px,8vw,104px)}
 .hero-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:48px;align-items:center}
 .hero h1{font-size:var(--fs-h2);line-height:1.10;letter-spacing:-.022em;font-weight:700;text-wrap:balance}
-.hero h1 .grad{color:var(--accent)}
 .hero p.sub{margin:var(--sp-4) 0 0;font-size:var(--fs-body);line-height:1.6;color:var(--muted);max-width:var(--maxw-narrow);text-wrap:pretty}
 .hero .tagline{margin:var(--sp-3) 0 0;font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;color:var(--muted-2);letter-spacing:.12em;text-transform:uppercase}
 .hero-cta{display:flex;gap:var(--sp-3);margin-top:var(--sp-6);flex-wrap:wrap}
@@ -622,6 +621,24 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   html{scroll-behavior:auto}
 }
 </style>
+<!-- ============================================================
+     SENTINELS — every [data-sentinel] element below marks a fact
+     the business has not yet supplied. They render with a dashed
+     amber outline so they cannot be missed in a browser.
+
+     Before go-live:  grep -c 'data-sentinel' index.html   -> must be 0
+
+     Outstanding:
+       contact-email    real domain mailbox (hello@dayaminsights.com?)
+       phone            is +91 78776 40693 public? display as text?
+       city / state     for local SEO and the FAQ
+       revenue-band     hero qualifier, currently "Rs 1-20 crore"
+       lead-time        "4-6 weeks" — confirm
+       pricing-model    "fixed price quoted up front" — confirm
+       founder-*        name, role, bio, photo, LinkedIn
+       form-endpoint    Formspree / Netlify / Web3Forms URL
+       result-1..3      which numeric claims are defensible
+     ============================================================ -->
 </head>
 <body>
 <a href="#main" class="skip-link">Skip to content</a>
@@ -660,18 +677,18 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <section class="hero wrap" id="top" aria-labelledby="h-hero">
   <div class="hero-grid">
   <div class="hero-copy">
-    <span class="eyebrow reveal"><span class="dot"></span>For growing businesses</span>
-    <h1 class="reveal" id="h-hero" data-d="1">Stop losing time and money to manual work.<br>Start growing with <span class="grad">DAYAM</span></h1>
-    <p class="sub reveal" data-d="2">Get more customers, automate repetitive tasks, track your business in real time, and scale faster with one team handling everything.</p>
-    <p class="tagline reveal" data-d="2">One team. Five services. Zero confusion.</p>
+    <span class="eyebrow reveal"><span class="dot"></span>For retailers, distributors &amp; manufacturers</span>
+    <h1 class="reveal" id="h-hero" data-d="1">Your business runs on five spreadsheets. It shouldn't have to.</h1>
+    <p class="sub reveal" data-d="2">We connect your orders, stock and invoices into one system that updates itself — and put your numbers on one screen you can check from your phone.</p>
+    <p class="tagline reveal" data-d="2">Built for businesses doing <span data-sentinel="revenue-band">RS_1_TO_20_CRORE</span> a year</p>
     <div class="hero-cta reveal" data-d="3">
-      <a href="#cta" class="btn btn-primary">Book a Free Consultation <span class="arrow">→</span></a>
-      <a href="#results" class="btn btn-ghost">See Our Work</a>
+      <a href="#contact" class="btn btn-primary">Show me what to automate first <span class="arrow">→</span></a>
+      <a href="#intelligence" class="btn btn-ghost">See a dashboard we built</a>
     </div>
     <div class="hero-meta reveal" data-d="4">
-      <div class="m"><b data-count="40" data-suffix="%">0%</b><span>Less Time on Admin</span></div>
-      <div class="m"><b data-count="3" data-suffix="x">0x</b><span>Faster Decisions</span></div>
-      <div class="m"><b>5</b><span>Services, One Team</span></div>
+      <div class="m"><b><span data-sentinel="lead-time">4–6 WEEKS</span></b><span>from first call to a live system</span></div>
+      <div class="m"><b><span data-sentinel="pricing-model">FIXED PRICE</span></b><span>quoted before any work starts</span></div>
+      <div class="m"><b>You own it</b><span>your data, your accounts, your logins</span></div>
     </div>
   </div>
 
