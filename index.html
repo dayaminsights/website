@@ -477,7 +477,10 @@ a.service-card{cursor:pointer}
 .prob .fix-tag{display:inline-flex;align-items:center;gap:var(--sp-1);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--good)}
 .prob .fix-tag svg{width:13px;height:13px;flex:0 0 auto}
 .prob .fix p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--ink-2);line-height:1.5;min-height:3em}
-.prob .fix .stat-row{display:flex;align-items:baseline;gap:var(--sp-2);flex-wrap:wrap}
+/* Stacked, not inline-with-wrap: label lengths differ enough that flex-wrap
+   resolved differently per card, so two stats sat beside their label and two
+   below it. */
+.prob .fix .stat-row{display:flex;flex-direction:column;align-items:flex-start;gap:2px}
 .prob .fix .stat{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:700;letter-spacing:-.012em;color:var(--ink);font-variant-numeric:tabular-nums}
 .prob .fix .stat-label{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2)}
 
