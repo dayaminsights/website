@@ -1,8 +1,11 @@
 # Dayam Insights — Design System Specification
 
 **Date:** 2026-08-30
-**Status:** Approved direction, pending founder/contact facts
+**Version:** v2 — light ground
+**Status:** Approved direction, pending accent choice + founder/contact facts
 **Scope:** Token system + component specs for `index.html`. Implementation of P0/P1 audit findings follows in a separate plan.
+
+> **v2 supersedes v1.** v1 specified a near-black ground with a burnt-amber accent. The direction changed to a white ground with black. The type scale, spacing scale, radii, motion tokens and accessibility floors carry over unchanged; colour, elevation and the mockup treatment are rebuilt.
 
 ---
 
@@ -11,7 +14,7 @@
 | Decision | Chosen | Consequence |
 |---|---|---|
 | Positioning | **Direction A — SME operations** | Retailers, distributors, small manufacturers. Plain language. ₹ formatting. All five services retained. WhatsApp-first contact stays. |
-| Visual direction | **Reposition — warm accent on cold ground** | Navy → near-black with a green bias. Blue/violet/cyan → one burnt-amber accent. Gradient CTAs removed. |
+| Visual direction | **White ground, black ink, inverted panels** | Dark navy → white. The "black" is not only type: whole sections invert to a near-black panel as the page's structural emphasis. |
 | Proof handling | **Relabel as worked examples** | `#results` quotes deleted. Section retitled. Figures marked as modelled. |
 | Implementation scope | **Design system + P0 + P1** | 16 audit findings. |
 
@@ -23,12 +26,15 @@
 
 These are the rules that resolve arguments later. When a decision is unclear, apply them in order.
 
-1. **Restraint reads as expensive.** Every effect must justify itself. The default answer to "should this animate?" is no.
-2. **One accent.** Boldness spent in one place. Everything around it stays neutral.
-3. **Semantic colour is not decoration.** Green means good. Amber means attention. If they appear anywhere else, they stop meaning anything.
-4. **Motion belongs to data.** Chart bars, counters, pipeline builds — these communicate. Floating chips do not.
-5. **Nothing off-scale.** A font size, spacing value, or radius that is not in this document is a bug.
-6. **Contrast is a constraint, not a preference.** Every text/background pair ships at AA or better. Values are recorded below, measured, not estimated.
+1. **The page is white; emphasis is black.** Inversion is the primary structural device, replacing the gradients, glows and blurs that a dark ground invited. A black section on a white page is louder than any gradient.
+2. **Borders do the separating, not shadows.** On a light ground, hairlines read as precision and shadows read as cheap. Shadow is reserved for genuinely floating things.
+3. **One accent, used sparingly.** Boldness spent in one place. Everything around it stays achromatic.
+4. **Semantic colour is not decoration.** Green means good. Amber means attention. If they appear anywhere else, they stop meaning anything.
+5. **Motion belongs to data.** Chart bars, counters, pipeline builds — these communicate. Floating chips do not.
+6. **Nothing off-scale.** A font size, spacing value, or radius that is not in this document is a bug.
+7. **Contrast is a constraint, not a preference.** Every text/background pair ships at AA or better. Values below are measured, not estimated.
+
+**Why light.** Analytics and AI-automation sites are overwhelmingly dark — the dark navy landing page is the category default and was the audit's strongest "template" finding. A white ground with black type and inverted panels is the register of a printed consultancy report, not a startup landing page, and it removes the entire class of effects (glow orbs, blur layers, gradient text) that were reading as generated.
 
 ---
 
@@ -36,107 +42,152 @@ These are the rules that resolve arguments later. When a decision is unclear, ap
 
 ### 2.1 Ground and surfaces
 
-Near-black with a slight green bias. Not navy — navy is what every AI-era landing page uses, and the bias is what stops this reading as pure grey.
+Pure white page. A near-white band for alternation. A near-black panel for inversion.
 
 | Token | Hex | Use |
 |---|---|---|
-| `--bg` | `#0A0D0F` | Page ground |
-| `--bg-2` | `#0E1214` | Alternating section bands, full-bleed panels |
-| `--surface` | `#14181B` | Raised cards — the default card fill |
-| `--surface-2` | `#1B2023` | Elevated / hover state, nested cards |
-| `--surface-sunken` | `#070A0B` | Inset wells, mockup interiors, code |
+| `--bg` | `#FFFFFF` | Page ground |
+| `--bg-2` | `#F7F7F5` | Alternating section bands — very slightly warm, so it reads as chosen paper rather than grey |
+| `--surface` | `#FFFFFF` | Cards. On a band they separate by border; on white they separate by border plus `--shadow-sm` |
+| `--surface-sunken` | `#F2F2EF` | Inset wells, mockup interiors, code, table headers |
+| `--panel` | `#111315` | **Inverted panel** — CTA band, dashboard mockups, one showcase section |
+| `--panel-2` | `#1B1E21` | Raised surface *inside* an inverted panel |
 
-**Replaces:** six ad-hoc `rgba()` card gradients (`.service-card`, `.prob`, `.res`, `.why`, `.tech-item`, `.browser-mock`). All cards now use `--surface` or `--surface-sunken`. No card gradients.
+**On `--panel`.** This is the direction's structural idea. Rather than decorating a white page, one or two sections invert completely. The dashboard and automation mockups become black panels on white, which reads as a real product screenshot rather than an illustration — a credibility gain the dark version could not get, because on a dark page a dark mockup is just more dark page.
 
 ### 2.2 Lines
 
-| Token | Value | Use |
+| Token | Hex | Use |
 |---|---|---|
-| `--line` | `rgba(240,241,239,.09)` | Default borders, dividers, table rules |
-| `--line-strong` | `rgba(240,241,239,.18)` | Emphasised borders, hover state, mockup chrome |
+| `--line` | `#E4E4E0` | Default borders, dividers, table rules |
+| `--line-strong` | `#C9C9C3` | Emphasised borders, hover state, section rules |
+| `--line-invert` | `rgba(247,247,245,.14)` | Borders inside an inverted panel |
 
-### 2.3 Text
-
-| Token | Hex | Contrast on `--bg` | Use |
-|---|---|---|---|
-| `--text` | `#F0F1EF` | **17.01 : 1** ✓ | Headings, primary copy, stat values |
-| `--text-2` | `#C7CBC8` | **11.4 : 1** ✓ | Sub-headings, emphasised body |
-| `--muted` | `#9BA3A5` | **7.59 : 1** ✓ | Body copy, descriptions |
-| `--muted-2` | `#798285` | **4.96 : 1** ✓ | Captions, labels, footnotes — min 11px |
-
-`--muted-2` replaces the old `#6B7794`, which measured **4.40 : 1** and failed AA at the 11–13px sizes it was used at. This is audit finding P0-7.
-
-### 2.4 Accent
-
-One accent. Burnt amber. Chosen because a warm accent on a cold ground is what dark-mode consultancy sites use, and precisely no AI landing-page template does.
+### 2.3 Text on white
 
 | Token | Hex | Contrast on `--bg` | Use |
 |---|---|---|---|
-| `--accent` | `#D06A40` | **5.40 : 1** ✓ | Links, eyebrows, icons, chart bars, primary button fill |
-| `--accent-hover` | `#E07A4E` | 6.5 : 1 ✓ | Hover state on accent fills and text |
-| `--accent-soft` | `rgba(208,106,64,.12)` | — | Tints, icon backgrounds, hover fills |
-| `--accent-line` | `rgba(208,106,64,.35)` | — | Accent borders, focus rings on accent surfaces |
-| `--on-accent` | `#0A0D0F` | **5.40 : 1** ✓ | Text on an accent fill |
+| `--ink` | `#111315` | **18.62 : 1** ✓ | Headings, primary copy, stat values |
+| `--ink-2` | `#3A3E44` | **10.76 : 1** ✓ | Sub-headings, emphasised body |
+| `--muted` | `#555B63` | **6.85 : 1** ✓ | Body copy, descriptions |
+| `--muted-2` | `#6E747C` | **4.72 : 1** ✓ | Captions, labels, footnotes — min 11px |
 
-`#D06A40` is deliberately calibrated to clear AA **both** as text on the ground and as a fill carrying near-black text. One token does both jobs, so there is no light/dark accent pair to keep in sync.
+A light ground compresses the usable grey range: everything from `--muted` down sits between 4.5 : 1 and 7 : 1, so there are four ink levels rather than the five a dark ground allows. This is a real constraint of the direction, not an oversight — do not add a fifth by inventing a lighter grey, because it will fail AA.
 
-**Removed:** `--accent-2` (`#8B5CF6` violet), `--accent-3` (`#22D3EE` cyan), and every `linear-gradient(135deg, accent, accent-2)`. Gradient-clipped text is removed in all five places it appeared.
+### 2.4 Text on `--panel`
 
-### 2.5 Semantic
-
-Reserved. These never appear as decoration.
-
-| Token | Hex | Contrast | Meaning |
+| Token | Hex | Contrast on `--panel` | Use |
 |---|---|---|---|
-| `--good` | `#4E9E7A` | **6.03 : 1** ✓ | Positive delta, completed step, "what we do" tag |
-| `--warn` | `#D9AE3F` | **9.22 : 1** ✓ | Needs attention — low stock, reorder alert |
+| `--on-panel` | `#F7F7F5` | **17.4 : 1** ✓ | Headings and primary copy inside an inverted panel |
+| `--on-panel-muted` | `#9BA0A6` | **7.4 : 1** ✓ | Secondary copy inside an inverted panel |
 
-`--warn` is pulled distinctly yellow so it never reads as a second accent beside the orange. The `#problem` card icons move from `--warn` to `--muted` — they are not warnings, they are illustrations, and using `--warn` there was diluting it.
+### 2.5 Accent
 
-### 2.6 Focus
+**One accent, pending your pick.** Three candidates, all measured on white. The style guide renders all three live so the choice can be made by looking rather than by reading hex codes.
+
+| Candidate | Hex | Contrast on white | Character |
+|---|---|---|---|
+| **Rust** *(recommended)* | `#A94F26` | **5.47 : 1** ✓ | Carries the warmth from the direction already approved. Rust on white with black is a printed-report combination — uncommon in this category and quietly expensive. |
+| Deep green | `#1F6B4A` | **6.44 : 1** ✓ | Reads as money and growth, fits analytics directly. Safe second choice. Costs you green as a semantic — `--good` would have to move. |
+| Ink blue | `#1B4B8F` | **8.57 : 1** ✓ | Highest contrast, most conservative. Also the consultancy default, so it differentiates least. |
+
+Whichever is chosen:
+
+| Token | Derivation | Use |
+|---|---|---|
+| `--accent` | the chosen hex | Links, eyebrows, icons, chart bars, accent rules |
+| `--accent-hover` | ~12% darker | Hover on accent text and fills |
+| `--accent-soft` | same hue at 8% alpha | Tints, icon wells, hover fills |
+| `--accent-line` | same hue at 30% alpha | Accent borders |
+| `--accent-on-panel` | ~25% lighter | The accent used *inside* an inverted panel, where the dark version would fail contrast |
+
+**Primary buttons are black, not accent.** `--ink` fill with `--bg` text is 18.6 : 1 and is the strongest call-to-action available on a white page. The accent is reserved for links, data and emphasis — which keeps it meaning something. This is the single biggest difference from the dark version, where the accent had to carry the button because black-on-black is not a button.
+
+### 2.6 Semantic
+
+Reserved. Never decorative.
+
+| Token | Hex | Contrast on white | Meaning |
+|---|---|---|---|
+| `--good` | `#1F6B4A` | **6.44 : 1** ✓ | Positive delta, completed step, "what we do" tag |
+| `--warn` | `#8A5A0B` | **5.91 : 1** ✓ | Needs attention — low stock, reorder alert |
+
+If deep green is chosen as the accent, `--good` moves to `#166534` and `--accent` takes `#1F6B4A`, keeping them distinguishable.
+
+Inside an inverted panel these lighten to `--good-invert:#5FBF8F` (6.0 : 1 on `--panel`) and `--warn-invert:#D9AE3F` (9.2 : 1 on `--panel`).
+
+### 2.7 Focus
 
 | Token | Hex | Use |
 |---|---|---|
-| `--focus` | `#8FB8FF` | Focus ring — a cool blue, deliberately the only cool hue in the system, so keyboard focus is unmistakable against the warm palette |
+| `--focus` | `#1B4B8F` | Focus ring on white — 8.57 : 1 |
+| `--focus-invert` | `#8FB8FF` | Focus ring inside an inverted panel — 9.8 : 1 |
 
-### 2.7 Full token block
+If ink blue is chosen as the accent, focus moves to `#B3300F` so the ring never reads as an accent element.
+
+### 2.8 Token block
 
 ```css
 :root{
   /* ground */
-  --bg:#0A0D0F;
-  --bg-2:#0E1214;
-  --surface:#14181B;
-  --surface-2:#1B2023;
-  --surface-sunken:#070A0B;
+  --bg:#FFFFFF;
+  --bg-2:#F7F7F5;
+  --surface:#FFFFFF;
+  --surface-sunken:#F2F2EF;
+  --panel:#111315;
+  --panel-2:#1B1E21;
 
   /* lines */
-  --line:rgba(240,241,239,.09);
-  --line-strong:rgba(240,241,239,.18);
+  --line:#E4E4E0;
+  --line-strong:#C9C9C3;
+  --line-invert:rgba(247,247,245,.14);
 
-  /* text */
-  --text:#F0F1EF;
-  --text-2:#C7CBC8;
-  --muted:#9BA3A5;
-  --muted-2:#798285;
+  /* ink */
+  --ink:#111315;
+  --ink-2:#3A3E44;
+  --muted:#555B63;
+  --muted-2:#6E747C;
 
-  /* accent */
-  --accent:#D06A40;
-  --accent-hover:#E07A4E;
-  --accent-soft:rgba(208,106,64,.12);
-  --accent-line:rgba(208,106,64,.35);
-  --on-accent:#0A0D0F;
+  /* on inverted panel */
+  --on-panel:#F7F7F5;
+  --on-panel-muted:#9BA0A6;
+
+  /* accent — rust shown; swap the four values to change it */
+  --accent:#A94F26;
+  --accent-hover:#8E4120;
+  --accent-soft:rgba(169,79,38,.08);
+  --accent-line:rgba(169,79,38,.30);
+  --accent-on-panel:#D7855C;
 
   /* semantic */
-  --good:#4E9E7A;
-  --warn:#D9AE3F;
-  --focus:#8FB8FF;
+  --good:#1F6B4A;
+  --warn:#8A5A0B;
+  --good-invert:#5FBF8F;
+  --warn-invert:#D9AE3F;
+
+  /* focus */
+  --focus:#1B4B8F;
+  --focus-invert:#8FB8FF;
 }
 ```
+
+### 2.9 Removed from the current site
+
+| Removed | Was | Why |
+|---|---|---|
+| `--accent-2` | `#8B5CF6` violet | Every blue→violet gradient goes with it — the strongest AI-startup signature there is |
+| `--accent-3` | `#22D3EE` cyan | Eyebrow and icon uses move to `--accent` |
+| Gradient text | 5 uses, 3 directions | Invisible in high-contrast modes; a template signal |
+| `.grid-lines` | 64px fixed overlay | Meaningless on white; was the second-strongest template signal |
+| `.glow-orb` | ×8, 50–70px blur | Blurred glows do not exist on a white ground. Replaced by hairlines and inverted panels. |
+| `.glow-chip`, `.scroll-path-layer` | ×10, `backdrop-filter` | Decorative, no meaning, ten compositing layers |
+| `--shadow` heavy | `0 24px 60px -24px rgba(2,6,20,.85)` | Calibrated for a dark ground; on white it reads as a cheap drop shadow |
 
 ---
 
 ## 3. Typography
+
+Unchanged from v1. The family and scale decisions are independent of ground colour.
 
 ### 3.1 Families
 
@@ -146,9 +197,7 @@ Reserved. These never appear as decoration.
 | Body | **Source Serif 4** | 400, 600, 400i | Running prose only — paragraphs of two or more lines |
 | Data | **IBM Plex Mono** | 400, 500 | Numbers, timings, tags, step markers, code |
 
-**On the sans/serif split.** The approved direction specified Source Serif 4 as the body face. It is scoped here to *running prose only*, with Instrument Sans carrying all UI text and anything under 15px. Reason: a serif at 11–13px on a near-black ground, on the mid-range Android screens this audience uses, is a readability risk that a serif at 17px in a paragraph is not. This keeps the editorial differentiation exactly where it earns its place and removes it where it would cost legibility.
-
-**Replaces:** Inter (5 weights) + JetBrains Mono (2 weights). Inter + JetBrains Mono is the most-used pairing in AI-generated interfaces and was the audit's single strongest "template" signal.
+The serif reads noticeably better on white than it did on near-black, which removes the readability caveat that scoped it in v1. It stays scoped to running prose anyway — UI text under 15px is still sans, because that is what UI text is.
 
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -156,12 +205,13 @@ Reserved. These never appear as decoration.
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 ```
 
-Fallback stacks are mandatory:
 ```css
 --font-ui:'Instrument Sans',-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;
 --font-body:'Source Serif 4','Iowan Old Style',Georgia,serif;
 --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 ```
+
+**One light-ground adjustment.** Text on white appears optically heavier than the same weight on dark. Body weight stays 400, but headings drop from 700 to **600** at h2 and below — on white, 700 reads as shouting. h1 keeps 700.
 
 ### 3.2 Scale
 
@@ -170,7 +220,7 @@ Eight sizes. Replaces the eighteen hardcoded values currently in the file, five 
 | Token | Desktop | Tablet | Mobile | Line height | Tracking | Family |
 |---|---|---|---|---|---|---|
 | `--fs-h1` | 60px | 44px | 34px | 1.04 | −0.03em | UI 700 |
-| `--fs-h2` | 40px | 34px | 28px | 1.10 | −0.022em | UI 700 |
+| `--fs-h2` | 40px | 34px | 28px | 1.10 | −0.022em | UI 600 |
 | `--fs-h3` | 24px | 22px | 20px | 1.25 | −0.012em | UI 600 |
 | `--fs-h4` | 19px | 19px | 18px | 1.30 | −0.005em | UI 600 |
 | `--fs-body` | 17px | 17px | 16px | 1.60 | 0 | Body 400 |
@@ -196,13 +246,14 @@ Eight sizes. Replaces the eighteen hardcoded values currently in the file, five 
 - **`text-wrap:pretty`** on paragraphs, to prevent orphans.
 - **No hard `<br>` in headings.** The current hero `<br>` forces a bad break on mobile. Line control comes from `max-width` and `balance`.
 - **`font-variant-numeric:tabular-nums`** on every stat, KPI, table column, and counter.
-- **Uppercase labels always carry `+0.12em` tracking.** Uppercase without tracking is the most common amateur typography tell.
+- **Uppercase labels always carry `+0.12em` tracking.**
+- **`-webkit-font-smoothing:antialiased` is removed.** It is correct for light text on dark and wrong for dark text on light, where it thins the strokes. Default rendering on a light ground.
 
 ---
 
 ## 4. Spacing
 
-One scale. Values not on it are bugs.
+Unchanged from v1. One scale; values not on it are bugs.
 
 | Token | Value | Use |
 |---|---|---|
@@ -217,9 +268,9 @@ One scale. Values not on it are bugs.
 | `--sp-9` | 96px | Section padding — `clamp(64px,8vw,96px)` |
 | `--sp-10` | 128px | Major narrative breaks |
 
-The current file uses `54px` in five places (`.prob-grid`, `.proc-grid`, `.res-grid`, `.tech-groups`, `.why-grid` top margins) and `26px`/`30px`/`18px` ad hoc. All collapse to `--sp-7` (48) or `--sp-8` (64).
+The current file uses `54px` in five places and `26px`/`30px`/`18px` ad hoc. All collapse to `--sp-7` or `--sp-8`. The inline `style="padding:10px 24px …"` on `#cta` is removed; that section uses standard `.pad`.
 
-**Section padding is uniform.** The inline `style="padding:10px 24px …"` on `#cta` is removed; that section uses standard `.pad` like every other.
+**Light-ground note.** White needs more air than dark — a dark ground visually absorbs whitespace, a white one exposes it. Section padding sits at `--sp-9` minimum, and inverted panels get `--sp-10` internal padding so they read as deliberate blocks rather than filled boxes.
 
 ---
 
@@ -234,12 +285,18 @@ The current file uses `54px` in five places (`.prob-grid`, `.proc-grid`, `.res-g
 
 **Grid rules**
 - Sibling groups use `gap`, never per-element margins.
-- Wide content (mockups, tables) scrolls inside its own `overflow-x:auto` container.
+- Wide content scrolls inside its own `overflow-x:auto` container.
 - Full-bleed panels use `margin-inline:calc(50% - 50vw); width:100vw` on a container with `overflow-x:clip`, **not** the current `left:50%;transform:translateX(-50%)` hack. This lets `body{overflow-x:hidden}` be removed, which currently masks a real overflow and risks breaking `position:sticky`.
 
-**Breakpoints** — unchanged, they are correct:
-- `1000px` — grids collapse to single column, hero morph disables
-- `760px` — mobile layout, nav collapses to menu
+**Section rhythm.** With a white ground the page needs a visible alternation or it becomes an undifferentiated scroll. The pattern is:
+
+```
+white  →  white  →  bg-2 band  →  white  →  PANEL (inverted)  →  white  →  bg-2 band  →  PANEL (final CTA)
+```
+
+Two inverted panels maximum. A third stops being emphasis.
+
+**Breakpoints** — unchanged: `1000px` grids collapse and the hero morph disables; `760px` mobile layout and the nav collapses to a menu.
 
 ---
 
@@ -251,21 +308,21 @@ Three values plus a pill. Replaces the thirteen currently in use.
 |---|---|---|
 | `--r-sm` | 6px | Tags, chips, inputs, small icon wells, mockup blocks |
 | `--r-md` | 12px | All cards, buttons, icon containers, mockup frames |
-| `--r-lg` | 20px | CTA band, full-bleed showcase panels |
+| `--r-lg` | 20px | Inverted panels, CTA band |
 | `--r-pill` | 999px | Eyebrows, status pills, progress bars only |
 
 ---
 
 ## 7. Elevation
 
-Two levels. Currently the file has an inconsistent model where mockups get a shadow and content cards get none.
+On a light ground, borders separate and shadows float. Most things do not float.
 
 | Token | Value | Use |
 |---|---|---|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,.4)` | Raised cards |
-| `--shadow-md` | `0 1px 2px rgba(0,0,0,.4), 0 12px 32px -20px rgba(0,0,0,.85)` | Mockups, CTA band, menu overlay |
+| `--shadow-sm` | `0 1px 2px rgba(17,19,21,.06)` | Cards sitting on `--bg-2` |
+| `--shadow-md` | `0 1px 2px rgba(17,19,21,.06), 0 12px 28px -16px rgba(17,19,21,.18)` | Mockups, mobile menu overlay, sticky nav when scrolled |
 
-Flat surfaces (`--surface-sunken`) take no shadow. Borders do the separating.
+Cards on white use **border only, no shadow**. Cards on `--bg-2` use border plus `--shadow-sm`. The old `0 24px 60px -24px rgba(2,6,20,.85)` was calibrated for a dark ground and reads as a cheap drop shadow on white.
 
 ---
 
@@ -277,11 +334,12 @@ All variants: `--fs-small` (15px), UI 600, `padding:13px 22px`, `--r-md`, **min-
 
 | Variant | Fill | Text | Border | Hover |
 |---|---|---|---|---|
-| **Primary** | `--accent` | `--on-accent` | none | `--accent-hover` + `translateY(-2px)` |
-| **Secondary** | transparent | `--text` | `1px --line-strong` | `background:rgba(240,241,239,.05)` + `translateY(-2px)` |
-| **Ghost** | none | `--muted` | none | `color:--text`, arrow nudges 3px |
+| **Primary** | `--ink` | `--bg` | none | `#000` + `translateY(-2px)` |
+| **Secondary** | `--bg` | `--ink` | `1px --line-strong` | `background:--bg-2` + `translateY(-2px)` |
+| **Ghost** | none | `--muted` | none | `color:--ink`, arrow nudges 3px |
+| **Primary on panel** | `--on-panel` | `--panel` | none | `#FFF` + `translateY(-2px)` |
 
-**Focus is mandatory on all three** — audit finding P0-8:
+**Focus is mandatory on all variants** — audit finding P0-8:
 ```css
 .btn:focus-visible,
 .nav-links a:focus-visible,
@@ -290,31 +348,32 @@ a.card:focus-visible{
   outline:2px solid var(--focus);
   outline-offset:2px;
 }
+.panel :focus-visible{outline-color:var(--focus-invert)}
 ```
-No gradient fills. The `linear-gradient(135deg,var(--accent),var(--accent-2))` on `.btn-primary` is removed.
+No gradient fills anywhere.
 
 ### 8.2 Cards
 
-| Property | Raised | Flat |
-|---|---|---|
-| Background | `--surface` | `--surface-sunken` |
-| Border | `1px --line` | `1px --line` |
-| Radius | `--r-md` | `--r-md` |
-| Padding | `--sp-5` (24px) | `--sp-5` |
-| Shadow | `--shadow-sm` | none |
-| Hover | `translateY(-2px)` + border → `--line-strong` | same |
+| Property | On white | On `--bg-2` | Inside a panel |
+|---|---|---|---|
+| Background | `--bg` | `--surface` | `--panel-2` |
+| Border | `1px --line` | `1px --line` | `1px --line-invert` |
+| Radius | `--r-md` | `--r-md` | `--r-md` |
+| Padding | `--sp-5` | `--sp-5` | `--sp-5` |
+| Shadow | none | `--shadow-sm` | none |
+| Hover | `translateY(-2px)` + border → `--line-strong` | same | border → `rgba(247,247,245,.28)` |
 
-**Hover applies only to cards that are links.** `.tech-item`, `.prob`, `.res`, `.why` are not links and lose their hover entirely — audit finding P1 / P2. This is what restores meaning to the hover state on the cards that *are* clickable.
+**Hover applies only to cards that are links.** `.tech-item`, `.prob`, `.res`, `.why` lose their hover entirely — none are links. This is what restores meaning to the hover state on the cards that *are* clickable.
 
 ### 8.3 Eyebrow
 
 ```
---r-pill · padding 7px 14px · 1px --line
+--r-pill · padding 7px 14px · 1px --accent-line
 background --accent-soft · color --accent
---fs-label · uppercase · +0.12em
+--fs-label · uppercase · +0.12em · mono
 6px dot in --accent, no glow
 ```
-The `box-shadow:0 0 10px` glow on the dot is removed.
+Inside a panel: `--accent-on-panel` on `rgba(247,247,245,.06)`.
 
 ### 8.4 Icon container
 
@@ -323,28 +382,35 @@ The `box-shadow:0 0 10px` glow on the dot is removed.
 background --accent-soft · 1px --line
 icon 22px · stroke --accent · stroke-width 2
 ```
-One icon treatment, replacing the current five (`.s-icon`, `.pic`, `.wic`, `.fl-icon`, `.dk` variants), each of which had its own gradient and border colour.
+One treatment, replacing the current five (`.s-icon`, `.pic`, `.wic`, `.fl-icon`, `.dk`), each of which had its own gradient and border colour.
 
 ### 8.5 Stat
 
 ```
-value   --fs-h3 · UI 700 · --text · tabular-nums
+value   --fs-h3 · UI 700 · --ink · tabular-nums
 label   --fs-micro · --muted-2
 ```
-Flat `--text`, not gradient-clipped. Gradient text is removed everywhere — it was applied five ways with three different gradient directions, and it is invisible in high-contrast modes.
+Flat `--ink`, never gradient-clipped. Inside a panel, `--on-panel`.
 
-### 8.6 Section head
+### 8.6 Inverted panel
+
+The direction's signature component.
 
 ```
-eyebrow          --sp-4 below
-h2               --fs-h2 · balance · max-width --maxw-text
-intro paragraph  --fs-body · --muted · max-width --maxw-text
-                 --sp-6 below before content
+background --panel · --r-lg
+padding --sp-10 (128px) desktop, --sp-8 mobile
+full-bleed via margin-inline:calc(50% - 50vw)
+all text tokens swap to the on-panel set
+accent swaps to --accent-on-panel
+focus ring swaps to --focus-invert
 ```
+Used for: the dashboard/automation showcase, and the final CTA. Two maximum.
 
 ---
 
 ## 9. Motion
+
+Unchanged from v1 except where a light ground changes the effect.
 
 ### 9.1 Tokens
 
@@ -359,34 +425,32 @@ intro paragraph  --fs-body · --muted · max-width --maxw-text
 
 ### 9.2 Rules
 
-**Reveal.** `opacity 0→1` + `translateY(16px→0)`, `--t-reveal`, stagger `60ms`, capped at `180ms` total. Replaces the current 800ms/26px/320ms, which meant the fourth card in a row finished 1.12s after entry — slow enough that a scrolling reader outran it.
+**Reveal.** `opacity 0→1` + `translateY(16px→0)`, `--t-reveal`, stagger `60ms`, capped at `180ms`. Replaces 800ms/26px/320ms, which meant the fourth card in a row finished 1.12s after entry.
 
-**Hover.** `translateY(-2px)`, `--t-fast`. One value, replacing the current six (2px, 3px, 4px, 4px, 5px, and a 3px sideways slide).
+**Hover.** `translateY(-2px)`, `--t-fast`. One value, replacing six.
 
-**Counters.** 900ms, cubic ease-out. Down from 1400ms. Only on numbers that mean something — the count-up on "5 services" is removed.
+**Counters.** 900ms, cubic ease-out, only on numbers that mean something. The count-up on "5 services" is removed.
 
-**Data motion keeps its full budget.** Chart bars, funnel widths, KPI reveals, the browser build sequence and the pipeline flow are the only animations that carry information, and they get the time the decoration was using. Mockup build sequences compress to ≤1.2s total.
+**Data motion keeps its full budget** — chart bars, funnel widths, KPI reveals, browser build, pipeline flow. Mockup sequences compress to ≤1.2s total.
 
-**Ambient: at most one.** Currently thirteen infinite loops run simultaneously.
+**Ambient: none.** On a dark ground the budget was "at most one glow". On white there is nothing to glow — the ambient layer is deleted outright rather than reduced.
 
 ### 9.3 Removed
 
 | Element | Was | Why |
 |---|---|---|
-| `.glow-chip` ×7 | `cardFloat` 8s infinite + `backdrop-filter:blur(6px)` | Decorative, no meaning, 7 compositing layers |
-| `.scroll-path-layer` ×3 | Fixed bezier travel across the whole page | Decorative, desktop-only, competes with content |
+| `.glow-chip` ×7 | `cardFloat` 8s infinite + `backdrop-filter` | Decorative; and blurred glows do not exist on white |
+| `.scroll-path-layer` ×3 | Fixed bezier travel across the page | Decorative, desktop-only, competes with content |
 | `.service-card` float | `cardFloat` 7s infinite | Reads as a toy |
-| `.glow-orb` ×7 of 8 | `float` 9–13s + 50–70px blur + JS parallax | Most expensive thing on the page for a mobile GPU |
-| `riseLine`/`riseDot` | 3s infinite micro-wiggle on trend arrows | Marginal |
-| `.fl-arrow` wiggle | Horizontal flow arrow bobbing vertically | Semantically wrong |
-| `.grid-lines` | Fixed 64px grid overlay at `opacity:.5` | Second-strongest template signal after the gradient |
-| Hero pin excess | `270vh` stage, morph completes at `100vh` | ~70vh of dead pinned scroll |
+| `.glow-orb` ×8 | `float` + 50–70px blur + JS parallax | Meaningless on a white ground; was the mobile GPU budget |
+| `riseLine`/`riseDot` | 3s infinite micro-wiggle | Marginal |
+| `.fl-arrow` wiggle | Horizontal arrow bobbing vertically | Semantically wrong |
+| `.grid-lines` | Fixed 64px overlay at `opacity:.5` | Template signal; illegible on white |
+| Hero pin excess | `270vh` stage, morph completes at `100vh` | ~70vh of dead pinned scroll → `130vh`, progress ÷ `innerHeight*0.75` |
 
-**Hero pin** becomes `height:130vh` with progress divided by `innerHeight * 0.75`, so the morph completes at 75% of the pin and the hero releases immediately after.
+Thirteen infinite loops become **zero**.
 
 ### 9.4 Reduced motion
-
-The current blanket rule kills every transition including hover and focus feedback, which users with vestibular sensitivity still need.
 
 ```css
 @media(prefers-reduced-motion:reduce){
@@ -396,81 +460,105 @@ The current blanket rule kills every transition including hover and focus feedba
   html{scroll-behavior:auto}
 }
 ```
-Positional motion goes. Colour and opacity feedback stays.
+Positional motion goes. Colour and opacity feedback stays — the current blanket rule kills hover and focus feedback, which vestibular-sensitive users still need.
 
 ---
 
-## 10. Accessibility floor
+## 10. Mockup treatment
+
+The four hand-built mockups (browser build, search ranking, KPI dashboard, pipeline flow) were designed for a dark ground and need rebuilding, not recolouring.
+
+| Mockup | v1 (dark) | v2 (light) |
+|---|---|---|
+| Browser build | Dark chrome on dark page — low separation | **White chrome, `--line` border, `--shadow-md`.** Reads as a real browser window because real browser chrome is light. |
+| Search ranking | Dark card overlapping the browser | Same, on `--surface` with `--shadow-md`. The "you are #1" row keeps `--good` at 6.44 : 1. |
+| KPI dashboard | Dark card on dark page | **Inverted `--panel`.** A black dashboard on a white page reads as a product screenshot — the single biggest credibility gain available from this direction. |
+| Pipeline flow | Dark card on dark page | **Inverted `--panel`**, same section as the dashboard. |
+
+The dashboard and pipeline sitting inside one inverted panel is also what supplies the section rhythm in §5.
+
+---
+
+## 11. Accessibility floor
 
 Non-negotiable. Every item is a ship blocker.
 
-- All text/background pairs at **AA or better**. Values recorded in §2 and measured, not estimated.
-- **`:focus-visible`** on every interactive element, using `--focus`.
-- **`<main>`** wrapping the page content, plus a skip-to-content link as the first focusable element.
+- All text/background pairs at **AA or better**, measured — including inside inverted panels, which are a separate contrast context.
+- **`:focus-visible`** on every interactive element, using `--focus` on white and `--focus-invert` on panels.
+- **`<main>`** plus a skip-to-content link as the first focusable element.
 - **`aria-hidden="true"`** on every decorative SVG.
-- **`aria-labelledby`** on each `<section>`, pointing at its heading.
+- **`aria-labelledby`** on each `<section>`.
 - **Touch targets ≥ 44×44px.** Current `.nav-toggle` is 42px; footer links are ~22px tall.
-- **Real `<button>`** for the mobile menu toggle, with `aria-expanded`. The current element is an `<a>` pointing at WhatsApp sitting in the hamburger position.
+- **Real `<button>`** for the mobile menu, with `aria-expanded`. The current element is an `<a>` pointing at WhatsApp sitting in the hamburger position.
+- **`color-scheme:light`** declared, so form controls and scrollbars render correctly.
 
 ---
 
-## 11. Performance floor
+## 12. Performance floor
 
-- **No raster images** except the OG card and the founder photo. Current architecture is correct and is preserved.
-- **Scroll handlers read `scrollY` only.** All `getBoundingClientRect()` and `document.createRange()` measurements are cached on load and resize. The current loop forces ~11 synchronous reflows per frame, including two text measurements re-run 60×/second on text that never changes.
-- **One `backdrop-filter` on the page** — the sticky nav. The other ten come from decorative chips that are being removed.
-- **Three font weights per family maximum.**
-- **No third-party script without a real ID.** GA4 either carries the real Measurement ID or the block is removed.
+- **No raster images** except the OG card and the founder photo.
+- **Scroll handlers read `scrollY` only.** All rect and range measurements cached on load and resize. The current loop forces ~11 synchronous reflows per frame, including two `document.createRange()` text measurements re-run 60×/second on text that never changes.
+- **Zero `backdrop-filter`.** The sticky nav uses an opaque `--bg` with a border when scrolled, which is cheaper and looks better on white than a blur.
+- **Zero `filter:blur()`.** The eight blurred orbs are gone.
+- **Three font weights per family, maximum.**
+- **No third-party script without a real ID.**
+
+A white ground with no blur, no backdrop-filter and no infinite animation is materially cheaper to render than what exists now — this direction is a performance win as well as a positioning one.
 
 ---
 
-## 12. Migration map
-
-Old token → new token, for the implementation pass.
+## 13. Migration map
 
 | Old | New | Note |
 |---|---|---|
-| `--bg:#070b16` | `--bg:#0A0D0F` | |
-| `--bg-2:#0a0f1f` | `--bg-2:#0E1214` | |
-| `--surface:#0e1426` | `--surface:#14181B` | |
-| `--surface-2:#121a30` | `--surface-2:#1B2023` | Was dead — declared, never used |
-| `--text:#eef2fb` | `--text:#F0F1EF` | |
-| `--muted:#9aa6c2` | `--muted:#9BA3A5` | |
-| `--muted-2:#6b7794` | `--muted-2:#798285` | **Was 4.40:1 — AA failure** |
-| `--accent:#4f7dff` | `--accent:#D06A40` | |
-| `--accent-2:#8b5cf6` | *removed* | All gradients using it are removed |
-| `--accent-3:#22d3ee` | *removed* | Eyebrow/icon uses → `--accent` |
-| `--good:#34d399` | `--good:#4E9E7A` | |
-| `--warn:#fbbf24` | `--warn:#D9AE3F` | Pulled yellower to separate from the amber accent |
+| `--bg:#070b16` | `--bg:#FFFFFF` | |
+| `--bg-2:#0a0f1f` | `--bg-2:#F7F7F5` | |
+| `--surface:#0e1426` | `--surface:#FFFFFF` / `--panel:#111315` | Split — most cards go white, mockups invert |
+| `--surface-2:#121a30` | `--surface-sunken:#F2F2EF` | Was dead — declared, never used |
+| `--line:rgba(148,163,184,.14)` | `--line:#E4E4E0` | Solid, not alpha — cleaner on white |
+| `--text:#eef2fb` | `--ink:#111315` | |
+| `--muted:#9aa6c2` | `--muted:#555B63` | |
+| `--muted-2:#6b7794` | `--muted-2:#6E747C` | **Was 4.40 : 1 — AA failure** |
+| `--accent:#4f7dff` | `--accent:#A94F26` | Pending final pick |
+| `--accent-2:#8b5cf6` | *removed* | |
+| `--accent-3:#22d3ee` | *removed* | |
+| `--good:#34d399` | `--good:#1F6B4A` | |
+| `--warn:#fbbf24` | `--warn:#8A5A0B` | |
 | `--radius:16px` | `--r-md:12px` | |
 | `--radius-lg:24px` | `--r-lg:20px` | |
+| `--shadow` | `--shadow-sm` / `--shadow-md` | Recalibrated for a light ground |
 | `--ease` | `--ease-out` / `--ease` | Split into entry vs state |
-| `--shadow` | `--shadow-md` | Plus new `--shadow-sm` |
 
 ---
 
-## 13. Open items — facts required before implementation
+## 14. Open items
 
-These block specific P0/P1 findings. Nothing is invented; each ships as a clearly-marked sentinel until supplied.
+### 14.1 Design decision outstanding
 
-| # | Needed | Blocks | Sentinel until supplied |
+**Accent colour** — rust `#A94F26` (recommended), deep green `#1F6B4A`, or ink blue `#1B4B8F`. All three render live in the style guide. Everything else in this spec is settled.
+
+### 14.2 Facts required before implementation
+
+Nothing is invented; each ships as a clearly-marked sentinel until supplied.
+
+| # | Needed | Blocks | Sentinel |
 |---|---|---|---|
 | 1 | Real domain email | P0-1 | `hello@dayaminsights.com` — assumed, needs mailbox created |
 | 2 | Founder name, role, one-paragraph bio, photo, LinkedIn URL | P1-3 | `FOUNDER_NAME` / `FOUNDER_BIO` / `FOUNDER_LINKEDIN` |
-| 3 | City + state | P0-7 (local SEO), hero qualifier | `CITY, STATE` |
-| 4 | Display phone number | P0-5 | `+91 78776 40693` — taken from the existing `wa.me` link, confirm it is public |
+| 3 | City + state | P0-7, hero qualifier | `CITY, STATE` |
+| 4 | Display phone number | P0-5 | `+91 78776 40693` — from the existing `wa.me` link, confirm it is public |
 | 5 | GA4 Measurement ID | P0-7 | `G-XXXXXXXXXX` — block is removed if none supplied |
-| 6 | Form endpoint (Formspree / Netlify / Web3Forms) | P0-5 | `FORM_ENDPOINT` |
-| 7 | Booking link (Cal.com / Calendly) | P0-5, P1-1 | Omitted if none — form + WhatsApp carry it |
+| 6 | Form endpoint | P0-5 | `FORM_ENDPOINT` |
+| 7 | Booking link | P0-5, P1-1 | Omitted if none — form + WhatsApp carry it |
 | 8 | Revenue band for the hero qualifier | P0-4 | `₹1–20 crore` — assumed, confirm |
 | 9 | Which four numeric claims you can defend, with baselines | P1-4 | The other ten are cut |
 
 ---
 
-## 14. What this spec does not cover
+## 15. Out of scope
 
-Deferred to a later phase, deliberately:
+Deferred deliberately:
 
 - Service pages (`/dashboards`, `/automation`, `/websites`). Section ordering and naming in the P1 pass are structured so the split does not require a rewrite.
-- A real named case study. The `#results` section is being relabelled honestly in the meantime; the layout is built so one can drop in.
-- Light theme. This page commits to a single dark visual world. Every colour is painted explicitly so nothing borrows from a host ground.
+- A real named case study. `#results` is relabelled honestly in the meantime; the layout accepts one when it exists.
+- Dark theme. This page commits to a single light visual world. Every colour is painted explicitly, `color-scheme:light` is declared, and nothing borrows from a host ground.
