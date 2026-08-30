@@ -196,7 +196,7 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .pad{padding:clamp(64px,8vw,96px) 0}
 
 /* ===== Hero scroll-morph stage ===== */
-.hero-morph-stage{position:relative;height:270vh}
+.hero-morph-stage{position:relative;height:130vh}
 .hero-morph-stage .hero{position:sticky;top:0;height:100vh;display:flex;flex-direction:column;justify-content:center;overflow:hidden;padding:clamp(24px,4vw,48px) 0} /* reduced from live padding so centered content clears the sticky nav and fits 100vh */
 @media(prefers-reduced-motion:reduce),(max-width:1000px){
   .hero-morph-stage{height:auto}
@@ -1263,7 +1263,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   var heroCta = heroSection ? heroSection.querySelector('.hero-copy .hero-cta') : null;
   var heroMeta = heroSection ? heroSection.querySelector('.hero-copy .hero-meta') : null;
   var heroVisual = heroSection ? heroSection.querySelector('.hero-visual') : null;
-  var heroGlow = null;
 
   function computeHeroMorphEnabled(){
     return !reduce && window.matchMedia('(min-width:1001px)').matches
@@ -1280,6 +1279,12 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   // Content widths are fixed, so these are measured once (on init/resize).
   var heroCtaCenterOffset = 0;
   var heroMetaCenterOffset = 0;
+  var heroH1CenterOffset = 0;
+  var heroEyebrowCenterOffset = 0;
+  var heroTaglineCenterOffset = 0;
+  var heroVisualStartWidth = 0;
+  var heroStageTop = 0;
+  var heroPinDistance = 0;
 
   function rowGroupCenterOffset(row){
     if (!row || !row.firstElementChild || !row.lastElementChild) return 0;
@@ -1288,10 +1293,38 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     return Math.max(0, (rowRect.width - groupWidth) / 2);
   }
 
+  // Width of an element's rendered TEXT, not its box. Block elements fill the
+  // container, so a Range is the only way to get the widest line's width.
+  function textCenterOffset(el, containerWidth){
+    if (!el) return 0;
+    var r = document.createRange();
+    r.selectNodeContents(el);
+    var w = r.getBoundingClientRect().width;
+    return Math.max(0, (containerWidth - w) / 2);
+  }
+
+  // Everything measured here is layout-invariant during a scroll: content
+  // widths are fixed. Measuring once on init/resize/load keeps the scroll loop
+  // free of synchronous reflows.
   function measureHeroMorphOffsets(){
     if (!heroMorphEnabled) return;
+    var stageRect = heroStage.getBoundingClientRect();
+    heroStageTop = stageRect.top + window.scrollY;
+    // How far the sticky hero stays pinned before the stage scrolls past it.
+    heroPinDistance = stageRect.height - window.innerHeight;
+
+    var copyWidth = heroCopy.getBoundingClientRect().width;
     heroCtaCenterOffset = rowGroupCenterOffset(heroCta);
     heroMetaCenterOffset = rowGroupCenterOffset(heroMeta);
+    heroH1CenterOffset = textCenterOffset(heroH1, copyWidth);
+    heroTaglineCenterOffset = textCenterOffset(heroTagline, copyWidth);
+    heroEyebrowCenterOffset = heroEyebrow
+      ? Math.max(0, (copyWidth - heroEyebrow.getBoundingClientRect().width) / 2)
+      : 0;
+
+    // .hero-grid's 1.15fr column with a 48px gap — the width the cards land in.
+    var containerWidth = heroSection.getBoundingClientRect().width;
+    heroVisualStartWidth = (containerWidth - 48) * 1.15 / 2.15;
   }
 
   function applyHeroMorph(progress){
@@ -1299,56 +1332,33 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     var snap = p > 0.5;
     var slide = 1 - p; // 1 -> 0 across the whole range
 
-    // Numeric interpolation
-    heroH1.style.fontSize = lerp(78, 52, p).toFixed(1) + 'px';
-    heroH1.style.lineHeight = lerp(1.03, 1.1, p).toFixed(3);
-    heroH1.style.letterSpacing = lerp(-0.04, -0.032, p).toFixed(4) + 'em';
+    // Numeric interpolation: --fs-h1 (60) down to --fs-h2 (40)
+    heroH1.style.fontSize = lerp(60, 40, p).toFixed(1) + 'px';
+    heroH1.style.lineHeight = lerp(1.04, 1.10, p).toFixed(3);
+    heroH1.style.letterSpacing = lerp(-0.03, -0.022, p).toFixed(4) + 'em';
+
     // Cards fade/slide in faster than the overall morph (done by p=0.7) so
     // they're fully visible with room to spare before the stage finishes.
     var visualP = Math.min(1, p / 0.7);
     heroVisual.style.opacity = lerp(0, 1, visualP).toFixed(3);
     heroVisual.style.transform = 'translateX(' + lerp(60, 0, visualP).toFixed(1) + 'px)';
 
-    // Atmospheric glow behind the centered headline fades out early (gone by p=0.4)
-    // so it doesn't linger behind the live 2-col layout.
-    if (heroGlow) heroGlow.style.opacity = lerp(0.6, 0, Math.min(1, p / 0.4)).toFixed(3);
-
-    // h1 is flush-left at all times; slide it right so it appears centered at
-    // progress 0, sliding to its natural (flush-left) position by progress 1.
-    // h1 is a block element (full container width), so measure its actual
-    // rendered text via Range to get the widest line's width, not the box width.
-    var h1LineRange = document.createRange();
-    h1LineRange.selectNodeContents(heroH1);
-    var h1Rect = h1LineRange.getBoundingClientRect();
-    var copyWidth = heroCopy.getBoundingClientRect().width;
-    var h1CenterOffset = Math.max(0, (copyWidth - h1Rect.width) / 2);
-    heroH1.style.transform = 'translateX(' + (h1CenterOffset * slide).toFixed(2) + 'px)';
-
-    // Same slide-to-flush-left treatment for the CTA buttons and stats row.
+    // Copy is flush-left at all times; these slide it right so it APPEARS
+    // centered at progress 0, reaching its natural position by progress 1.
+    // Every offset is cached by measureHeroMorphOffsets() — nothing in this
+    // function reads layout, so the scroll loop never forces a reflow.
+    heroH1.style.transform = 'translateX(' + (heroH1CenterOffset * slide).toFixed(2) + 'px)';
     if (heroCta) heroCta.style.transform = 'translateX(' + (heroCtaCenterOffset * slide).toFixed(2) + 'px)';
     if (heroMeta) heroMeta.style.transform = 'translateX(' + (heroMetaCenterOffset * slide).toFixed(2) + 'px)';
-
-    // Eyebrow badge (inline-flex, content-sized) and tagline (block, measured via
-    // Range like h1) get the same centered-at-0 -> flush-left-at-1 treatment.
-    if (heroEyebrow){
-      var eyebrowRect = heroEyebrow.getBoundingClientRect();
-      var eyebrowOffset = Math.max(0, (copyWidth - eyebrowRect.width) / 2);
-      heroEyebrow.style.transform = 'translateX(' + (eyebrowOffset * slide).toFixed(2) + 'px)';
-    }
-    if (heroTagline){
-      var taglineRange = document.createRange();
-      taglineRange.selectNodeContents(heroTagline);
-      var taglineRect = taglineRange.getBoundingClientRect();
-      var taglineOffset = Math.max(0, (copyWidth - taglineRect.width) / 2);
-      heroTagline.style.transform = 'translateX(' + (taglineOffset * slide).toFixed(2) + 'px)';
-    }
+    if (heroEyebrow) heroEyebrow.style.transform = 'translateX(' + (heroEyebrowCenterOffset * slide).toFixed(2) + 'px)';
+    if (heroTagline) heroTagline.style.transform = 'translateX(' + (heroTaglineCenterOffset * slide).toFixed(2) + 'px)';
 
     // Discrete snaps at midpoint (CSS transition on max-width/margin eases these)
     heroGrid.style.gridTemplateColumns = snap ? '1fr 1.15fr' : '1fr';
     heroCopy.style.maxWidth = snap ? 'none' : '1100px';
     heroCopy.style.margin = snap ? '0' : '0 auto';
     if (heroSub){
-      heroSub.style.maxWidth = snap ? '480px' : '620px';
+      heroSub.style.maxWidth = snap ? 'var(--maxw-narrow)' : 'var(--maxw-text)';
       heroSub.style.marginLeft = snap ? '0' : 'auto';
       heroSub.style.marginRight = snap ? '0' : 'auto';
     }
@@ -1358,64 +1368,40 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     heroVisual.style.bottom = snap ? 'auto' : '0';
     heroVisual.style.right = snap ? 'auto' : '0';
 
-    // Cards stay the same px size for the whole morph -- no shrink animation.
-    // At the snap point position flips to relative/auto so the cards take
-    // their place in .hero-grid's row (and inherit its vertical centering);
-    // before that, fix the width to match that same grid-cell size so there's
-    // no size change at all, just the position/opacity/slide-in.
-    if (snap){
-      heroVisual.style.width = 'auto';
-    } else {
-      var containerWidth = heroSection.getBoundingClientRect().width; // .hero has 0 horizontal padding
-      var endWidth = (containerWidth - 48) * 1.15 / 2.15; // .hero-grid's 1.15fr column, 48px gap
-      heroVisual.style.width = endWidth.toFixed(1) + 'px';
-    }
+    // Cards stay the same px size for the whole morph — no shrink animation.
+    // At the snap point position flips to relative/auto so the cards take their
+    // place in .hero-grid's row; before that the width is pinned to that same
+    // grid-cell size, so there is no size change at all.
+    heroVisual.style.width = snap ? 'auto' : heroVisualStartWidth.toFixed(1) + 'px';
   }
 
   function heroMorphProgress(){
-    var rect = heroStage.getBoundingClientRect();
-    var scrolled = -rect.top; // 0 when stage top is at viewport top; grows as user scrolls
-    return scrolled / window.innerHeight; // 0 -> 1 over the first 100vh of stage scroll
+    // The hero stays pinned for exactly (stage height - viewport height) of
+    // scroll. Completing the morph at 75% of THAT distance leaves a short
+    // settled beat before the hero releases. Deriving it from the measured
+    // pin distance rather than a viewport fraction keeps the morph and the
+    // pin in sync if the stage height ever changes.
+    if (heroPinDistance <= 0) return 1;
+    return (window.scrollY - heroStageTop) / (heroPinDistance * 0.75);
   }
 
-  // Sticky nav background, scroll progress bar, parallax — batched in one rAF
+  // Sticky nav border + scroll progress bar, batched in one rAF
   var nav = document.querySelector('header.nav');
   var scrollBar = document.getElementById('scrollBar');
-  var orbs = [];
   var ticking = false;
 
-  // Decoration layer removed; these are nulled so the existing guard clauses stay valid.
-  var scrollPath = null;
-  var pathChips = [];
-  var pathChipOffsets = [];
-  var pathLength = 0;
-
-  function updatePathChips(t){
-    if (!scrollPath || !pathLength) return;
-    pathChips.forEach(function(chip, i){
-      var chipT = Math.min(1, Math.max(0, t + pathChipOffsets[i]));
-      var pt = scrollPath.getPointAtLength(chipT * pathLength);
-      chip.style.left = pt.x + '%';
-      chip.style.top = pt.y + '%';
-    });
+  // Cached on init, resize and load; the scroll loop never reads layout.
+  var docScrollMax = 0;
+  function measureDocument(){
+    docScrollMax = document.documentElement.scrollHeight - window.innerHeight;
   }
 
   function onFrame(){
     var y = window.scrollY;
     nav.classList.toggle('scrolled', y > 8);
 
-    var max = document.documentElement.scrollHeight - window.innerHeight;
-    var pct = max > 0 ? (y / max) * 100 : 0;
+    var pct = docScrollMax > 0 ? (y / docScrollMax) * 100 : 0;
     scrollBar.style.width = pct + '%';
-    updatePathChips(max > 0 ? y / max : 0);
-
-    if (!reduce){
-      orbs.forEach(function(orb){
-        var rect = orb.parentElement.getBoundingClientRect();
-        var shift = (rect.top - window.innerHeight / 2) * -0.06;
-        orb.style.translate = '0 ' + shift.toFixed(1) + 'px';
-      });
-    }
 
     if (heroMorphEnabled){
       applyHeroMorph(heroMorphProgress());
@@ -1425,17 +1411,26 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   function onScroll(){
     if (!ticking){ requestAnimationFrame(onFrame); ticking = true; }
   }
+  measureDocument();
   measureHeroMorphOffsets();
   onFrame();
   window.addEventListener('scroll', onScroll, {passive:true});
+  // Re-measure once webfonts have settled: font swap changes both text widths
+  // and document height.
+  window.addEventListener('load', function(){
+    measureDocument();
+    measureHeroMorphOffsets();
+    onFrame();
+  });
 
   window.addEventListener('resize', function(){
+    measureDocument();
     var nowEnabled = computeHeroMorphEnabled();
     if (nowEnabled !== heroMorphEnabled){
       heroMorphEnabled = nowEnabled;
       if (!heroMorphEnabled){
         // Clear inline styles so CSS (mobile/reduced-motion overrides) takes over
-        [heroGrid, heroCopy, heroSub, heroCta, heroMeta, heroH1, heroVisual, heroEyebrow, heroTagline, heroGlow].forEach(function(el){
+        [heroGrid, heroCopy, heroSub, heroCta, heroMeta, heroH1, heroVisual, heroEyebrow, heroTagline].forEach(function(el){
           if (el) el.removeAttribute('style');
         });
       } else {
