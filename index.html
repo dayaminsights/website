@@ -39,7 +39,7 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme:light;
@@ -156,7 +156,8 @@ body{
   overflow-x:hidden;
 }
 a{color:inherit;text-decoration:none}
-.mono{font-family:'JetBrains Mono',ui-monospace,monospace}
+.mono{font-family:var(--font-mono);font-variant-numeric:tabular-nums}
+h1,h2,h3,h4,h5,.btn,.eyebrow,.nav-links a,.brand,th,label,button{font-family:var(--font-ui)}
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 section{position:relative}
 
@@ -203,13 +204,13 @@ header.nav.scrolled{background:rgba(7,11,22,.72);backdrop-filter:blur(14px) satu
 .nav-toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:10px;width:42px;height:42px;color:var(--text);cursor:pointer}
 
 /* ===== Section scaffolding ===== */
-.eyebrow{display:inline-flex;align-items:center;gap:9px;font-size:12.5px;font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent-3);padding:7px 14px;border:1px solid var(--line);border-radius:999px;background:rgba(34,211,238,.05)}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent-3);box-shadow:0 0 10px var(--accent-3)}
-.section-head{max-width:660px}
+.eyebrow{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:7px 14px;border:1px solid var(--accent-line);border-radius:var(--r-pill);background:var(--accent-soft)}
+.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.section-head{max-width:var(--maxw-text)}
 .section-head.center{margin:0 auto;text-align:center}
-h2.title{font-size:clamp(28px,4vw,44px);font-weight:700;letter-spacing:-.025em;line-height:1.12;margin:18px 0 14px}
-.section-head p{color:var(--muted);font-size:17px}
-.pad{padding:clamp(56px,7vw,96px) 0}
+h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-height:1.10;margin:var(--sp-4) 0 var(--sp-3);text-wrap:balance}
+.section-head p{color:var(--muted);font-size:var(--fs-body);text-wrap:pretty}
+.pad{padding:clamp(64px,8vw,96px) 0}
 
 /* ===== Hero scroll-morph stage ===== */
 .hero-morph-stage{position:relative;height:270vh}
