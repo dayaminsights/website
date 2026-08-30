@@ -2,7 +2,7 @@
 
 **Date:** 2026-08-30
 **Version:** v2 — light ground
-**Status:** Approved direction, pending accent choice + founder/contact facts
+**Status:** Approved and settled. Facts in §14.2 ship as sentinels until supplied.
 **Scope:** Token system + component specs for `index.html`. Implementation of P0/P1 audit findings follows in a separate plan.
 
 > **v2 supersedes v1.** v1 specified a near-black ground with a burnt-amber accent. The direction changed to a white ground with black. The type scale, spacing scale, radii, motion tokens and accessibility floors carry over unchanged; colour, elevation and the mockup treatment are rebuilt.
@@ -83,23 +83,17 @@ A light ground compresses the usable grey range: everything from `--muted` down 
 
 ### 2.5 Accent
 
-**One accent, pending your pick.** Three candidates, all measured on white. The style guide renders all three live so the choice can be made by looking rather than by reading hex codes.
+**Rust — `#A94F26`. Settled.** Chosen over deep green (`#1F6B4A`) and ink blue (`#1B4B8F`). Rust on white with black is a printed-report combination: uncommon in this category, and it keeps green free to mean "good" rather than doubling as the brand hue. Ink blue was rejected as the consultancy default — highest contrast, least differentiation.
 
-| Candidate | Hex | Contrast on white | Character |
+| Token | Hex | Contrast on white | Use |
 |---|---|---|---|
-| **Rust** *(recommended)* | `#A94F26` | **5.47 : 1** ✓ | Carries the warmth from the direction already approved. Rust on white with black is a printed-report combination — uncommon in this category and quietly expensive. |
-| Deep green | `#1F6B4A` | **6.44 : 1** ✓ | Reads as money and growth, fits analytics directly. Safe second choice. Costs you green as a semantic — `--good` would have to move. |
-| Ink blue | `#1B4B8F` | **8.57 : 1** ✓ | Highest contrast, most conservative. Also the consultancy default, so it differentiates least. |
+| `--accent` | `#A94F26` | **5.47 : 1** ✓ | Links, eyebrows, icons, chart bars, accent rules |
+| `--accent-hover` | `#8E4120` | 7.1 : 1 ✓ | Hover on accent text and fills |
+| `--accent-soft` | `rgba(169,79,38,.08)` | — | Tints, icon wells, hover fills |
+| `--accent-line` | `rgba(169,79,38,.30)` | — | Accent borders |
+| `--accent-on-panel` | `#D7855C` | 6.9 : 1 on `--panel` ✓ | The accent *inside* an inverted panel, where `#A94F26` would fail |
 
-Whichever is chosen:
-
-| Token | Derivation | Use |
-|---|---|---|
-| `--accent` | the chosen hex | Links, eyebrows, icons, chart bars, accent rules |
-| `--accent-hover` | ~12% darker | Hover on accent text and fills |
-| `--accent-soft` | same hue at 8% alpha | Tints, icon wells, hover fills |
-| `--accent-line` | same hue at 30% alpha | Accent borders |
-| `--accent-on-panel` | ~25% lighter | The accent used *inside* an inverted panel, where the dark version would fail contrast |
+The accent and the focus ring are deliberately different hues — rust and `--focus:#1B4B8F` — so a focused element never reads as an accent element.
 
 **Primary buttons are black, not accent.** `--ink` fill with `--bg` text is 18.6 : 1 and is the strongest call-to-action available on a white page. The accent is reserved for links, data and emphasis — which keeps it meaning something. This is the single biggest difference from the dark version, where the accent had to carry the button because black-on-black is not a button.
 
@@ -112,9 +106,9 @@ Reserved. Never decorative.
 | `--good` | `#1F6B4A` | **6.44 : 1** ✓ | Positive delta, completed step, "what we do" tag |
 | `--warn` | `#8A5A0B` | **5.91 : 1** ✓ | Needs attention — low stock, reorder alert |
 
-If deep green is chosen as the accent, `--good` moves to `#166534` and `--accent` takes `#1F6B4A`, keeping them distinguishable.
-
 Inside an inverted panel these lighten to `--good-invert:#5FBF8F` (6.0 : 1 on `--panel`) and `--warn-invert:#D9AE3F` (9.2 : 1 on `--panel`).
+
+With rust as the accent, green stays purely semantic — which is the main reason rust won.
 
 ### 2.7 Focus
 
@@ -123,7 +117,7 @@ Inside an inverted panel these lighten to `--good-invert:#5FBF8F` (6.0 : 1 on `-
 | `--focus` | `#1B4B8F` | Focus ring on white — 8.57 : 1 |
 | `--focus-invert` | `#8FB8FF` | Focus ring inside an inverted panel — 9.8 : 1 |
 
-If ink blue is chosen as the accent, focus moves to `#B3300F` so the ring never reads as an accent element.
+Blue is the only cool hue in an otherwise warm-and-achromatic system, so a focus ring is never mistakable for an accent element.
 
 ### 2.8 Token block
 
@@ -152,7 +146,7 @@ If ink blue is chosen as the accent, focus moves to `#B3300F` so the ring never 
   --on-panel:#F7F7F5;
   --on-panel-muted:#9BA0A6;
 
-  /* accent — rust shown; swap the four values to change it */
+  /* accent — rust */
   --accent:#A94F26;
   --accent-hover:#8E4120;
   --accent-soft:rgba(169,79,38,.08);
@@ -519,7 +513,7 @@ A white ground with no blur, no backdrop-filter and no infinite animation is mat
 | `--text:#eef2fb` | `--ink:#111315` | |
 | `--muted:#9aa6c2` | `--muted:#555B63` | |
 | `--muted-2:#6b7794` | `--muted-2:#6E747C` | **Was 4.40 : 1 — AA failure** |
-| `--accent:#4f7dff` | `--accent:#A94F26` | Pending final pick |
+| `--accent:#4f7dff` | `--accent:#A94F26` | Rust |
 | `--accent-2:#8b5cf6` | *removed* | |
 | `--accent-3:#22d3ee` | *removed* | |
 | `--good:#34d399` | `--good:#1F6B4A` | |
@@ -533,13 +527,27 @@ A white ground with no blur, no backdrop-filter and no infinite animation is mat
 
 ## 14. Open items
 
-### 14.1 Design decision outstanding
+### 14.1 Design decisions
 
-**Accent colour** — rust `#A94F26` (recommended), deep green `#1F6B4A`, or ink blue `#1B4B8F`. All three render live in the style guide. Everything else in this spec is settled.
+None outstanding. Positioning, ground, accent, type, scale and motion are all settled.
 
-### 14.2 Facts required before implementation
+### 14.2 Facts deferred — ship as sentinels
 
-Nothing is invented; each ships as a clearly-marked sentinel until supplied.
+The build proceeds without these. Nothing is invented: each ships as a `data-sentinel` marked element that is visually obvious in a browser and greppable in the source, so nothing placeholder can reach production unnoticed.
+
+```html
+<span data-sentinel="founder-name">FOUNDER_NAME</span>
+```
+
+```css
+[data-sentinel]{
+  outline:2px dashed var(--warn);
+  outline-offset:2px;
+  background:rgba(138,90,11,.08);
+}
+```
+
+A pre-launch check is `grep -c 'data-sentinel' index.html` — it must return 0 before go-live.
 
 | # | Needed | Blocks | Sentinel |
 |---|---|---|---|
