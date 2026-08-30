@@ -214,6 +214,12 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .nav-links{display:flex;align-items:center;gap:var(--sp-6)}
 .nav-links a{color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:500;transition:color var(--t-fast) var(--ease)}
 .nav-links a:hover{color:var(--ink)}
+/* Current section, no click required. The underline is drawn rather than
+   toggled so it reads as a position indicator, not a hover state. */
+.nav-links a{position:relative;padding-block:var(--sp-2)}
+.nav-links a::after{content:"";position:absolute;left:0;right:0;bottom:0;height:1.5px;background:var(--accent);transform:scaleX(0);transform-origin:left;transition:transform var(--t-base) var(--ease-out)}
+.nav-links a.is-current{color:var(--ink)}
+.nav-links a.is-current::after{transform:scaleX(1)}
 .nav-cta{display:flex;align-items:center;gap:var(--sp-3)}
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:var(--sp-2);font-family:var(--font-ui);font-weight:600;font-size:var(--fs-small);border-radius:var(--r-md);padding:13px 22px;min-height:44px;cursor:pointer;border:1px solid transparent;white-space:nowrap;text-decoration:none;transition:background var(--t-fast) var(--ease),color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease),transform var(--t-fast) var(--ease)}
 .btn:active{transform:translateY(1px)}
@@ -317,6 +323,24 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .hero-pipe .pipe-step.is-end{border-color:rgba(31,107,74,.32);background:rgba(31,107,74,.05)}
 .hero-pipe .pipe-step.is-end .pipe-icon{background:rgba(31,107,74,.1);border-color:rgba(31,107,74,.3)}
 .hero-pipe .pipe-step.is-end .pipe-icon svg{color:var(--good)}
+
+/* The pulse: one order moving through the five steps. Fires once when the
+   hero enters view, and again on hover — the only motion on the page that
+   the visitor can replay, because it is the one that explains the product. */
+.hero-pipe .pipe-step{transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out),border-color var(--t-base) var(--ease),background var(--t-base) var(--ease)}
+.hero-pipe .pipe-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease),border-color var(--t-base) var(--ease)}
+.hero-pipe .pipe-step.lit{border-color:var(--accent-line);background:var(--accent-soft)}
+.hero-pipe .pipe-step.lit .pipe-icon{transform:scale(1.12);background:var(--accent);border-color:var(--accent)}
+.hero-pipe .pipe-step.lit .pipe-icon svg{color:var(--bg)}
+.hero-pipe .pipe-step.is-end.lit{border-color:rgba(31,107,74,.45);background:rgba(31,107,74,.1)}
+.hero-pipe .pipe-step.is-end.lit .pipe-icon{background:var(--good);border-color:var(--good)}
+/* The connector fills as the pulse passes it. */
+.hero-pipe .pipe-step + .pipe-step::before{background:var(--line-strong);transition:background var(--t-fast) var(--ease)}
+.hero-pipe .pipe-step + .pipe-step.lit::before{background:var(--accent)}
+.hero-pipe{cursor:default}
+@media(prefers-reduced-motion:reduce){
+  .hero-pipe .pipe-step.lit .pipe-icon{transform:none}
+}
 
 /* ===== Hero service cards (overlapping panel below the fold line) ===== */
 .hero-services{
@@ -615,7 +639,12 @@ a.service-card{cursor:pointer}
 .faq-item summary::after{content:"";flex:0 0 auto;width:11px;height:11px;border-right:2px solid var(--muted);border-bottom:2px solid var(--muted);transform:rotate(45deg);transition:transform var(--t-base) var(--ease);margin-right:4px}
 .faq-item[open] summary::after{transform:rotate(-135deg)}
 .faq-item summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-.faq-body{padding:0 0 var(--sp-5)}
+.faq-body{padding:0 0 var(--sp-5);animation:faqOpen var(--t-base) var(--ease-out)}
+@keyframes faqOpen{from{opacity:0;transform:translateY(-4px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.faq-body{animation:none}}
+.faq-item summary{transition:color var(--t-fast) var(--ease)}
+.faq-item summary:hover{color:var(--accent)}
+.faq-item summary:hover::after{border-color:var(--accent)}
 .faq-body p{font-size:var(--fs-body);color:var(--muted);margin:0}
 /* ===== Mid-page CTA ===== */
 .mid-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--sp-4) var(--sp-6);padding:var(--sp-6);margin:var(--sp-8) 0;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
@@ -1373,7 +1402,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     <h2 class="title" id="h-faq">The questions we get every week.</h2>
   </div>
   <div class="faq-list">
-    <details class="faq-item reveal" data-d="1">
+    <details class="faq-item reveal" data-d="1" open>
       <summary>What does this cost?</summary>
       <div class="faq-body"><p>It depends on how many systems have to talk to each other, but most first projects sit between a dashboard for one part of the business and a full order-to-invoice automation. We quote a fixed price before any work starts, so there is no meter running. If your budget and the scope do not meet, we will tell you on the first call.</p></div>
     </details>
@@ -1517,6 +1546,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 
     var pct = docScrollMax > 0 ? (y / docScrollMax) * 100 : 0;
     scrollBar.style.width = pct + '%';
+    if (typeof updateSpy === 'function') updateSpy();
 
     ticking = false;
   }
@@ -1547,7 +1577,11 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   } else {
     var ro = new IntersectionObserver(function(entries){
       entries.forEach(function(e){
-        if (e.isIntersecting){ e.target.classList.add('in'); ro.unobserve(e.target); }
+        if (e.isIntersecting){
+          e.target.classList.add('in');
+          if (e.target.id === 'heroVisual' && !reduce) setTimeout(runPipe, 420);
+          ro.unobserve(e.target);
+        }
       });
     }, {threshold:.14, rootMargin:'0px 0px -8% 0px'});
     reveals.forEach(function(el){ ro.observe(el); });
@@ -1675,6 +1709,70 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       window.open('https://wa.me/917877640693?text=' + encodeURIComponent(text), '_blank', 'noopener');
     });
   }
+
+
+  // ===== Hero pipeline: one order moving through =====
+  // Fires once when the hero visual reveals, and on hover. The dashboard
+  // counters are held back until the pulse reaches the Dashboard step, so
+  // the two read as one sequence rather than two effects that happen to
+  // start together.
+  var heroPipe = document.querySelector('.hero-pipe');
+  var pipeSteps = heroPipe ? Array.prototype.slice.call(heroPipe.querySelectorAll('.pipe-step')) : [];
+  var pipeTimers = [];
+  function runPipe(){
+    if (!pipeSteps.length) return;
+    pipeTimers.forEach(clearTimeout);
+    pipeTimers = [];
+    pipeSteps.forEach(function(s){ s.classList.remove('lit'); });
+    pipeSteps.forEach(function(step, i){
+      pipeTimers.push(setTimeout(function(){ step.classList.add('lit'); }, i * 220));
+      // Each step stays lit only while the order is passing through it,
+      // except the last, which is where the order ends up.
+      if (i < pipeSteps.length - 1){
+        pipeTimers.push(setTimeout(function(){ step.classList.remove('lit'); }, i * 220 + 620));
+      }
+    });
+    pipeTimers.push(setTimeout(function(){
+      pipeSteps[pipeSteps.length - 1].classList.remove('lit');
+    }, pipeSteps.length * 220 + 1400));
+  }
+  if (heroPipe && !reduce){
+    heroPipe.addEventListener('mouseenter', runPipe);
+  }
+
+  // ===== Nav scroll-spy =====
+  var navAnchors = Array.prototype.slice.call(document.querySelectorAll('.nav-links a[href^="#"]'));
+  var spyTargets = navAnchors
+    .map(function(a){ return { link:a, el:document.querySelector(a.getAttribute('href')) }; })
+    .filter(function(t){ return t.el; });
+  // Offsets are cached on load and resize and compared against scrollY, so the
+  // scroll loop stays free of layout reads. A detection band tuned in
+  // percentages was fragile: a section centred at 50% of the viewport fell
+  // outside it, leaving a stale link marked.
+  var spyOffsets = [];
+  function measureSpy(){
+    spyOffsets = spyTargets.map(function(t){
+      return { link: t.link, top: t.el.getBoundingClientRect().top + window.scrollY };
+    });
+  }
+  var spyCurrent = null;
+  function updateSpy(){
+    if (!spyOffsets || !spyOffsets.length) return;
+    var line = window.scrollY + window.innerHeight * 0.32;
+    var found = null;
+    for (var i = 0; i < spyOffsets.length; i++){
+      if (spyOffsets[i].top <= line) found = spyOffsets[i];
+    }
+    var link = found ? found.link : null;
+    if (link === spyCurrent) return;
+    navAnchors.forEach(function(a){ a.classList.remove('is-current'); });
+    if (link) link.classList.add('is-current');
+    spyCurrent = link;
+  }
+  measureSpy();
+  updateSpy();
+  window.addEventListener('load', measureSpy);
+  window.addEventListener('resize', measureSpy, {passive:true});
 
 })();
 </script>
