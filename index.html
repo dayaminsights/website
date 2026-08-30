@@ -161,23 +161,6 @@ h1,h2,h3,h4,h5,.btn,.eyebrow,.nav-links a,.brand,th,label,button{font-family:var
 .wrap{max-width:var(--maxw);margin:0 auto;padding:0 24px}
 section{position:relative}
 
-/* ===== Ambient background ===== */
-.bg-field{position:fixed;inset:0;z-index:-2;pointer-events:none;overflow:hidden}
-.bg-field::before{
-  content:"";position:absolute;inset:0;
-  background:
-    radial-gradient(60% 50% at 18% 8%, rgba(79,125,255,.16), transparent 60%),
-    radial-gradient(50% 50% at 85% 0%, rgba(139,92,246,.13), transparent 60%),
-    radial-gradient(45% 45% at 50% 100%, rgba(34,211,238,.08), transparent 60%);
-}
-.grid-lines{position:fixed;inset:0;z-index:-1;pointer-events:none;
-  background-image:linear-gradient(var(--line) 1px,transparent 1px),linear-gradient(90deg,var(--line) 1px,transparent 1px);
-  background-size:64px 64px;
-  -webkit-mask-image:radial-gradient(circle at 50% 0%,#000,transparent 75%);
-  mask-image:radial-gradient(circle at 50% 0%,#000,transparent 75%);
-  opacity:.5;
-}
-
 /* ===== Scroll progress ===== */
 .scroll-progress{position:fixed;top:0;left:0;right:0;height:2px;z-index:200;background:rgba(148,163,184,.08);pointer-events:none}
 .scroll-progress i{display:block;height:100%;width:0%;background:linear-gradient(90deg,var(--accent-3),var(--accent),var(--accent-2));box-shadow:0 0 12px rgba(79,125,255,.6);transition:width .08s linear}
@@ -223,7 +206,6 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
   .hero-morph-stage .hero-copy .hero-cta,.hero-morph-stage .hero-copy .hero-meta{justify-content:flex-start}
   .hero-morph-stage .hero h1{font-size:clamp(30px,4.6vw,52px)}
   .hero-morph-stage .hero-visual{position:static;inset:auto;width:auto;opacity:1;transform:none;pointer-events:auto}
-  .hero-morph-stage .hero-glow{display:none}
 }
 /* Reduced-motion users on DESKTOP get the live 2-col layout statically */
 @media(prefers-reduced-motion:reduce) and (min-width:1001px){
@@ -256,43 +238,8 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .hero-morph-stage .hero h1,.hero-morph-stage .hero-cta,.hero-morph-stage .hero-meta,.hero-morph-stage .hero-copy .eyebrow,.hero-morph-stage .hero-copy .tagline{transition-property:opacity} /* drop the .reveal transform transition so per-frame JS translateX isn't eased/laggy during the morph */
 .hero-visual{opacity:0;transform:translateX(60px);pointer-events:none;transition:none} /* opacity/transform driven per-frame by JS scroll morph, not CSS */
 
-/* Floating glow chips around the centered STATE_A headline; fade out as the morph proceeds */
-.hero-glow{position:absolute;inset:0;pointer-events:none;z-index:0;opacity:.6;transition:opacity .3s var(--ease)}
-.hero-glow .glow-orb{position:absolute;width:340px;height:340px;border-radius:50%;filter:blur(70px);animation:float 11s ease-in-out infinite}
-.hero-glow .glow-orb.ga{top:-8%;left:4%;background:radial-gradient(circle,rgba(79,125,255,.28),transparent 70%)}
-.hero-glow .glow-orb.gb{bottom:-12%;right:6%;width:380px;height:380px;background:radial-gradient(circle,rgba(139,92,246,.24),transparent 70%);animation-duration:13s;animation-delay:-4s}
-.glow-chip,.path-chip{position:absolute;width:56px;height:56px;border-radius:14px;display:grid;place-items:center;color:var(--accent-3);background:linear-gradient(165deg,rgba(22,30,54,.9),rgba(10,15,31,.9));border:1px solid transparent;background-clip:padding-box;box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);backdrop-filter:blur(6px);animation:cardFloat 8s ease-in-out infinite}
-.glow-chip::before,.path-chip::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:linear-gradient(160deg,rgba(148,163,184,.4),rgba(148,163,184,.04) 40%,rgba(148,163,184,.22));-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
-.glow-chip svg,.path-chip svg{width:26px;height:26px;position:relative;z-index:1}
-.glow-chip.c1{top:8%;left:8%;animation-delay:0s}
-.glow-chip.c2{top:14%;right:10%;color:var(--accent-2);box-shadow:0 0 32px -6px rgba(139,92,246,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-2.6s}
-.glow-chip.c3{bottom:18%;left:6%;color:var(--accent);box-shadow:0 0 32px -6px rgba(79,125,255,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-5.2s}
-.glow-chip.c4{bottom:10%;right:8%;animation-delay:-1.3s}
-.glow-chip.c5{top:42%;left:1%;width:46px;height:46px;border-radius:12px;color:var(--good);box-shadow:0 0 28px -6px rgba(52,211,153,.5),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-3.8s}
-.glow-chip.c5 svg{width:22px;height:22px}
-.glow-chip.mini,.path-chip.mini{width:18px;height:18px;border-radius:6px;background:linear-gradient(165deg,var(--accent),var(--accent-2));box-shadow:0 0 20px -2px rgba(139,92,246,.7)}
-.glow-chip.mini::before,.path-chip.mini::before{display:none}
-.glow-chip.c6{top:30%;right:1%;animation-delay:-6.4s}
-.glow-chip.c7{bottom:36%;left:18%;background:linear-gradient(165deg,var(--accent-3),var(--accent));box-shadow:0 0 20px -2px rgba(34,211,238,.7);animation-delay:-1.9s}
-@media(prefers-reduced-motion:reduce){.glow-chip,.path-chip,.hero-glow .glow-orb{animation:none;translate:none!important}}
-
-/* Decorative scroll path: faint line along the right margin with chips positioned
-   along it via JS (SVGGeometryElement.getPointAtLength), based on scroll progress */
-.scroll-path-layer{position:fixed;inset:0;z-index:1;pointer-events:none}
-.scroll-path-layer svg{position:absolute;inset:0;width:100%;height:100%}
-.scroll-path-layer path{stroke:var(--line-strong);stroke-width:.15;vector-effect:non-scaling-stroke;opacity:.4}
-.path-chip{width:40px;height:40px;border-radius:11px;margin:-20px 0 0 -20px;animation:cardFloat 7s ease-in-out infinite;will-change:transform}
-.path-chip.mini{margin:-9px 0 0 -9px}
-.path-chip svg{width:20px;height:20px}
-.path-chip.pc2{color:var(--accent-2);box-shadow:0 0 28px -6px rgba(139,92,246,.55),inset 0 1px 0 rgba(255,255,255,.06);animation-delay:-2.4s}
-.path-chip.pc3{animation-delay:-4.8s}
-@media(max-width:1240px),(prefers-reduced-motion:reduce){.scroll-path-layer{display:none}}
-
 /* ===== Hero service cards grid ===== */
 .hero-visual{position:absolute;top:0;bottom:0;right:0;width:53.5%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: positioned over the eventual right-column area (not centered over the text) and out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
-.hero-visual .glow-orb{position:absolute;width:280px;height:280px;border-radius:50%;background:radial-gradient(circle,rgba(79,125,255,.35),transparent 70%);filter:blur(50px);top:-60px;right:-50px;animation:float 9s ease-in-out infinite;pointer-events:none;z-index:0}
-.hero-visual .glow-orb.b{background:radial-gradient(circle,rgba(139,92,246,.3),transparent 70%);top:auto;bottom:-70px;left:-50px;right:auto;animation-duration:11s;animation-delay:-3s}
-@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(18px)}}
 
 .card-reveal{opacity:0;transform:translateY(40px) scale(.96);transition:opacity .7s var(--ease),transform .7s var(--ease)}
 .hero-visual.in .card-reveal{opacity:1;transform:none}
@@ -304,14 +251,6 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 
 .service-card{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:14px;height:100%;border:1px solid var(--line-strong);border-radius:var(--radius);padding:22px;background:linear-gradient(165deg,rgba(18,26,48,.92),rgba(10,15,31,.92));box-shadow:var(--shadow);transition:transform .35s var(--ease),border-color .35s,background .35s}
 .service-card:hover{transform:translateY(-4px);border-color:var(--accent-3)}
-.hero-visual.in .card-reveal .service-card{animation:cardFloat 7s ease-in-out infinite}
-.hero-visual.in .card-reveal:nth-child(3) .service-card{animation-delay:0s}
-.hero-visual.in .card-reveal:nth-child(4) .service-card{animation-delay:-1.6s}
-.hero-visual.in .card-reveal:nth-child(5) .service-card{animation-delay:-3.2s}
-.hero-visual.in .card-reveal:nth-child(6) .service-card{animation-delay:-4.8s}
-.hero-visual.in .card-reveal:nth-child(7) .service-card{animation-delay:-6.4s}
-@keyframes cardFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
-@media(prefers-reduced-motion:reduce){.hero-visual.in .card-reveal .service-card{animation:none}}
 
 .service-card .s-icon{flex:0 0 auto;width:48px;height:48px;border-radius:13px;display:grid;place-items:center;background:linear-gradient(135deg,rgba(79,125,255,.18),rgba(139,92,246,.14));border:1px solid var(--line-strong)}
 .service-card .s-icon svg{width:24px;height:24px;color:var(--accent-3)}
@@ -339,14 +278,6 @@ a.service-card:focus-visible{outline:2px solid var(--accent-3);outline-offset:3p
 .service-card .s-grow .s-grow-arrow{width:14px;height:14px;color:var(--muted-2)}
 .service-card .s-grow .s-grow-browser{width:22px;height:22px;color:var(--accent-3)}
 .service-card .s-grow .s-grow-trend{width:26px;height:20px;color:var(--good)}
-.service-card .s-grow .s-grow-trend .rise-line{animation:riseLine 3s ease-in-out infinite}
-.service-card .s-grow .s-grow-trend .rise-dot{animation:riseDot 3s ease-in-out infinite}
-@keyframes riseLine{0%,100%{transform:translateY(0)}50%{transform:translateY(-2px)}}
-@keyframes riseDot{0%,100%{transform:translate(0,0)}50%{transform:translate(1px,-2px)}}
-@media(prefers-reduced-motion:reduce){
-  .service-card .s-grow .s-grow-trend .rise-line,
-  .service-card .s-grow .s-grow-trend .rise-dot{animation:none}
-}
 
 /* ===== Growth & Intelligence showcases (Websites/Marketing/Dashboards/Automation) ===== */
 .web-show{padding-top:0;position:relative;isolation:isolate}
@@ -373,7 +304,6 @@ a.service-card:focus-visible{outline:2px solid var(--accent-3);outline-offset:3p
 .web-stats .ws span{font-size:14px;color:var(--muted)}
 
 .web-visual{position:relative;display:flex;flex-direction:column;gap:0}
-.web-visual .glow-orb{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,rgba(34,211,238,.22),transparent 70%);filter:blur(60px);top:-60px;right:-60px;pointer-events:none;z-index:0;animation:float 10s ease-in-out infinite}
 
 /* Browser mockup */
 .browser-mock{position:relative;z-index:1;border:1px solid var(--line-strong);border-radius:var(--radius);overflow:hidden;background:var(--surface);box-shadow:var(--shadow)}
@@ -437,11 +367,9 @@ a.service-card:focus-visible{outline:2px solid var(--accent-3);outline-offset:3p
 .sm-you{border-radius:9px;background:rgba(52,211,153,.08);border:1px solid rgba(52,211,153,.28);padding:8px 10px;margin:0 -10px 4px}
 .sm-you .sm-rank{background:linear-gradient(135deg,var(--good),var(--accent-3));color:#06281d}
 .sm-rise{margin-left:auto;flex:0 0 auto;color:var(--good)}
-.web-visual.in .sm-rise svg{animation:riseLine 3s ease-in-out 1.6s infinite}
 
 @media(prefers-reduced-motion:reduce){
-  .web-visual.in .bm-live,
-  .web-visual.in .sm-rise svg{animation:none}
+  .web-visual.in .bm-live{animation:none}
 }
 
 /* ===== Marketing: campaign card + funnel ===== */
@@ -524,13 +452,11 @@ a.service-card:focus-visible{outline:2px solid var(--accent-3);outline-offset:3p
 .fl-arrow{flex:0 0 auto;color:var(--muted-2);opacity:0;transition:opacity .4s var(--ease)}
 .web-visual.in .fl-arrow{opacity:1;transition-delay:.3s}
 .web-visual.in .fl-arrow:nth-of-type(4){transition-delay:.6s}
-.web-visual.in .fl-arrow svg{animation:riseLine 2.4s ease-in-out infinite}
 .flow-foot{display:flex;align-items:center;gap:10px;padding-top:16px;border-top:1px solid var(--line);font-size:12.5px;color:var(--muted-2)}
 .flow-pulse{width:9px;height:9px;border-radius:50%;background:var(--good);position:relative;flex:0 0 auto}
 .web-visual.in .flow-pulse::before{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid var(--good);animation:ping 2.4s ease-out infinite}
 
 @media(prefers-reduced-motion:reduce){
-  .web-visual.in .fl-arrow svg,
   .web-visual.in .flow-pulse::before{animation:none}
 }
 
@@ -673,25 +599,12 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important;transition:none!important}
   .reveal,.card-reveal{opacity:1;transform:none}
-  .glow-orb{translate:none!important}
   html{scroll-behavior:auto}
 }
 </style>
 </head>
 <body>
-<div class="bg-field"></div>
-<div class="grid-lines"></div>
 <div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
-
-<!-- Decorative scroll path: glow chips drift down the right margin as the page scrolls -->
-<div class="scroll-path-layer" aria-hidden="true">
-  <svg id="scrollPathSvg" viewBox="0 0 100 100" preserveAspectRatio="none">
-    <path id="scrollPath" d="M92,0 C100,12 84,26 91,40 C98,54 85,68 92,82 C97,91 90,96 92,100" fill="none"/>
-  </svg>
-  <span class="path-chip pc1"><svg viewBox="0 0 24 24" fill="none"><path class="rise-line" d="M2 16l6-5 5 3 7-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="rise-dot" cx="20" cy="5" r="2" fill="currentColor"/></svg></span>
-  <span class="path-chip pc2"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l8-7 8 7M5 10v9h4v-5h6v5h4v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3l6 2.4v3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-  <span class="path-chip pc3 mini"></span>
-</div>
 
 <!-- NAV -->
 <header class="nav">
@@ -722,17 +635,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 <!-- HERO -->
 <div class="hero-morph-stage">
 <section class="hero wrap" id="top">
-  <div class="hero-glow" id="heroGlow" aria-hidden="true">
-    <span class="glow-orb ga"></span>
-    <span class="glow-orb gb"></span>
-    <span class="glow-chip c1"><svg viewBox="0 0 24 24" fill="none"><path class="rise-line" d="M2 16l6-5 5 3 7-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><circle class="rise-dot" cx="20" cy="5" r="2" fill="currentColor"/></svg></span>
-    <span class="glow-chip c2"><svg viewBox="0 0 24 24" fill="none"><path d="M3 11l8-7 8 7M5 10v9h4v-5h6v5h4v-9" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3l6 2.4v3.2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-    <span class="glow-chip c3"><svg viewBox="0 0 24 24" fill="none"><path d="M5 19V10m5 9V5m5 14v-7m5 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-    <span class="glow-chip c4"><svg viewBox="0 0 24 24" fill="none"><rect x="4" y="7" width="16" height="13" rx="2.5" stroke="currentColor" stroke-width="2"/><path d="M12 7V3m-4 9h.01M16 12h.01M9 16h6" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-    <span class="glow-chip c5"><svg viewBox="0 0 24 24" fill="none"><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m15.1-7.1l-2.1 2.1M9 15l-2.1 2.1m10.2 0L15 15M9 9L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></span>
-    <span class="glow-chip c6 mini"></span>
-    <span class="glow-chip c7 mini"></span>
-  </div>
   <div class="hero-grid">
   <div class="hero-copy">
     <span class="eyebrow reveal"><span class="dot"></span>For growing businesses</span>
@@ -752,9 +654,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
   <!-- Service cards grid -->
   <div class="hero-visual" id="heroVisual">
-    <div class="glow-orb"></div>
-    <div class="glow-orb b"></div>
-
     <div class="card-reveal">
       <a class="service-card" href="#growth">
         <span class="s-icon"><svg viewBox="0 0 24 24" fill="none"><path d="M8 9l-4 3 4 3m8-6l4 3-4 3M14 4l-4 16" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
@@ -1023,7 +922,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
     <!-- Animated build + search ranking visual -->
     <div class="web-visual" id="webVisual">
-      <div class="glow-orb"></div>
 
       <!-- Browser mockup that builds itself -->
       <div class="browser-mock">
@@ -1103,7 +1001,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
     <!-- Animated marketing campaign visual -->
     <div class="web-visual" id="marketingVisual">
-      <div class="glow-orb b"></div>
 
       <!-- Social campaign card that builds itself -->
       <div class="campaign-mock">
@@ -1185,7 +1082,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
     <!-- Animated dashboard visual -->
     <div class="web-visual" id="dashVisual">
-      <div class="glow-orb"></div>
 
       <div class="dash-mock">
         <div class="bm-bar">
@@ -1250,7 +1146,6 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
 
     <!-- Animated automation pipeline visual -->
     <div class="web-visual" id="autoVisual">
-      <div class="glow-orb b"></div>
 
       <div class="flow-mock">
         <div class="flow-row">
@@ -1374,7 +1269,7 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   var heroCta = heroSection ? heroSection.querySelector('.hero-copy .hero-cta') : null;
   var heroMeta = heroSection ? heroSection.querySelector('.hero-copy .hero-meta') : null;
   var heroVisual = heroSection ? heroSection.querySelector('.hero-visual') : null;
-  var heroGlow = heroSection ? heroSection.querySelector('.hero-glow') : null;
+  var heroGlow = null;
 
   function computeHeroMorphEnabled(){
     return !reduce && window.matchMedia('(min-width:1001px)').matches
@@ -1492,15 +1387,14 @@ footer{border-top:1px solid var(--line);margin-top:clamp(64px,9vw,110px);padding
   // Sticky nav background, scroll progress bar, parallax — batched in one rAF
   var nav = document.querySelector('header.nav');
   var scrollBar = document.getElementById('scrollBar');
-  var orbs = document.querySelectorAll('.glow-orb');
+  var orbs = [];
   var ticking = false;
 
-  // Decorative scroll-path chips: travel down #scrollPath as the page scrolls,
-  // each with a staggered offset along the path's length.
-  var scrollPath = document.getElementById('scrollPath');
-  var pathChips = document.querySelectorAll('.path-chip');
-  var pathChipOffsets = [0, -0.08, -0.16];
-  var pathLength = scrollPath ? scrollPath.getTotalLength() : 0;
+  // Decoration layer removed; these are nulled so the existing guard clauses stay valid.
+  var scrollPath = null;
+  var pathChips = [];
+  var pathChipOffsets = [];
+  var pathLength = 0;
 
   function updatePathChips(t){
     if (!scrollPath || !pathLength) return;
