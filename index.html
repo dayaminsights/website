@@ -585,6 +585,9 @@ a.service-card{cursor:pointer}
 .faq-item summary:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
 .faq-body{padding:0 0 var(--sp-5)}
 .faq-body p{font-size:var(--fs-body);color:var(--muted);margin:0}
+/* ===== Mid-page CTA ===== */
+.mid-cta{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:var(--sp-4) var(--sp-6);padding:var(--sp-6);margin:var(--sp-8) 0;border:1px solid var(--line);border-radius:var(--r-md);background:var(--surface)}
+.mid-cta p{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);margin:0}
 
 /* ===== CTA ===== */
 .cta-band{position:relative;border-radius:var(--r-lg);padding:clamp(40px,7vw,96px);text-align:center;background:var(--panel);color:var(--on-panel)}
@@ -654,6 +657,8 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .foot-grid{grid-template-columns:1fr 1fr}
 }
 @media(max-width:760px){
+  .mid-cta{flex-direction:column;gap:var(--sp-4);text-align:center}
+  .mid-cta .btn{width:100%}
   .cf-row{grid-template-columns:1fr}
   .contact-form{margin-top:var(--sp-6)}
   .cf-submit{align-self:stretch}
@@ -1193,6 +1198,14 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </div>
   </div>
 </section>
+
+<!-- MID-PAGE CTA -->
+<div class="wrap">
+  <div class="mid-cta reveal">
+    <p>Not sure which of these you need first?</p>
+    <a href="#contact" class="btn btn-primary">Tell us what&rsquo;s slowing you down <span class="arrow">&rarr;</span></a>
+  </div>
+</div>
 
 <!-- PROCESS -->
 <section class="pad wrap" id="process" aria-labelledby="h-process">
