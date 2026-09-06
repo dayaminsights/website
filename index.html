@@ -72,21 +72,16 @@
   ]
 }
 </script>
-<!-- Google Analytics 4 — paste the real Measurement ID in place of both
-     G-XXXXXXXXXX below, then uncomment the block. Until then no analytics
-     script is loaded, so the page does not ship ~130KB of JavaScript
-     reporting to a property that does not exist. The generate_lead click
-     handler at the bottom of the page guards on typeof gtag, so it is a
-     safe no-op while this is commented out.
-     GA4_MEASUREMENT_ID_GOES_HERE
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+<!-- Google Analytics 4. The generate_lead handlers near the bottom of the
+     page guard on typeof gtag, so they stay safe no-ops if this is ever
+     removed or blocked by the visitor. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
-  gtag('config', 'G-XXXXXXXXXX');
+  gtag('config', 'G-24QJPZPKZR');
 </script>
--->
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
