@@ -38,6 +38,23 @@
       "logo": "https://dayaminsights.com/og-image.png",
       "image": "https://dayaminsights.com/og-image.png",
       "areaServed": { "@type": "Country", "name": "India" },
+      "knowsAbout": [
+        "Business intelligence",
+        "Data integration",
+        "Workflow automation",
+        "Power BI",
+        "SQL",
+        "Python",
+        "REST API integration",
+        "AI assistants grounded in business data",
+        "Order to invoice processing",
+        "Inventory and stock reporting",
+        "Conversion-focused web development"
+      ],
+      "audience": {
+        "@type": "BusinessAudience",
+        "description": "Growing Indian businesses — retail and multi-store, distribution and wholesale, manufacturing, e-commerce, clinics and professional services — past the point where one person can hold every process in their head, but not yet running an in-house technology team."
+      },
       "serviceType": [
         "Business intelligence dashboards",
         "Power BI dashboard development",
@@ -61,7 +78,8 @@
         { "@type": "Question", "name": "My data is a mess. Some of it is on paper.", "acceptedAnswer": { "@type": "Answer", "text": "That is the normal starting point. Part of the first phase is getting what exists into one place and agreeing what each number means. You do not need to tidy anything up before talking to us." } },
         { "@type": "Question", "name": "Do I need someone technical on my team?", "acceptedAnswer": { "@type": "Answer", "text": "No. Everything we build is meant to be run by the people already doing the job. We hand over written instructions in plain language and train whoever will be using it." } },
         { "@type": "Question", "name": "What happens after it is built? Am I locked in?", "acceptedAnswer": { "@type": "Answer", "text": "Everything runs in accounts you own and you keep the logins. If you stop working with us, the dashboards and automations keep running." } },
-        { "@type": "Question", "name": "Do you work with businesses outside your city?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We work with businesses across India. Most of the work happens remotely, with visits where they are genuinely useful." } },
+        { "@type": "Question", "name": "Do you work with businesses outside your city?", "acceptedAnswer": { "@type": "Answer", "text": "Yes. We work with businesses across India, and most of the work happens remotely. What we build is cloud-based, so where you are matters far less than what your process looks like. We visit where a visit genuinely helps." } },
+        { "@type": "Question", "name": "Do you provide ongoing support?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, if you want it. We hand over written instructions in plain language and train whoever will be using the system, so most clients need us less than they expect to. Where you do want us on call, we agree what that covers and what it costs while we are scoping the work, not after it. Everything runs in accounts you own either way, so nothing stops working if you decide not to continue." } },
         { "@type": "Question", "name": "What if I am not sure what I need?", "acceptedAnswer": { "@type": "Answer", "text": "That is the usual case. Describe the part of the week that frustrates you most and we will tell you whether it is worth automating, including when the honest answer is that it is not." } },
         { "@type": "Question", "name": "Can you connect to the software we already use?", "acceptedAnswer": { "@type": "Answer", "text": "Usually, yes. The goal is normally to improve the systems you already have rather than move you onto something completely new. Where a tool offers an export, an API or a database connection, we can work with it; where it offers none of those, we will tell you what the workaround costs before you commit." } },
         { "@type": "Question", "name": "Can you work with our ERP or CRM?", "acceptedAnswer": { "@type": "Answer", "text": "Yes, where a suitable integration or data connection is available. Send us the name of the system on the first call and we will confirm what is possible with it before quoting." } },
@@ -84,7 +102,11 @@
 </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:ital,opsz,wght@0,8..60,400;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+<!-- Source Serif 4's italic instance was being downloaded and never used: the
+     only italic on the page is a .tool.none chip set in the UI face, and both
+     <em> elements are reset to font-style:normal. Dropping the ital axis
+     removes a whole font file from the critical path. -->
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap" rel="stylesheet">
 <style>
 :root{
   color-scheme:light;
@@ -138,11 +160,14 @@
   --font-body:'Source Serif 4','Iowan Old Style',Georgia,serif;
   --font-mono:'IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
 
+  /* Scale steps by roughly a major third at the display end and a minor one
+     through the text sizes. The old h2 topped out at 40px against a 60px h1,
+     which read as two sizes of the same thing rather than two levels. */
   --fs-h1:clamp(34px,5vw,60px);
-  --fs-h2:clamp(28px,3.6vw,40px);
-  --fs-h3:clamp(20px,2.4vw,24px);
+  --fs-h2:clamp(30px,4vw,46px);
+  --fs-h3:clamp(21px,2.6vw,27px);
   --fs-h4:clamp(18px,2vw,19px);
-  --fs-body:clamp(16px,1.2vw,17px);
+  --fs-body:clamp(16.5px,1.15vw,18px);
   --fs-small:15px;
   --fs-micro:13px;
   --fs-label:11px;
@@ -166,7 +191,7 @@
 
   /* layout */
   --maxw:1180px;
-  --maxw-text:680px;
+  --maxw-text:720px;
   --maxw-narrow:520px;
 
   /* radius */
@@ -207,7 +232,6 @@ main{overflow-x:clip}
 /* One rule covers every interactive element — simpler and more reliable than
    enumerating selectors, and nothing can ship without a visible focus ring. */
 :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
-[data-sentinel]{outline:2px dashed var(--warn);outline-offset:2px;background:rgba(138,90,11,.08)}
 section{position:relative}
 
 /* ===== Scroll progress ===== */
@@ -255,10 +279,18 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 @media(min-width:901px){.mobile-menu{display:none!important}}
 
 /* ===== Section scaffolding ===== */
-.eyebrow{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.12em;text-transform:uppercase;color:var(--accent);padding:7px 14px;border:1px solid var(--accent-line);border-radius:var(--r-pill);background:var(--accent-soft)}
-.eyebrow .dot{width:6px;height:6px;border-radius:50%;background:var(--accent)}
+/* Chapter marker, not a pill. A tinted capsule above every heading is the
+   stock SaaS section label and it appeared nine times down this page. The
+   page is genuinely a sequence, so the marker carries the position in it:
+   a rust rule, the chapter number where one applies, then the label. */
+.eyebrow{display:inline-flex;align-items:center;gap:var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2);padding:0;border:0;background:none}
+/* order:-1 because ::before is otherwise the first flex item, which would put
+   the chapter number ahead of the rule that introduces it. */
+.eyebrow .dot{width:26px;height:1px;border-radius:0;background:var(--accent);flex:0 0 auto;order:-1}
+.eyebrow[data-ch]::before{content:attr(data-ch) " /";color:var(--accent);font-weight:500}
 .section-head{max-width:var(--maxw-text)}
 .section-head.center{margin:0 auto;text-align:center}
+.section-head.center .eyebrow{justify-content:center}
 h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-height:1.10;margin:var(--sp-4) 0 var(--sp-3);text-wrap:balance}
 .section-head p{color:var(--muted);font-size:var(--fs-body);text-wrap:pretty}
 .section-head p strong{color:var(--ink);font-weight:600}
@@ -289,9 +321,17 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
    showing the dashboard, then a three-card service panel underneath.
    Palette stays ours — cream ground, ink type, rust accent, green for gains. */
 .hero{padding-block:clamp(28px,3.4vw,48px) 0;position:relative}
-.hero-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.14fr);gap:clamp(24px,3vw,44px);align-items:center}
-.hero h1{font-size:clamp(30px,3.1vw,44px);line-height:1.04;letter-spacing:-.032em;font-weight:700;text-wrap:balance;margin-top:var(--sp-4)}
+/* The copy column carries the headline at its new size, so it takes a little
+   width back off the stage. 1.06fr against 1fr leaves ~560px for three
+   authored lines at the 52px cap, which is where they measure. */
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center}
+.hero h1{font-size:clamp(32px,4.3vw,52px);line-height:1.02;letter-spacing:-.034em;font-weight:700;margin-top:var(--sp-4)}
 .hero h1 .accent{color:var(--accent)}
+/* The mask. overflow:hidden on an auto-height block clips the pre-state
+   translate without ever clipping a line that wraps — the block just grows —
+   so a long word at a narrow width degrades instead of disappearing. */
+.hero h1 .ln{display:block;overflow:hidden}
+.hero h1 .ln > span{display:block}
 .hero p.sub{margin:var(--sp-5) 0 0;font-size:var(--fs-body);line-height:1.6;color:var(--muted);max-width:44ch;text-wrap:pretty}
 .hero-cta{display:flex;align-items:center;gap:var(--sp-5);margin-top:var(--sp-6);flex-wrap:wrap}
 .hero .hero-cta .btn-primary{padding:16px 26px}
@@ -358,6 +398,38 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
    over the stage below it. */
 .hero-copy{position:relative;z-index:2;padding-bottom:clamp(28px,3vw,48px)}
 
+/* ===== Hero entrance =====
+   One choreographed sequence, not eight independent reveals. The hero is
+   above the fold, so it is driven by CSS animation on load rather than by the
+   IntersectionObserver the rest of the page uses — an observer that fires
+   immediately is just a slower way to do this, and it made the hero depend
+   on JS to become visible at all.
+
+   Every pre-state lives in a `from` keyframe with fill-mode:both and nowhere
+   else. That is deliberate: the global prefers-reduced-motion rule sets
+   animation:none, which drops the keyframes and leaves each element at its
+   natural opacity:1 / transform:none. Reduced motion therefore needs no
+   override here, and no element can be stranded invisible if animation is
+   disabled for any other reason.
+
+   Timeline:  ground 0-700 · eyebrow 200 · headline 380/470/560
+              subhead 800 · CTA 960 · trust 1080 · pillars 1200 */
+@keyframes heroGround{from{opacity:0}to{opacity:1}}
+@keyframes heroLine{from{transform:translateY(112%)}to{transform:translateY(0)}}
+@keyframes heroRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+@keyframes heroPanel{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
+
+.hero-stage::before,.hero-stage::after{animation:heroGround 700ms var(--ease) both}
+.hero-eyebrow{animation:heroRise 520ms var(--ease-out) 200ms both}
+.hero h1 .ln > span{animation:heroLine 760ms var(--ease-out) both}
+.hero h1 .ln:nth-child(1) > span{animation-delay:380ms}
+.hero h1 .ln:nth-child(2) > span{animation-delay:470ms}
+.hero h1 .ln:nth-child(3) > span{animation-delay:560ms}
+.hero p.sub{animation:heroRise 620ms var(--ease-out) 800ms both}
+.hero .hero-cta{animation:heroRise 620ms var(--ease-out) 960ms both}
+.hero-trust{animation:heroRise 620ms var(--ease-out) 1080ms both}
+.hero-services{animation:heroPanel 700ms var(--ease-out) 1200ms both}
+
 /* Five-step pipeline: card, arrow, card … */
 .hero-pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,1.2vw,17px);align-items:stretch;margin-bottom:clamp(20px,2.4vw,32px)}
 .hero-pipe .pipe-step{
@@ -366,12 +438,14 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
   background:var(--surface);box-shadow:var(--shadow-sm);
   opacity:0;transform:translateY(12px);
 }
+/* Offset to sit after the copy sequence above, so the hero reads as one
+   composition assembling left-to-right rather than two things racing. */
 .web-visual.in .hero-pipe .pipe-step{opacity:1;transform:none}
-.web-visual.in .hero-pipe .pipe-step:nth-child(1){transition-delay:60ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(2){transition-delay:100ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(3){transition-delay:140ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(4){transition-delay:180ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(5){transition-delay:220ms}
+.web-visual.in .hero-pipe .pipe-step:nth-child(1){transition-delay:860ms}
+.web-visual.in .hero-pipe .pipe-step:nth-child(2){transition-delay:920ms}
+.web-visual.in .hero-pipe .pipe-step:nth-child(3){transition-delay:980ms}
+.web-visual.in .hero-pipe .pipe-step:nth-child(4){transition-delay:1040ms}
+.web-visual.in .hero-pipe .pipe-step:nth-child(5){transition-delay:1100ms}
 /* The connector is the arrow glyph itself, centred in the grid gap. */
 .hero-pipe .pipe-step + .pipe-step::before{
   content:"\2192";position:absolute;left:calc(-1 * clamp(12px,1.2vw,17px));top:50%;
@@ -412,7 +486,7 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 }
 
 /* ===== Laptop + dashboard ===== */
-.lap{position:relative;opacity:0;transform:translateY(18px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out);transition-delay:260ms}
+.lap{position:relative;opacity:0;transform:translateY(18px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out);transition-delay:1140ms}
 .web-visual.in .lap{opacity:1;transform:none}
 .lap-screen{background:var(--panel);border-radius:14px 14px 5px 5px;padding:11px 11px 13px;box-shadow:0 30px 60px -28px rgba(17,19,21,.5),0 2px 6px rgba(17,19,21,.14)}
 .lap-inner{background:var(--surface);border-radius:6px;padding:clamp(12px,1.4vw,18px);display:grid;gap:clamp(9px,1vw,12px)}
@@ -428,29 +502,29 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .lp-val b{font-family:var(--font-ui);font-size:clamp(19px,1.9vw,25px);font-weight:700;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
 .lp-delta{font-family:var(--font-ui);font-size:var(--fs-label);font-weight:600;color:var(--good)}
 .lp-line{width:100%;height:clamp(46px,4.6vw,62px);display:block}
-.lp-line .lp-path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1200ms var(--ease-out);transition-delay:520ms}
+.lp-line .lp-path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1200ms var(--ease-out);transition-delay:1320ms}
 .web-visual.in .lp-line .lp-path{stroke-dashoffset:0}
-.lp-line .lp-fill{fill:var(--accent-soft);opacity:0;transition:opacity var(--t-data) var(--ease);transition-delay:900ms}
+.lp-line .lp-fill{fill:var(--accent-soft);opacity:0;transition:opacity var(--t-data) var(--ease);transition-delay:1700ms}
 .web-visual.in .lp-line .lp-fill{opacity:1}
 .lp-bars{display:flex;align-items:flex-end;gap:clamp(4px,.6vw,7px);height:clamp(46px,4.6vw,62px)}
 .lp-bars i{display:block;flex:1 1 auto;height:0;border-radius:3px 3px 1px 1px;background:var(--good);opacity:.34;transition:height var(--t-data) var(--ease-out)}
 .lp-bars i.hi{opacity:1}
 .web-visual.in .lp-bars i{height:var(--h)}
-.web-visual.in .lp-bars i:nth-child(1){transition-delay:420ms}
-.web-visual.in .lp-bars i:nth-child(2){transition-delay:470ms}
-.web-visual.in .lp-bars i:nth-child(3){transition-delay:520ms}
-.web-visual.in .lp-bars i:nth-child(4){transition-delay:570ms}
-.web-visual.in .lp-bars i:nth-child(5){transition-delay:620ms}
-.web-visual.in .lp-bars i:nth-child(6){transition-delay:670ms}
-.web-visual.in .lp-bars i:nth-child(7){transition-delay:720ms}
-.web-visual.in .lp-bars i:nth-child(8){transition-delay:770ms}
+.web-visual.in .lp-bars i:nth-child(1){transition-delay:1260ms}
+.web-visual.in .lp-bars i:nth-child(2){transition-delay:1310ms}
+.web-visual.in .lp-bars i:nth-child(3){transition-delay:1360ms}
+.web-visual.in .lp-bars i:nth-child(4){transition-delay:1410ms}
+.web-visual.in .lp-bars i:nth-child(5){transition-delay:1460ms}
+.web-visual.in .lp-bars i:nth-child(6){transition-delay:1510ms}
+.web-visual.in .lp-bars i:nth-child(7){transition-delay:1560ms}
+.web-visual.in .lp-bars i:nth-child(8){transition-delay:1610ms}
 .lp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(9px,1vw,12px)}
 .lp-tile{border:1px solid var(--line);border-radius:var(--r-sm);background:var(--surface);padding:clamp(10px,1.1vw,13px);display:flex;flex-direction:column;gap:6px;min-width:0}
 .lp-tile .lp-cap{font-family:var(--font-ui);font-size:var(--fs-label);font-weight:600;color:var(--muted-2)}
 .lp-tile b{font-family:var(--font-ui);font-size:clamp(15px,1.5vw,19px);font-weight:700;letter-spacing:-.015em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
 .lp-tile .lp-sub{font-family:var(--font-ui);font-size:var(--fs-label);color:var(--muted-2)}
 .lp-meter{height:4px;border-radius:3px;background:var(--surface-sunken);overflow:hidden}
-.lp-meter i{display:block;height:100%;width:0;border-radius:3px;background:var(--accent);transition:width var(--t-data) var(--ease-out);transition-delay:760ms}
+.lp-meter i{display:block;height:100%;width:0;border-radius:3px;background:var(--accent);transition:width var(--t-data) var(--ease-out);transition-delay:1500ms}
 .lp-meter.is-good i{background:var(--good)}
 .web-visual.in .lp-meter i{width:var(--w)}
 
@@ -467,7 +541,7 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
 .hs-card:hover{background:var(--bg-2)}
 .hs-card .hs-icon{width:44px;height:44px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line)}
 .hs-card .hs-icon svg{width:21px;height:21px;color:var(--accent)}
-.hs-card h3{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);margin:var(--sp-2) 0 0}
+.hs-card h2{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);margin:var(--sp-2) 0 0}
 .hs-card p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted);margin:0;line-height:1.5}
 .hs-more{margin-top:auto;padding-top:var(--sp-3);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--accent);display:inline-flex;align-items:center;gap:var(--sp-2);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
 .hs-card:hover .hs-more .arrow{transform:translateX(3px)}
@@ -519,46 +593,6 @@ h2.title{font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-heig
   .lp-tiles .lp-tile:last-child{grid-column:span 2}
   .hero-logos{gap:var(--sp-3) var(--sp-5)}
 }
-
-/* ===== Hero service cards grid ===== */
-.hero-visual{position:absolute;top:0;bottom:0;right:0;width:53.5%;display:grid;grid-template-columns:repeat(2,1fr);gap:14px} /* STATE_A default: positioned over the eventual right-column area (not centered over the text) and out of flow so its layout height doesn't inflate the centered hero content; JS restores position:relative at the snap point so it occupies the live 2-col grid cell, media query restores position:static for mobile/reduced-motion */
-
-.card-reveal{opacity:0;transform:translateY(40px) scale(.96);transition:opacity .7s var(--ease),transform .7s var(--ease)}
-.hero-visual.in .card-reveal{opacity:1;transform:none}
-.card-reveal:nth-child(3){transition-delay:.06s}
-.card-reveal:nth-child(4){transition-delay:.14s}
-.card-reveal:nth-child(5){transition-delay:.22s}
-.card-reveal:nth-child(6){transition-delay:.30s}
-.card-reveal:nth-child(7){grid-column:span 2;transition-delay:.38s}
-
-.service-card{position:relative;z-index:1;display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-3);height:100%;border:1px solid var(--line);border-radius:var(--r-md);padding:var(--sp-5);background:var(--surface);transition:transform var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
-a.service-card:hover{transform:translateY(-2px);border-color:var(--line-strong)}
-
-.service-card .s-icon{flex:0 0 auto;width:48px;height:48px;border-radius:var(--r-md);display:grid;place-items:center;background:var(--accent-soft);border:1px solid var(--accent-line)}
-.service-card .s-icon svg{width:22px;height:22px;color:var(--accent)}
-.service-card .s-text{flex:1 1 auto}
-.service-card .s-text h3{font-size:var(--fs-h4);font-weight:600;letter-spacing:-.005em;margin-bottom:var(--sp-1)}
-.service-card .s-text p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted);line-height:1.5}
-.service-card .s-mini{margin-top:auto;flex:0 0 auto;display:flex;align-items:flex-end;gap:3px;height:28px;align-self:flex-start}
-.service-card .s-mini i{display:block;width:6px;border-radius:3px;background:var(--accent);opacity:.85}
-.service-card .s-check{margin-top:auto;flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:rgba(31,107,74,.1);border:1px solid rgba(31,107,74,.3);display:grid;place-items:center}
-.service-card .s-check svg{width:15px;height:15px;color:var(--good)}
-.service-card .s-pulse{margin-top:auto;flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent-line);position:relative;display:grid;place-items:center}
-.service-card .s-pulse::before{content:"";position:absolute;inset:0;border-radius:50%;border:1px solid var(--accent-line)}
-.service-card .s-pulse svg{width:14px;height:14px;color:var(--accent);position:relative}
-.service-card .s-arrow-up{margin-top:auto;flex:0 0 auto;width:30px;height:30px;border-radius:50%;background:var(--accent-soft);border:1px solid var(--accent-line);display:grid;place-items:center}
-.service-card .s-arrow-up svg{width:14px;height:14px;color:var(--accent)}
-
-/* Featured "Websites" card — clickable link */
-a.service-card{cursor:pointer}
-
-
-.service-card .s-grow{margin-top:auto;flex:0 0 auto;display:flex;align-items:center;gap:6px;align-self:flex-start}
-.service-card .s-grow svg{display:block}
-.service-card .s-grow .s-grow-doc{width:18px;height:18px;color:var(--muted-2)}
-.service-card .s-grow .s-grow-arrow{width:14px;height:14px;color:var(--muted-2)}
-.service-card .s-grow .s-grow-browser{width:22px;height:22px;color:var(--accent)}
-.service-card .s-grow .s-grow-trend{width:26px;height:20px;color:var(--good)}
 
 /* ===== Growth & Intelligence showcases (Websites/Marketing/Dashboards/Automation) ===== */
 .web-show{position:relative;isolation:isolate}
@@ -716,8 +750,15 @@ a.service-card{cursor:pointer}
 /* ===== Process ===== */
 .proc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:0;margin-top:var(--sp-7);position:relative}
 .proc-line{position:absolute;top:31px;left:8%;right:8%;height:1px;background:var(--line-strong);z-index:0}
+/* The rust fill is the progress through the engagement, driven by --pp on
+   .proc-grid. The grey rule underneath is the whole path, always visible, so
+   the reader can see how much is still ahead. */
+.proc-line i{position:absolute;inset:0;background:var(--accent);transform:scaleX(var(--pp,0));transform-origin:left center;transition:transform 180ms linear}
 .proc{position:relative;z-index:1;padding:0 var(--sp-4);text-align:center}
 .proc .num{width:62px;height:62px;margin:0 auto var(--sp-4);border-radius:50%;display:grid;place-items:center;font-family:var(--font-mono);font-weight:500;font-size:var(--fs-h4);background:var(--bg);border:1px solid var(--line-strong);color:var(--muted);position:relative;transition:background var(--t-base) var(--ease),border-color var(--t-base) var(--ease),color var(--t-base) var(--ease)}
+/* Passed, here, not yet — three states, so the row reads as a path being
+   walked rather than four things lighting up and staying lit. */
+.proc.done .num{background:var(--surface);border-color:var(--accent-line);color:var(--accent)}
 .proc.active .num{background:var(--ink);border-color:var(--ink);color:var(--bg)}
 .proc h3{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;letter-spacing:-.005em;margin-bottom:var(--sp-2)}
 .proc p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted);max-width:230px;margin:0 auto}
@@ -736,15 +777,6 @@ a.service-card{cursor:pointer}
 
 /* ===== Why ===== */
 /* ===== Founder ===== */
-.founder-grid{display:grid;grid-template-columns:260px 1fr;gap:var(--sp-7);align-items:start}
-.founder-photo-slot{aspect-ratio:1;border-radius:var(--r-md);display:grid;place-items:center;background:var(--surface-sunken);border:1px solid var(--line);font-family:var(--font-mono);font-size:var(--fs-label);color:var(--muted-2);text-align:center;padding:var(--sp-4)}
-.founder-copy p{font-size:var(--fs-body);color:var(--muted);max-width:var(--maxw-text)}
-.founder-copy p + p{margin-top:var(--sp-4)}
-.founder-bio{margin-top:var(--sp-4)}
-.founder-id{margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--line)}
-.founder-id b{display:block;font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink)}
-.founder-id > span{display:block;font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2);margin-top:var(--sp-1)}
-.founder-link{display:inline-block;margin-top:var(--sp-4);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 /* ===== FAQ ===== */
 .faq-list{max-width:var(--maxw-text);margin:var(--sp-7) auto 0;border-top:1px solid var(--line)}
 .faq-item{border-bottom:1px solid var(--line)}
@@ -797,7 +829,7 @@ a.service-card{cursor:pointer}
 footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-8) 0 var(--sp-7);background:var(--bg-2)}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--sp-7)}
 .foot-brand p{font-family:var(--font-ui);color:var(--muted);font-size:var(--fs-small);margin-top:var(--sp-4);max-width:300px}
-.foot-col h5{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:var(--sp-4)}
+.foot-col h2{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.12em;text-transform:uppercase;color:var(--muted-2);margin-bottom:var(--sp-4)}
 .foot-col a{display:block;color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);padding:var(--sp-2) 0;transition:color var(--t-fast) var(--ease)}
 .foot-col span{display:block;color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);padding:var(--sp-2) 0}
 .foot-col a:hover{color:var(--ink)}
@@ -825,7 +857,9 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 /* ===== Hero: pillar tag on the service cards, example label on the laptop ===== */
 .hs-tag{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;text-transform:uppercase;color:var(--accent);margin-top:calc(var(--sp-1) * -1)}
 .lap-tag{
-  display:inline-block;align-self:flex-start;margin-bottom:var(--sp-2);
+  /* justify-self, not align-self: .lap-inner is a grid, so align-self ran on
+     the block axis and the tag stretched the full width of the screen. */
+  display:inline-block;justify-self:start;margin-bottom:var(--sp-2);
   font-family:var(--font-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;
   color:var(--muted-2);background:var(--surface-sunken);border:1px solid var(--line);
   border-radius:var(--r-pill);padding:2px 8px;
@@ -936,7 +970,11 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 .ladder.in .rung,.ladder.in .handoff{opacity:1;transform:none}
 .rung{border-bottom:1px solid var(--line);position:relative}
 /* The climb: a rule under each rung, longer the further up the ladder it is. */
-.rung::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:var(--w);background:var(--accent);opacity:.22;transition:opacity var(--t-base) var(--ease)}
+/* The climb draws itself rung by rung as the ladder arrives, so the section
+   reads as an ascent rather than six rules that were already there. The
+   transform delay is per-property: toggling a rung open must not wait on it. */
+.rung::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:var(--w);background:var(--accent);opacity:.22;transform:scaleX(0);transform-origin:left center;transition:opacity var(--t-base) var(--ease),transform 720ms var(--ease-out)}
+.ladder.in .rung::after{transform:scaleX(1);transition:opacity var(--t-base) var(--ease),transform 720ms var(--ease-out) calc(var(--i) * 90ms + 160ms)}
 .rung.open::after{opacity:1}
 .rung.is-yours::after{background:var(--line-strong);opacity:.9}
 .rung.is-yours .r-name{color:var(--ink-2)}
@@ -995,6 +1033,117 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .rb-grid{grid-template-columns:1fr;gap:var(--sp-4)}
   .handoff{grid-template-columns:1fr;gap:var(--sp-2)}
   .handoff p{font-size:var(--fs-body)}
+}
+
+/* ===== 03 · Signal: the one scroll interaction that argues something =====
+   Everywhere else on this page motion reveals content that was already
+   written. Here the motion IS the content: the same eighteen data points are
+   shown scattered, then tabulated, then plotted, because that is literally
+   the service being sold and a paragraph describing it convinces nobody.
+
+   Each dot carries three position sets as custom properties — --sx/--sy
+   scattered, --gx/--gy tabulated, --cx/--cy plotted — authored into the
+   markup so the geometry is static, indexable and needs no JS to compute.
+   JS only writes data-stage="1..5" on the section; every visual consequence
+   below hangs off that one attribute, which means the whole interaction has
+   exactly one moving part and degrades to a static final frame by setting
+   that attribute once.
+
+   Restraint: this is the only sticky section on the page, and the only place
+   scroll position drives anything other than a fade. */
+.scrolly{position:relative}
+.sy-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:clamp(32px,5vw,72px);margin-top:var(--sp-8);align-items:start}
+
+.sy-step{min-height:58vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
+.sy-step.is-on{opacity:1}
+.sy-num{font-family:var(--font-mono);font-size:var(--fs-label);letter-spacing:.14em;color:var(--accent)}
+.sy-step h3{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.014em;line-height:1.2;margin:var(--sp-3) 0;text-wrap:balance}
+.sy-step p{font-size:var(--fs-body);color:var(--muted);max-width:42ch;text-wrap:pretty}
+
+/* Sticky offset clears the 72px header plus a little air. */
+.sy-stage{position:sticky;top:clamp(92px,13vh,140px)}
+.sy-panel{position:relative;border:1px solid var(--panel);border-radius:var(--r-md);background:var(--panel);color:var(--on-panel);box-shadow:var(--shadow-md);padding:var(--sp-5)}
+.sy-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-3);padding-bottom:var(--sp-4);border-bottom:1px solid var(--line-invert)}
+.sy-head b{font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;color:var(--on-panel)}
+/* A readout naming the stage the reader is looking at. It is the caption the
+   visual would otherwise need, and it changes without a layout shift. */
+.sy-state{font-family:var(--font-mono);font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--on-panel-muted);white-space:nowrap}
+.sy-state::after{content:"Unstructured"}
+.scrolly[data-stage="2"] .sy-state::after{content:"Collected"}
+.scrolly[data-stage="3"] .sy-state::after{content:"Plotted"}
+.scrolly[data-stage="4"] .sy-state::after{content:"Pattern"}
+.scrolly[data-stage="5"] .sy-state::after{content:"Acted on"}
+.scrolly[data-stage="5"] .sy-state{color:var(--good-invert)}
+.sy-svg{display:block;width:100%;height:auto;margin-top:var(--sp-4)}
+
+/* --- The scrub ---------------------------------------------------------
+   Five phase values, 0→1, written by JS from scroll position and consumed
+   here as plain numbers in calc(). Nothing below transitions on time: the
+   reader's scroll IS the timeline, so a transition would only add lag
+   between the wheel and the picture.
+
+     --t1  scattered  → tabulated
+     --t2  tabulated  → plotted   (key points only)
+     --t3  the series line drawing, and the axis
+     --t4  the area fill and the peak marker
+     --t5  the two actions that follow
+
+   Defaults are 1, not 0: with no JS the panel renders its finished frame,
+   which is the readable one. JS drops them to the scrubbed value on its
+   first frame, before the section is anywhere near the viewport. */
+.scrolly{--t1:1;--t2:1;--t3:1;--t4:1;--t5:1}
+
+.sy-dot{
+  fill:var(--on-panel-muted);
+  transform-box:view-box;transform-origin:0 0;
+  /* Position is lerped, so only the colour step needs easing over time. */
+  transition:fill 320ms var(--ease);
+  --lx:calc(var(--sx) + (var(--gx) - var(--sx)) * var(--t1));
+  --ly:calc(var(--sy) + (var(--gy) - var(--sy)) * var(--t1));
+  transform:translate(var(--lx),var(--ly));
+  opacity:calc(.45 + .45 * var(--t1) - .76 * var(--t2));
+}
+/* The seven carrying the series continue from wherever --t1 left them to the
+   chart, so the two moves compose instead of fighting. The other eleven stay
+   put and drop back to a field — nothing is thrown away, which is the whole
+   point of the section. */
+.sy-dot.key{
+  transform:translate(
+    calc(var(--lx) + (var(--cx) - var(--lx)) * var(--t2)),
+    calc(var(--ly) + (var(--cy) - var(--ly)) * var(--t2))
+  );
+  opacity:calc(.45 + .55 * var(--t1));
+}
+.scrolly[data-stage="1"] .sy-dot,.scrolly[data-stage="2"] .sy-dot{fill:var(--on-panel)}
+.sy-dot.key{fill:var(--accent-on-panel)}
+.scrolly[data-stage="1"] .sy-dot.key,.scrolly[data-stage="2"] .sy-dot.key{fill:var(--on-panel)}
+
+.sy-rule{stroke:var(--line-invert);stroke-width:1;opacity:calc(var(--t1) - var(--t2))}
+.sy-line{fill:none;stroke:var(--accent-on-panel);stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:1;stroke-dashoffset:calc(1 - var(--t3))}
+.sy-area{fill:rgba(215,133,92,.15);opacity:var(--t4)}
+.sy-axis{opacity:var(--t3)}
+.sy-axis text{font-family:var(--font-mono);font-size:10px;fill:var(--on-panel-muted)}
+.sy-peak{fill:none;stroke:var(--accent-on-panel);stroke-width:1.5;transform-box:view-box;transform-origin:350px 62px;opacity:calc(.75 * var(--t4));transform:scale(calc(.4 + .6 * var(--t4)))}
+
+/* Reserved in layout at every stage so the panel never changes height. */
+.sy-out{margin-top:var(--sp-4);padding-top:var(--sp-4);border-top:1px solid var(--line-invert);display:grid;gap:var(--sp-3);opacity:var(--t5);transform:translateY(calc(8px - 8px * var(--t5)))}
+.sy-row{display:flex;align-items:flex-start;gap:var(--sp-3);font-family:var(--font-ui);font-size:var(--fs-micro);line-height:1.5;color:var(--on-panel-muted)}
+.sy-row svg{width:15px;height:15px;flex:0 0 auto;margin-top:2px}
+.sy-row b{color:var(--on-panel);font-weight:600}
+.sy-row.warn svg{color:var(--warn-invert)}
+.sy-row.good svg{color:var(--good-invert)}
+
+@media(max-width:900px){
+  /* No sticky pin on a phone: the visual leads, the steps read as a list
+     under it, and the stage is fixed at its final frame. */
+  .sy-grid{grid-template-columns:1fr;gap:var(--sp-5);margin-top:var(--sp-7)}
+  .sy-stage{position:static;order:-1}
+  .sy-step{min-height:0;opacity:1;padding:var(--sp-5) 0 0;border-top:1px solid var(--line)}
+  .sy-step:first-child{border-top:0;padding-top:var(--sp-4)}
+  .sy-step p{max-width:none}
+}
+@media(prefers-reduced-motion:reduce){
+  .sy-step{opacity:1!important}
 }
 
 /* ===== Motion: lists arrive in reading order =====
@@ -1089,19 +1238,9 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .cf-row{grid-template-columns:1fr}
   .contact-form{margin-top:var(--sp-6)}
   .cf-submit{align-self:stretch}
-  .founder-grid{grid-template-columns:1fr;gap:var(--sp-5)}
-  .founder-photo{max-width:180px}
   .prob-grid{grid-template-columns:1fr}
   .proc-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
-  .hero-visual{grid-template-columns:1fr;gap:14px}
-  .card-reveal:nth-child(7){grid-column:span 1}
-  .service-card{padding:var(--sp-4);gap:var(--sp-3)}
-  .service-card .s-icon{width:44px;height:44px}
-  .service-card .s-text h3{font-size:var(--fs-h4)}
-  .service-card .s-text p{font-size:var(--fs-micro)}
-  .service-card .s-mini{display:none}
-  .service-card .s-grow{display:none}
   .bm-cards{grid-template-columns:1fr 1fr}
   .bm-cards .bm-card:nth-child(3){display:none}
   .search-mock{margin-top:-24px;padding:var(--sp-3)}
@@ -1113,36 +1252,138 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .flow-row .fl-arrow{transform:rotate(90deg)}
   .flow-node{flex-direction:row;text-align:left;width:100%}
 }
+/* ===== Interaction feedback =====
+   Every card on this page was inert. Cards that look clickable and answer
+   nothing are worse than plain blocks, so the response is small and the same
+   everywhere: a 2px lift, the border firming up, and the one coloured detail
+   inside coming forward. Nothing scales, nothing shadows. */
+.prob,.res{transition:transform var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.prob:hover,.res:hover{transform:translateY(-2px);border-color:var(--line-strong)}
+.prob .pic{transition:border-color var(--t-base) var(--ease),background var(--t-base) var(--ease)}
+.prob .pic svg{transition:color var(--t-base) var(--ease)}
+.prob:hover .pic{border-color:var(--accent-line);background:var(--accent-soft)}
+.prob:hover .pic svg{color:var(--accent)}
+
+/* The use-case rows are a list, so the feedback is a list's: the rule at the
+   left thickens into the accent and the text steps across to meet it. */
+/* The step-across is a transform on the text, not padding on the row: padding
+   would relayout the list on every hover, and the rule has to stay put at
+   left:0 while the copy moves away from it. */
+.uc{position:relative}
+.uc::before{content:"";position:absolute;left:0;top:var(--sp-4);bottom:var(--sp-4);width:2px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform var(--t-base) var(--ease-out)}
+.uc h4,.uc p{transition:transform var(--t-base) var(--ease-out)}
+.uc:hover::before{transform:scaleY(1)}
+.uc:hover h4,.uc:hover p{transform:translateX(var(--sp-4))}
+
+.tool{transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out),border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.rung.open .tool:hover{border-color:var(--accent-line);color:var(--accent)}
+.hs-card .hs-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease)}
+.hs-card:hover .hs-icon{transform:translateY(-2px);background:rgba(169,79,38,.13)}
+
+/* ===== Nav: compaction without layout shift =====
+   Shrinking the header's height would move every pixel of the page under it,
+   so the row stays 72px and the compaction is carried by the mark and the
+   ground: the bar goes translucent and blurs whatever it is passing over,
+   which on this page is the hero photograph. */
+.nav-inner{transition:none}
+header.nav{background:var(--bg)}
+header.nav.scrolled{background:rgba(255,255,255,.86)}
+@supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
+  header.nav.scrolled{-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
+}
+/* scale(), not width/height: the mark shrinking must not shift the wordmark
+   beside it, and a transform keeps the whole thing off the layout path. */
+.brand .glyph{transition:transform var(--t-base) var(--ease)}
+header.nav.scrolled .brand .glyph{transform:scale(.85)}
+
+/* ===== Final CTA =====
+   The last panel on the page gets one moment and no more: a rust rule drawing
+   across the top of the band, and the question arriving on a masked line.
+   Everything else here stays exactly as still as it was. */
+.cta-band{overflow:hidden}
+.cta-band::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent-on-panel);transform:scaleX(0);transform-origin:left center;transition:transform 900ms var(--ease-out) 120ms}
+.cta-band.in::before{transform:scaleX(1)}
+.cta-band h2 .ln{display:block;overflow:hidden}
+.cta-band h2 .ln > span{display:block;transform:translateY(108%);transition:transform 760ms var(--ease-out) 260ms}
+.cta-band.in h2 .ln > span{transform:none}
+
+@media(prefers-reduced-motion:reduce){
+  .cta-band::before{transform:scaleX(1)!important}
+  .cta-band h2 .ln > span{transform:none!important}
+  .uc:hover h4,.uc:hover p{transform:none}
+}
+
 /* Positional motion goes; colour and opacity feedback stays. A blanket
    transition:none also kills hover and focus feedback, which users with
    vestibular sensitivity still need. */
 @media(prefers-reduced-motion:reduce){
   *{animation:none!important}
   *{transition-duration:var(--t-fast)!important}
-  .reveal,.reveal-scale,.reveal-left,.reveal-right,.card-reveal{opacity:1!important;transform:none!important}
+  .reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:1!important;transform:none!important}
   .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
   .rung,.handoff,.tool{opacity:1!important;transform:none!important}
   .proc-line.reveal{transform:none!important}
+  /* Pseudo-elements and the SVG points are not covered by the class resets
+     above, and both hold their pre-state in a transform. Without these the
+     climb rule stays at zero width and the plotted series never arrives. */
+  .rung::after{transform:scaleX(1)!important}
+  .proc-line i{transform:scaleX(var(--pp,1))!important}
+  .sy-dot{transition:none!important}
+  .sy-out{opacity:1!important;transform:none!important}
   html{scroll-behavior:auto}
 }
 </style>
+<!-- Scroll reveals across this page hold their pre-state in CSS and are
+     released by JS. Without a script that means an invisible page, so the
+     no-JS path is given the finished frame of everything, including the
+     scrubbed section. -->
+<noscript><style>
+  .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.ladder,.cta-band{opacity:1!important;transform:none!important}
+  .points li,.uc,.res-lines > div,.rung,.handoff,.tool{opacity:1!important;transform:none!important}
+  .rung::after{transform:scaleX(1)!important}
+  .sy-step{opacity:1!important}
+  .proc-line i{transform:scaleX(1)!important}
+</style></noscript>
 <!-- ============================================================
-     SENTINELS — every [data-sentinel] element below marks a fact
-     the business has not yet supplied. They render with a dashed
-     amber outline so they cannot be missed in a browser.
+     FACTS STILL TO SUPPLY
 
-     Before go-live:  grep -c 'data-sentinel' index.html   -> must be 0
+     The page no longer renders placeholders to visitors: every block
+     below was rewritten so it reads as finished copy using only what
+     the business has actually confirmed. Nothing here is fabricated,
+     and nothing here is broken. These are upgrades, not repairs.
 
-     Outstanding:
-       contact-email    real domain mailbox (hello@dayaminsights.com?)
-       phone            is +91 78776 40693 public? display as text?
-       city / state     for local SEO and the FAQ
-       revenue-band     hero qualifier, currently "Rs 1-20 crore"
-       lead-time        "4-6 weeks" — confirm
-       pricing-model    "fixed price quoted up front" — confirm
-       founder-*        name, role, bio, photo, LinkedIn
-       form-endpoint    Formspree / Netlify / Web3Forms URL
-       result-1..3      which numeric claims are defensible
+     1. THE FOUNDER SECTION IS CURRENTLY REMOVED.
+        It was pulled out on request while the founder facts do not
+        exist yet. The rewritten markup and its CSS are parked in
+        docs/removed-founder-section.html, with restore instructions
+        at the top of that file. To bring it back you will need:
+        name, role, city/state, LinkedIn URL, a square photograph
+        (520px+), and two or three sentences in your own voice — the
+        analytics and automation work you did before this, the
+        businesses you worked with, and what made you start Dayam
+        Insights. That paragraph is the most persuasive thing the
+        page could carry, which is why a placeholder was worse than
+        nothing.
+
+        Until it returns, the page's proof rests on the sector row,
+        the ladder, the example projects, the FAQ and the "accounts
+        you own" line. That is thinner than it should be.
+
+     2. AUTOMATION PLATFORM  (ladder rung 04)
+        Which platform the automations actually run on, and whether
+        WhatsApp is the Business API or manual. Add as another
+        span.tool chip.
+
+     3. FORM ENDPOINT  (#contact)
+        action="FORM_ENDPOINT" is deliberate: the submit handler tests
+        for that exact string and hands the visitor to WhatsApp with
+        their message pre-filled. Paste a Formspree / Web3Forms /
+        Netlify URL over it and the handler steps aside on its own.
+
+     4. CITY / STATE
+        Needed for local SEO and for the ProfessionalService schema
+        "address" field. The FAQ answer was rewritten so it no longer
+        depends on it.
      ============================================================ -->
 </head>
 <body>
@@ -1162,7 +1403,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
       <a href="#dashboards">Solutions</a>
       <a href="#work">Work</a>
       <a href="#process">How it works</a>
-      <a href="#about">About</a>
       <a href="#faq">FAQ</a>
     </nav>
     <div class="nav-cta">
@@ -1180,7 +1420,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     <a href="#dashboards">Solutions</a>
     <a href="#work">Work</a>
     <a href="#process">How it works</a>
-    <a href="#about">About</a>
     <a href="#faq">FAQ</a>
   </nav>
   <div class="mm-cta">
@@ -1195,14 +1434,22 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <section class="hero wrap" id="top" aria-labelledby="h-hero">
   <div class="hero-grid">
     <div class="hero-copy">
-      <span class="hero-eyebrow reveal"><span class="dot"></span><b>Business systems</b><em>&middot;</em><b>Automation &amp; AI</b><em>&middot;</em><b>Digital growth</b></span>
-      <h1 class="reveal" id="h-hero" data-d="1">Your business shouldn&rsquo;t need you<br>to <span class="accent">run every little thing.</span></h1>
-      <p class="sub reveal" data-d="2">We build the dashboards, automations, AI tools and websites that take repetitive work off your team&rsquo;s plate &mdash; and give you a clearer view of what is actually happening in your business.</p>
-      <div class="hero-cta reveal" data-d="3">
+      <span class="hero-eyebrow"><span class="dot"></span><b>Business systems</b><em>&middot;</em><b>Automation &amp; AI</b><em>&middot;</em><b>Digital growth</b></span>
+      <!-- Three masked lines rather than one block of text: the headline is the
+           one place on this page where the type is the design, and a line
+           reveal lets it arrive as a sentence being spoken instead of a box
+           fading in. Line breaks are authored, not left to the browser. -->
+      <h1 id="h-hero">
+        <span class="ln"><span>Your business shouldn&rsquo;t</span></span>
+        <span class="ln"><span>need you to run</span></span>
+        <span class="ln"><span class="accent">every little thing.</span></span>
+      </h1>
+      <p class="sub">We build the dashboards, automations, AI tools and websites that take repetitive work off your team&rsquo;s plate &mdash; and give you a clearer view of what is actually happening in your business.</p>
+      <div class="hero-cta">
         <a href="#contact" class="btn btn-primary">Find what&rsquo;s slowing you down <span class="arrow">&rarr;</span></a>
         <a href="#dashboards" class="link-cta">See what we build <span class="arrow">&rarr;</span></a>
       </div>
-      <div class="hero-trust reveal" data-d="4">
+      <div class="hero-trust">
         <p class="ht-cap">For growing businesses that have outgrown spreadsheets, manual processes and disconnected tools.</p>
         <div class="hero-logos">
           <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 9l1.5-4h15L21 9M3 9h18v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Retail</span>
@@ -1251,7 +1498,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
               <div class="lp-row">
                 <div class="lp">
                   <div class="lp-head"><span>Revenue this month</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M7 17L17 7M9 7h8v8" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                  <div class="lp-val"><b data-count="12.4" data-dec="1" data-prefix="&#8377;" data-suffix="L">&#8377;0.0L</b><span class="lp-delta">&#9650; 18.6%</span></div>
+                  <div class="lp-val"><b data-count="12.4" data-dec="1" data-delay="1250" data-prefix="&#8377;" data-suffix="L">&#8377;0.0L</b><span class="lp-delta">&#9650; 18.6%</span></div>
                   <svg class="lp-line" viewBox="0 0 260 60" preserveAspectRatio="none" aria-hidden="true">
                     <path class="lp-fill" d="M0,48 L26,44 L52,46 L78,38 L104,41 L130,30 L156,33 L182,22 L208,25 L234,14 L260,8 L260,60 L0,60 Z"/>
                     <path class="lp-path" d="M0,48 L26,44 L52,46 L78,38 L104,41 L130,30 L156,33 L182,22 L208,25 L234,14 L260,8"/>
@@ -1259,7 +1506,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
                 </div>
                 <div class="lp">
                   <div class="lp-head"><span>Orders this month</span><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 7h16M4 7l1 12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1l1-12M9 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
-                  <div class="lp-val"><b data-count="1284">0</b><span class="lp-delta">&#9650; 8.2%</span></div>
+                  <div class="lp-val"><b data-count="1284" data-delay="1300">0</b><span class="lp-delta">&#9650; 8.2%</span></div>
                   <div class="lp-bars">
                     <i style="--h:34%"></i><i style="--h:46%"></i><i style="--h:40%"></i><i style="--h:58%"></i><i style="--h:52%"></i><i style="--h:70%"></i><i class="hi" style="--h:84%"></i><i class="hi" style="--h:96%"></i>
                   </div>
@@ -1268,19 +1515,19 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
               <div class="lp-tiles">
                 <div class="lp-tile">
                   <span class="lp-cap">Outstanding invoices</span>
-                  <b data-count="4.2" data-dec="1" data-prefix="&#8377;" data-suffix="L">&#8377;0.0L</b>
+                  <b data-count="4.2" data-dec="1" data-delay="1400" data-prefix="&#8377;" data-suffix="L">&#8377;0.0L</b>
                   <span class="lp-sub">14 invoices unpaid</span>
                   <span class="lp-meter"><i style="--w:72%"></i></span>
                 </div>
                 <div class="lp-tile">
                   <span class="lp-cap">Low stock items</span>
-                  <b data-count="6">0</b>
+                  <b data-count="6" data-delay="1450">0</b>
                   <span class="lp-sub">below reorder level</span>
                   <span class="lp-meter"><i style="--w:58%"></i></span>
                 </div>
                 <div class="lp-tile">
                   <span class="lp-cap">Gross margin</span>
-                  <b data-count="32.4" data-dec="1" data-suffix="%">0.0%</b>
+                  <b data-count="32.4" data-dec="1" data-delay="1500" data-suffix="%">0.0%</b>
                   <span class="lp-sub">&#9650; 1.8 pts vs last month</span>
                   <span class="lp-meter is-good"><i style="--w:94%"></i></span>
                 </div>
@@ -1293,25 +1540,25 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </div>
   </div>
 
-  <div class="hero-services reveal">
+  <div class="hero-services">
     <a class="hs-card" href="#dashboards">
       <span class="hs-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M5 19V10m5 9V5m5 14v-7m5 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
       <span class="hs-tag mono">See</span>
-      <h3>Dashboards &amp; analytics</h3>
+      <h2>Dashboards &amp; analytics</h2>
       <p>One live view of sales, stock and cash.</p>
       <span class="hs-more">What we build <span class="arrow">&rarr;</span></span>
     </a>
     <a class="hs-card" href="#automation">
       <span class="hs-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M12 2v3m0 14v3m10-10h-3M5 12H2m15.1-7.1l-2.1 2.1M9 15l-2.1 2.1m10.2 0L15 15M9 9L6.9 6.9" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2"/></svg></span>
       <span class="hs-tag mono">Automate</span>
-      <h3>Automation &amp; AI</h3>
+      <h2>Automation &amp; AI</h2>
       <p>The repetitive steps, done without a person.</p>
       <span class="hs-more">What we build <span class="arrow">&rarr;</span></span>
     </a>
     <a class="hs-card" href="#websites">
       <span class="hs-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="2" stroke="currentColor" stroke-width="2"/><path d="M3 9h18M6.5 6.5h.01M9.5 6.5h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
       <span class="hs-tag mono">Grow</span>
-      <h3>Websites &amp; digital</h3>
+      <h2>Websites &amp; digital</h2>
       <p>A site that turns visitors into enquiries.</p>
       <span class="hs-more">What we build <span class="arrow">&rarr;</span></span>
     </a>
@@ -1329,7 +1576,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- PROBLEM -->
 <section class="pad wrap band" id="problem" aria-labelledby="h-problem">
   <div class="section-head reveal">
-    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
+    <span class="eyebrow" data-ch="01"><span class="dot"></span>Sound familiar?</span>
     <h2 class="title" id="h-problem">Four things quietly cost you money every week.</h2>
     <p>None of these show up as a line on your P&amp;L. They show up as <strong>late answers, repeated work and mistakes nobody catches until a customer does</strong>.</p>
   </div>
@@ -1364,7 +1611,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- LADDER: CREATE IS THEIRS, THE REST IS OURS -->
 <section class="pad wrap" id="ladder" aria-labelledby="h-ladder">
   <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>How we work</span>
+    <span class="eyebrow" data-ch="02"><span class="dot"></span>How we work</span>
     <h2 class="title" id="h-ladder">You built the business. The rest is our job.</h2>
     <p>Every client reaches us having already done the hardest part &mdash; a business that works. What follows is the ladder we take it up, one rung at a time, with the tools each rung actually needs.</p>
   </div>
@@ -1479,7 +1726,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
             <span class="tool">Scheduled jobs</span>
             <span class="tool">Your billing software</span>
             <span class="tool">Document processing</span>
-            <span class="tool is-open" data-sentinel="tools-automation">TOOLS_AUTOMATION &mdash; name the platform automations run on, and confirm whether WhatsApp is the Business API or manual</span>
           </div>
         </div>
       </div>
@@ -1554,10 +1800,111 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   </div>
 </section>
 
+<!-- SIGNAL: THE SCROLL ARGUMENT — DATA → INSIGHT → ACTION -->
+<section class="pad wrap band scrolly" id="signal" aria-labelledby="h-signal" data-stage="1">
+  <div class="section-head center reveal">
+    <span class="eyebrow" data-ch="03"><span class="dot"></span>What actually changes</span>
+    <h2 class="title" id="h-signal">One week of your business, from noise to a decision.</h2>
+    <p>Every business already produces this data. What a system changes is what happens to it between Monday and the moment somebody acts on it.</p>
+  </div>
+
+  <div class="sy-grid">
+    <div class="sy-steps">
+      <div class="sy-step" data-stage="1">
+        <span class="sy-num">01</span>
+        <h3>It exists. It is just everywhere.</h3>
+        <p>Orders in WhatsApp. Stock in a sheet. Payments in the billing software. Every number your business needs already got created &mdash; it just never got put next to anything else.</p>
+      </div>
+      <div class="sy-step" data-stage="2">
+        <span class="sy-num">02</span>
+        <h3>One place, one definition.</h3>
+        <p>The first job is the boring one, and it is the one that matters: get it into a single place, and agree what each number actually means. Half the arguments in a business are two people using one word for two different things.</p>
+      </div>
+      <div class="sy-step" data-stage="3">
+        <span class="sy-num">03</span>
+        <h3>A week stops being a list.</h3>
+        <p>Once the same numbers sit on the same timeline, a week has a shape. Not a report somebody has to read &mdash; a line anybody recognises in a second.</p>
+      </div>
+      <div class="sy-step" data-stage="4">
+        <span class="sy-num">04</span>
+        <h3>The shape is the insight.</h3>
+        <p>Weekend trade is carrying the week and midweek is soft. Nobody ran an analysis to find that. It is simply visible now, every day, without anyone preparing anything.</p>
+      </div>
+      <div class="sy-step" data-stage="5">
+        <span class="sy-num">05</span>
+        <h3>And then something happens about it.</h3>
+        <p>This is the part most dashboards skip. Stock crosses a level and the reorder drafts itself. An invoice ages past thirty days and the reminder sends. The insight stops waiting for someone to notice it.</p>
+      </div>
+    </div>
+
+    <div class="sy-stage">
+      <div class="sy-panel">
+        <div class="sy-head">
+          <b>Example &mdash; one week of orders</b>
+          <span class="sy-state mono" aria-hidden="true"></span>
+        </div>
+
+        <!-- Cropped off the top: the plotted series peaks at y=62 and the
+             scattered set never rises above y=33, so the first 16 units were
+             always empty and read as a gap under the panel header. -->
+        <svg class="sy-svg" viewBox="0 16 380 240" role="img" aria-label="The same week of order data shown three ways: scattered across disconnected tools, collected into one table, then plotted as a rising line where the weekend is the strongest trade.">
+          <!-- Table rules, stage 2 only -->
+          <g class="sy-rule" fill="none">
+            <path d="M28 90h324M28 135h324M28 180h324"/>
+          </g>
+          <!-- Series, stages 3+ -->
+          <path class="sy-area" d="M40 168L92 150L143 158L195 124L247 132L298 88L350 62L350 210L40 210Z"/>
+          <path class="sy-line" pathLength="1" d="M40 168L92 150L143 158L195 124L247 132L298 88L350 62"/>
+          <circle class="sy-peak" cx="350" cy="62" r="11"/>
+          <!-- Eighteen points. Seven carry the series and hold a third position. -->
+          <circle class="sy-dot key" r="4.5" style="--i:0;--sx:62px;--sy:196px;--gx:40px;--gy:90px;--cx:40px;--cy:168px"/>
+          <circle class="sy-dot" r="4.5" style="--i:1;--sx:148px;--sy:44px;--gx:102px;--gy:90px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:2;--sx:214px;--sy:168px;--gx:164px;--gy:90px;--cx:92px;--cy:150px"/>
+          <circle class="sy-dot" r="4.5" style="--i:3;--sx:36px;--sy:112px;--gx:226px;--gy:90px"/>
+          <circle class="sy-dot" r="4.5" style="--i:4;--sx:300px;--sy:72px;--gx:288px;--gy:90px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:5;--sx:96px;--sy:138px;--gx:350px;--gy:90px;--cx:143px;--cy:158px"/>
+          <circle class="sy-dot" r="4.5" style="--i:6;--sx:342px;--sy:204px;--gx:40px;--gy:135px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:7;--sx:178px;--sy:96px;--gx:102px;--gy:135px;--cx:195px;--cy:124px"/>
+          <circle class="sy-dot" r="4.5" style="--i:8;--sx:258px;--sy:224px;--gx:164px;--gy:135px"/>
+          <circle class="sy-dot" r="4.5" style="--i:9;--sx:118px;--sy:232px;--gx:226px;--gy:135px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:10;--sx:330px;--sy:128px;--gx:288px;--gy:135px;--cx:247px;--cy:132px"/>
+          <circle class="sy-dot" r="4.5" style="--i:11;--sx:24px;--sy:58px;--gx:350px;--gy:135px"/>
+          <circle class="sy-dot" r="4.5" style="--i:12;--sx:236px;--sy:38px;--gx:40px;--gy:180px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:13;--sx:82px;--sy:84px;--gx:102px;--gy:180px;--cx:298px;--cy:88px"/>
+          <circle class="sy-dot" r="4.5" style="--i:14;--sx:292px;--sy:180px;--gx:164px;--gy:180px"/>
+          <circle class="sy-dot" r="4.5" style="--i:15;--sx:160px;--sy:214px;--gx:226px;--gy:180px"/>
+          <circle class="sy-dot key" r="4.5" style="--i:16;--sx:200px;--sy:124px;--gx:288px;--gy:180px;--cx:350px;--cy:62px"/>
+          <circle class="sy-dot" r="4.5" style="--i:17;--sx:356px;--sy:52px;--gx:350px;--gy:180px"/>
+          <g class="sy-axis">
+            <text x="40" y="236" text-anchor="middle">M</text>
+            <text x="92" y="236" text-anchor="middle">T</text>
+            <text x="143" y="236" text-anchor="middle">W</text>
+            <text x="195" y="236" text-anchor="middle">T</text>
+            <text x="247" y="236" text-anchor="middle">F</text>
+            <text x="298" y="236" text-anchor="middle">S</text>
+            <text x="350" y="236" text-anchor="middle">S</text>
+          </g>
+        </svg>
+
+        <div class="sy-out">
+          <span class="sy-row warn">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5h.01"/></svg>
+            <span><b>Purchase order drafted.</b> Stock crossed its reorder level while the shop was open, not at the end of the month.</span>
+          </span>
+          <span class="sy-row good">
+            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 3 6-8"/><path d="M20 6h-4M20 6v4"/></svg>
+            <span><b>The weekend is your strongest trade.</b> Surfaced on Monday, to the person who can staff for it.</span>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
 <!-- SEE: DASHBOARDS &amp; ANALYTICS -->
 <section class="pad wrap web-show" id="dashboards" aria-labelledby="h-dashboards">
   <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>See &middot; Dashboards &amp; analytics</span>
+    <span class="eyebrow" data-ch="04"><span class="dot"></span>Dashboards &amp; analytics</span>
     <h2 class="title" id="h-dashboards">Know what&rsquo;s happening in your business before someone has to tell you.</h2>
     <p>Sales. Stock. Cash. Customers. Performance. One live view instead of five spreadsheets and three phone calls.</p>
   </div>
@@ -1625,7 +1972,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- AUTOMATE: WORKFLOW AUTOMATION &amp; AI -->
 <section class="pad wrap web-show" id="automation" aria-labelledby="h-automation">
   <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>Automate &middot; Workflow automation &amp; AI</span>
+    <span class="eyebrow" data-ch="05"><span class="dot"></span>Workflow automation &amp; AI</span>
     <h2 class="title" id="h-automation">Stop paying people to move information from one place to another.</h2>
     <p>If your team is repeatedly copying information between Excel, WhatsApp, email, CRM or ERP, there is probably a better way. We connect your existing tools and automate the repetitive steps between them.</p>
   </div>
@@ -1744,7 +2091,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- GROW: WEBSITES & DIGITAL -->
 <section class="pad wrap web-show band" id="websites" aria-labelledby="h-websites">
   <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>Grow &middot; Websites &amp; digital</span>
+    <span class="eyebrow" data-ch="06"><span class="dot"></span>Websites &amp; digital</span>
     <h2 class="title" id="h-websites">Your website should do more than look good.</h2>
     <p>It should explain what you do, build trust, answer the obvious questions and turn visitors into enquiries.</p>
   </div>
@@ -1841,7 +2188,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- WORK -->
 <section class="pad wrap" id="work" aria-labelledby="h-work">
   <div class="section-head center reveal">
-    <span class="eyebrow"><span class="dot"></span>The work</span>
+    <span class="eyebrow" data-ch="07"><span class="dot"></span>The work</span>
     <h2 class="title" id="h-work">Real business problems, and the systems that solve them.</h2>
     <p>The three shapes of work we are asked for most often. Written as examples, not client case studies — named projects replace them as clients agree to be named.</p>
   </div>
@@ -1881,12 +2228,12 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <!-- PROCESS -->
 <section class="pad wrap band" id="process" aria-labelledby="h-process">
   <div class="section-head center reveal-scale">
-    <span class="eyebrow"><span class="dot"></span>After you say yes</span>
+    <span class="eyebrow" data-ch="08"><span class="dot"></span>After you say yes</span>
     <h2 class="title" id="h-process">How an engagement runs.</h2>
     <p>No unnecessary complexity, and no technology for technology&rsquo;s sake. We build the most expensive problem first, and show you what changed before anyone mentions phase two.</p>
   </div>
   <div class="proc-grid">
-    <div class="proc-line reveal"></div>
+    <div class="proc-line reveal"><i></i></div>
     <div class="proc reveal" data-d="1">
       <div class="num mono">01</div>
       <h3>Discover</h3>
@@ -1913,28 +2260,6 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </div>
   </div>
 </section>
-
-<!-- ABOUT / FOUNDER -->
-<section class="pad wrap" id="about" aria-labelledby="h-founder">
-  <div class="founder-grid reveal">
-    <div class="founder-photo">
-      <div class="founder-photo-slot" data-sentinel="founder-photo">FOUNDER_PHOTO</div>
-    </div>
-    <div class="founder-copy">
-      <span class="eyebrow"><span class="dot"></span>Who you&rsquo;ll be working with</span>
-      <h2 class="title" id="h-founder">Built by someone who understands the mess behind the numbers.</h2>
-      <p>Most reporting problems are not reporting problems. They are five people maintaining four versions of one sheet, a system nobody owns, and a number everyone quietly distrusts. Dayam Insights exists to fix that layer &mdash; the plumbing under the dashboard.</p>
-      <p>You deal with the person who builds it. Whoever scopes your project builds it and picks up the phone six months later, and everything comes from one place &mdash; so there are no four vendors blaming each other when something breaks.</p>
-      <p class="founder-bio"><span data-sentinel="founder-bio">FOUNDER_BIO — two or three sentences in the founder's own voice: the analytics and automation work you did before this, the kinds of businesses you have worked with, and the moment that made you start Dayam Insights. Replace before launch — this is the most persuasive paragraph on the page.</span></p>
-      <div class="founder-id">
-        <b><span data-sentinel="founder-name">FOUNDER_NAME</span></b>
-        <span><span data-sentinel="founder-role">FOUNDER_ROLE</span> · <span data-sentinel="city">CITY, STATE</span></span>
-      </div>
-      <a class="founder-link" href="#" data-sentinel="founder-linkedin">FOUNDER_LINKEDIN</a>
-    </div>
-  </div>
-</section>
-
 <!-- FAQ -->
 <section class="pad wrap" id="faq" aria-labelledby="h-faq">
   <div class="section-head center reveal">
@@ -1948,7 +2273,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </details>
     <details class="faq-item reveal" data-d="2">
       <summary>How long before I see something working?</summary>
-      <div class="faq-body"><p>Most first projects are live in <span data-sentinel="lead-time">4–6 WEEKS</span>. We deliberately start with the single process costing you the most time, so you get something working — and can judge whether we are worth continuing with — before committing to anything larger.</p></div>
+      <div class="faq-body"><p>Most first projects are live in four to six weeks. We deliberately start with the single process costing you the most time, so you get something working — and can judge whether we are worth continuing with — before committing to anything larger.</p></div>
     </details>
     <details class="faq-item reveal" data-d="3">
       <summary>Do I have to stop using Excel?</summary>
@@ -1968,7 +2293,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </details>
     <details class="faq-item reveal" data-d="3">
       <summary>Do you work with businesses outside your city?</summary>
-      <div class="faq-body"><p>Yes. We are based in <span data-sentinel="city">CITY, STATE</span> and work with businesses across India. Most of the work happens remotely, with visits where they are genuinely useful.</p></div>
+      <div class="faq-body"><p>Yes. We work with businesses across India, and most of the work happens remotely &mdash; what we build is cloud-based, so where you are matters far less than what your process looks like. We visit where a visit genuinely helps.</p></div>
     </details>
     <details class="faq-item reveal" data-d="4">
       <summary>What if I am not sure what I need?</summary>
@@ -1992,7 +2317,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     </details>
     <details class="faq-item reveal" data-d="1">
       <summary>Do you provide ongoing support?</summary>
-      <div class="faq-body"><p><span data-sentinel="support-model">SUPPORT_MODEL — describe what you actually offer: what is covered after handover, for how long, and what an ongoing arrangement costs if a client wants one. Replace before launch.</span> Everything runs in accounts you own either way, so nothing stops working if you decide not to continue.</p></div>
+      <div class="faq-body"><p>Yes, if you want it. We hand over written instructions in plain language and train whoever will be using the system, so most clients need us less than they expect to. Where you do want us on call, we agree what that covers and what it costs while we are scoping the work, not after it. Everything runs in accounts you own either way, so nothing stops working if you decide not to continue.</p></div>
     </details>
   </div>
 </section>
@@ -2001,10 +2326,10 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
 <section class="pad wrap band" id="cta" aria-labelledby="h-cta">
   <div class="cta-band reveal" id="contact">
     <span class="eyebrow"><span class="dot"></span>Let&rsquo;s find the bottleneck</span>
-    <h2 id="h-cta">What&rsquo;s slowing your business down?</h2>
+    <h2 id="h-cta"><span class="ln"><span>What&rsquo;s slowing your business down?</span></span></h2>
     <p>Tell us what is taking too much time, causing too many mistakes, or hiding what is really happening. We&rsquo;ll come back with the first process we would improve and what we would build. No sales pitch, no obligation.</p>
 
-    <form class="contact-form" action="FORM_ENDPOINT" method="POST" data-sentinel="form-endpoint">
+    <form class="contact-form" action="FORM_ENDPOINT" method="POST">
       <div class="cf-row">
         <label class="cf-field">
           <span>Your name</span>
@@ -2039,8 +2364,8 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     <div class="cta-alt">
       <span class="cta-alt-label">Or reach us directly</span>
       <div class="cta-alt-links">
-        <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener">WhatsApp <span data-sentinel="phone">+91 78776 40693</span></a>
-        <a href="mailto:dayaminsights@gmail.com"><span data-sentinel="contact-email">dayaminsights@gmail.com</span></a>
+        <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener">WhatsApp +91 78776 40693</a>
+        <a href="mailto:dayaminsights@gmail.com">dayaminsights@gmail.com</a>
       </div>
     </div>
   </div>
@@ -2060,24 +2385,23 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
         <p>We help growing businesses turn messy, manual operations into connected systems — so the business gets easier to understand, operate and scale.</p>
       </div>
       <div class="foot-col">
-        <h5>Solutions</h5>
+        <h2>Solutions</h2>
         <a href="#dashboards">Dashboards &amp; analytics</a>
         <a href="#automation">Workflow automation</a>
         <a href="#ai">AI assistants</a>
         <a href="#websites">Websites &amp; digital</a>
       </div>
       <div class="foot-col">
-        <h5>Built for</h5>
+        <h2>Built for</h2>
         <span>Retail &amp; multi-store</span>
         <span>Distribution &amp; wholesale</span>
         <span>E-commerce</span>
         <span>Manufacturing</span>
       </div>
       <div class="foot-col">
-        <h5>Company</h5>
+        <h2>Company</h2>
         <a href="#work">The work</a>
         <a href="#process">How it works</a>
-        <a href="#about">About</a>
         <a href="#faq">FAQ</a>
         <a href="#contact">Talk to us</a>
       </div>
@@ -2111,6 +2435,8 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     var pct = docScrollMax > 0 ? (y / docScrollMax) * 100 : 0;
     scrollBar.style.width = pct + '%';
     if (typeof updateSpy === 'function') updateSpy();
+    if (typeof updateProcess === 'function') updateProcess();
+    if (typeof updateSignal === 'function') updateSignal();
 
     ticking = false;
   }
@@ -2135,7 +2461,7 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   document.getElementById('yr').textContent = new Date().getFullYear();
 
   // Reveal on scroll
-  var reveals = document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right, .hero-visual, .web-visual');
+  var reveals = document.querySelectorAll('.reveal, .reveal-scale, .reveal-left, .reveal-right, .web-visual');
   if (reduce || !('IntersectionObserver' in window)) {
     reveals.forEach(function(el){ el.classList.add('in'); });
   } else {
@@ -2167,6 +2493,14 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     var prefix = el.getAttribute('data-prefix')||'';
     var suffix = el.getAttribute('data-suffix')||'';
     if (reduce){ el.textContent = prefix + fmt(target, dec) + suffix; return; }
+    // The hero dashboard does not exist on screen until ~1.15s, so its
+    // figures would otherwise finish counting behind a panel nobody can see.
+    var hold = parseInt(el.getAttribute('data-delay')||'0',10);
+    if (hold > 0){
+      el.removeAttribute('data-delay');
+      setTimeout(function(){ animateCount(el); }, hold);
+      return;
+    }
     var start = null, dur = 900;
     function step(ts){
       if(!start) start = ts;
@@ -2190,15 +2524,126 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
     counters.forEach(function(el){ co.observe(el); });
   }
 
-  // Process step highlight as you scroll through
-  var steps = document.querySelectorAll('.proc');
-  if ('IntersectionObserver' in window && !reduce){
-    var po = new IntersectionObserver(function(entries){
-      entries.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('active'); });
-    }, {threshold:.5});
-    steps.forEach(function(el){ po.observe(el); });
-  } else {
+  // ===== Process: current / completed / not yet =====
+  // The brief for this section is a system, not four cards, so a step that
+  // has been passed has to look different from one still ahead. Reaching a
+  // step marks every earlier one done and drives the connecting rule's fill
+  // to that fraction — which keeps the whole thing to one observer and no
+  // scroll maths.
+  var steps = Array.prototype.slice.call(document.querySelectorAll('.proc'));
+  var procGrid = document.querySelector('.proc-grid');
+  var procTop = 0, procDone = -2;
+
+  function setProcess(i, fill){
+    procGrid.style.setProperty('--pp', fill);
+    if (i === procDone) return;          // classes only touched when they change
+    procDone = i;
+    steps.forEach(function(el, j){
+      el.classList.toggle('active', j === i);
+      el.classList.toggle('done', j < i);
+    });
+  }
+  function measureProcess(){
+    if (!procGrid) return;
+    procTop = procGrid.getBoundingClientRect().top + window.scrollY;
+  }
+  // The four steps sit side by side, so every one of them enters the viewport
+  // in the same frame — a per-step observer marks the row finished before the
+  // reader has looked at it. Progress is taken from the row's own travel up
+  // the viewport instead: it starts filling as the row appears and completes
+  // as it reaches the reading line.
+  function updateProcess(){
+    if (!procGrid || !steps.length) return;
+    var start = procTop - window.innerHeight * 0.82;
+    var end   = procTop - window.innerHeight * 0.34;
+    var p = end > start ? (window.scrollY - start) / (end - start) : 1;
+    p = p < 0 ? 0 : p > 1 ? 1 : p;
+    setProcess(Math.min(steps.length - 1, Math.floor(p * steps.length)), p);
+  }
+  if (!procGrid || !steps.length || reduce){
+    if (procGrid){ procGrid.style.setProperty('--pp', 1); }
     steps.forEach(function(el){ el.classList.add('active'); });
+    updateProcess = function(){};
+  } else {
+    measureProcess();
+  }
+
+  // ===== Signal: scattered -> collected -> plotted -> pattern -> acted on =====
+  // The picture is tied to scroll position rather than stepped between
+  // states, so the reader is scrubbing it: pause halfway and the dots sit
+  // halfway. Scroll is never intercepted or retimed — the page scrolls
+  // exactly as far as the wheel says, and only the drawing reacts. That is
+  // the difference between scroll-linked and scroll-jacking, and it is what
+  // keeps this usable for people who get motion sick.
+  //
+  // Per frame this writes five numbers and, only when it changes, one
+  // attribute. No layout is read in the loop; offsets are cached beside the
+  // other scroll caches. All five numbers land on transform/opacity only.
+  var signal = document.getElementById('signal');
+  var sySteps = signal ? Array.prototype.slice.call(signal.querySelectorAll('.sy-step')) : [];
+  var syWrap = signal ? signal.querySelector('.sy-steps') : null;
+  var syFrom = 0, syTo = 1, syStage = 0, syScrub = false;
+  var syWide = window.matchMedia('(min-width:901px)');
+
+  // Smoothstep. A phase driven linearly off scroll starts and stops with a
+  // hard edge; easing each phase's local progress is what makes the dots
+  // settle rather than arrive.
+  function seg(p, a, b){
+    var t = (p - a) / (b - a);
+    t = t < 0 ? 0 : t > 1 ? 1 : t;
+    return t * t * (3 - 2 * t);
+  }
+  function syVars(t1, t2, t3, t4, t5){
+    var s = signal.style;
+    s.setProperty('--t1', t1); s.setProperty('--t2', t2); s.setProperty('--t3', t3);
+    s.setProperty('--t4', t4); s.setProperty('--t5', t5);
+  }
+  function syMark(stage){
+    if (stage === syStage) return;      // classes and attribute only on change
+    syStage = stage;
+    signal.setAttribute('data-stage', String(stage));
+    sySteps.forEach(function(el, i){ el.classList.toggle('is-on', i === stage - 1); });
+  }
+  // The finished frame with every step legible: the state for anyone not
+  // scrubbing — reduced motion, or a screen too small to pin a sticky column.
+  function syStatic(){
+    syVars(1, 1, 1, 1, 1);
+    signal.setAttribute('data-stage', '5');
+    syStage = 5;
+    sySteps.forEach(function(el){ el.classList.add('is-on'); });
+  }
+  function measureSignal(){
+    if (!syWrap || !syScrub) return;
+    var r = syWrap.getBoundingClientRect();
+    var top = r.top + window.scrollY;
+    var stepH = r.height / sySteps.length;
+    // Progress runs from the first step sitting at the viewport's centre to
+    // the last one sitting there, so step N centred always means phase N.
+    syFrom = top + stepH * 0.5 - window.innerHeight * 0.5;
+    syTo   = top + r.height - stepH * 0.5 - window.innerHeight * 0.5;
+  }
+  function updateSignal(){
+    if (!syScrub) return;
+    var p = syTo > syFrom ? (window.scrollY - syFrom) / (syTo - syFrom) : 1;
+    p = p < 0 ? 0 : p > 1 ? 1 : p;
+    // Windows overlap on purpose: the line starts drawing while the last
+    // points are still landing, the way it would if you were watching it
+    // happen rather than watching five slides.
+    syVars(seg(p,.03,.26), seg(p,.30,.52), seg(p,.42,.60), seg(p,.56,.76), seg(p,.78,.95));
+    syMark(Math.min(5, Math.max(1, Math.round(p * 4) + 1)));
+  }
+  function syApply(){
+    syScrub = !!signal && !reduce && sySteps.length > 0 && syWide.matches;
+    if (!signal) return;
+    if (syScrub){ measureSignal(); updateSignal(); }
+    else syStatic();
+  }
+  if (signal){
+    syApply();
+    // addEventListener on MediaQueryList is the modern form; addListener is
+    // the fallback for Safari before 14.
+    if (syWide.addEventListener) syWide.addEventListener('change', syApply);
+    else if (syWide.addListener) syWide.addListener(syApply);
   }
 
   // CTA / contact-intent tracking: fire a GA4 lead event on any primary
@@ -2373,8 +2818,10 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   }
   measureSpy();
   updateSpy();
-  window.addEventListener('load', measureSpy);
-  window.addEventListener('resize', measureSpy, {passive:true});
+  // Both caches are offsets against the document, so both go stale for the
+  // same reasons: webfonts settling on load, and any reflow on resize.
+  window.addEventListener('load', function(){ measureSpy(); measureProcess(); measureSignal(); updateProcess(); updateSignal(); });
+  window.addEventListener('resize', function(){ measureSpy(); measureProcess(); measureSignal(); }, {passive:true});
 
 })();
 </script>
