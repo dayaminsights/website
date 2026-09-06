@@ -3,17 +3,24 @@
 Single self-contained `index.html` (no build step, GitHub Pages ready). Inline `<style>` + inline vanilla JS. Targets Tier-2 India audience — plain language, no jargon.
 
 ## Design system (CSS vars in `:root`)
-- Colors: `--bg:#070b16`, `--bg-2:#0a0f1f`, `--surface:#0e1426`, `--surface-2:#121a30`, `--line:rgba(148,163,184,.14)`, `--line-strong:rgba(148,163,184,.26)`, `--text:#eef2fb`, `--muted:#9aa6c2`, `--muted-2:#6b7794`
-- Accents: `--accent:#4f7dff` (blue), `--accent-2:#8b5cf6` (violet), `--accent-3:#22d3ee` (cyan), `--good:#34d399` (green), `--warn:#fbbf24` (amber)
-- Layout: `--radius:16px`, `--radius-lg:24px`, `--maxw:1180px`, `--ease:cubic-bezier(.22,.61,.36,1)`, `--shadow:0 24px 60px -24px rgba(2,6,20,.85)`
-- Fonts: Inter (body) + JetBrains Mono (`.mono`)
+Light editorial palette (visual-system-migration), not the old dark one:
+- Ground: `--bg:#FAF9F7`-family with `--surface:#FFFFFF`, `--surface-sunken:#F2F2EF`, `--placeholder:#DCDBD5`; inverted panels `--panel:#111315`, `--panel-2:#1B1E21`
+- Lines: `--line:#E4E4E0`, `--line-strong:#C9C9C3`, `--line-invert:rgba(247,247,245,.14)`
+- Ink: `--ink:#111315`, `--ink-2:#3A3E44`, `--muted:#555B63`, `--muted-2:#676D75`; on panels `--on-panel:#F7F7F5`, `--on-panel-muted:#9BA0A6`
+- Accent is rust: `--accent:#A94F26` (+ `--accent-hover`, `--accent-soft`, `--accent-line`, `--accent-on-panel:#D7855C`); semantic `--good:#1F6B4A`, `--warn:#8A5A0B` with `-invert` variants for panels
+- Fonts: Instrument Sans (`--font-ui`), Source Serif 4 (`--font-body`, the default), IBM Plex Mono (`--font-mono` / `.mono`)
+- Scale: `--fs-h1`…`--fs-label` clamps, `--sp-1`…`--sp-10` spacing, `--r-sm/md/lg/pill` radii, `--maxw:1180px`, `--maxw-text:680px`, `--maxw-narrow:520px`
 
 ## Animation conventions
 - `.reveal` + `.in` (toggled by IntersectionObserver) for scroll-triggered fade/slide-up. `data-d="1..4"` = stagger delay via `transition-delay`.
-- Reveal variants for scroll rhythm: `.reveal-scale` (fade + slight scale-up, used on `#process`/`#tech` section heads), `.reveal-left`/`.reveal-right` (slide in from side, used on `.web-grid web-block` rows — direction matches whether copy or visual is on that side). Collapse to translateY on mobile (`@media max-width:1000px`).
+- Reveal variants for scroll rhythm: `.reveal-scale` (fade + slight scale-up, used on `#process` section heads), `.reveal-left`/`.reveal-right` (slide in from side, used on `.web-grid web-block` rows — direction matches whether copy or visual is on that side). Collapse to translateY on mobile (`@media max-width:1000px`).
 - `prefers-reduced-motion: reduce` disables all animation globally — always add exceptions when adding new keyframes (incl. `.glow-orb{translate:none!important}`).
 - Animated counters: `data-count`, `data-prefix`, `data-suffix`, `data-dec` attributes + `animateCount()` JS (rAF, cubic ease-out, 1400ms).
 - "Build-up" pattern (`.bm-block`/`.dk`/`.flow-node` etc.): base `opacity:0;transform:translateY(Npx)` → parent `.web-visual.in` reveals with per-child `transition-delay`.
+- **Looping pipelines**: `pulse(root, selector, stepMs, holdMs, restMs)` walks a `.lit` class along a diagram's children and loops, but only while that diagram is on screen (its own IntersectionObserver starts and stops it, and `mouseenter` replays a pass). Used by `.hero-pipe` (`.pipe-step`) and `.flow-mock` (`.flow-node,.fl-arrow` — nodes and connectors share the walk so the pulse travels the arrows too). Returns a no-op under `prefers-reduced-motion`.
+- **Reading-order stagger**: `.points li`, `.uc`, `.res-lines > div` and `.tech-item` start at `opacity:0` and are revealed by `.in` on their reveal parent with 180–480ms `nth-child` delays, so a heading lands before its supporting rows.
+- Ladder rungs stagger via an inline `--i` custom property (`transition-delay:calc(var(--i) * 55ms)`) rather than `data-d`, because there are six of them plus the handoff row and `data-d` only defines 1–4. Tool chips stagger on `.rung.open` with `nth-of-type` delays.
+- `.proc-line` carries `.reveal` but overrides it to draw with `scaleX(0) → scaleX(1)`; `.proc-line.reveal` beats `.reveal` on specificity.
 - SVG icons: `viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"`.
 - JS reveal selector includes `.reveal, .reveal-scale, .reveal-left, .reveal-right, .hero-visual, .web-visual` — any new animated visual block should get one of these classes to be observed.
 - Scroll progress bar: `#scrollBar` (inside `.scroll-progress`, fixed top of page) — width set as % of scroll in the rAF-batched scroll handler.
@@ -21,23 +28,26 @@ Single self-contained `index.html` (no build step, GitHub Pages ready). Inline `
 - Scroll-driven layout morph: `.hero-morph-stage` (200vh wrapper) + `position:sticky` hero + `applyHeroMorph(progress)` lerps/snaps inline styles between STATE_A/STATE_B tables based on `heroMorphProgress()` (0-1 over first 100vh of stage scroll). Gated by `heroMorphEnabled` (desktop + motion-OK only); CSS media queries provide the STATE_B fallback for mobile/reduced-motion.
 
 ## Page structure (section order, top to bottom)
-1. `#top` — Hero: `.hero-grid` = `.hero-copy` (left: two-line headline — plain line + `.grad` gradient line "Start growing with AI.", tagline, CTAs, stats) + `.hero-visual` (right: 5 service cards in 2-col grid, "AI Assistants" spans both columns)
-   - Hero cards link to: Websites & Apps + Marketing → `#growth` / `#marketing`, Dashboards → `#dashboards`, Automation → `#automation`
-2. `#problem` — 4 pain-point cards (spreadsheets, typos, late data, scaling pain)
-3. `#process` — 4-step process (Audit → Architect → Automate → Accelerate)
-4. `#results` — measurable outcomes / case-study style metrics
-5. `#tech` — tech stack groups
-6. `#growth` (`.web-show`) — combined **Websites & Apps + Marketing** showcase
-   - Block 1: browser-mock that builds itself + search-ranking card (`.browser-mock`, `.search-mock`)
-   - Block 2 `#marketing` (`.web-grid.rev`): campaign-mock (social post + engagement stats) + funnel-mock (Reach → Clicks → New customers)
-7. `#intelligence` (`.web-show`) — combined **Dashboards + Automation** showcase
-   - Block 1 `#dashboards`: dash-mock (KPI cards + weekly bar chart)
-   - Block 2 `#automation` (`.web-grid.rev`): flow-mock (3-step pipeline: order → stock/dashboard update → invoice sent)
-8. `#why` — 4 reasons / differentiators grid
-9. `#cta` — final consultation CTA band
-10. Footer
+1. `#top` — Hero. Copy column (eyebrow → "Your business shouldn't need you to run every little thing." → what we build → CTA pair → audience line + sector row) beside `.hero-stage` (`.hero-pipe` 5-step pipeline: Order in → Automation → Stock & invoice → Dashboard → Decision, sitting over the `.lap` laptop). `.hero-services` is the three-pillar strip (See / Automate / Grow) linking to `#dashboards` / `#automation` / `#websites`
+2. `#positioning` — `.stmt-band`: the one-sentence positioning statement + supporting line, hairline rules above and below
+3. `#problem` (band) — four numbered pain cards: manual work, disconnected data, slow decisions, growth bottlenecks
+4. `#ladder` — the handoff ladder. Rung 01 Create is tagged **Yours · done**, then a `.handoff` band, then rungs 02–06 (Innovate, Integrate, Automate, Accelerate, Elevate) tagged **Ours**, each opening to symptom / what we do / what changes / tools. Static HTML rungs + one delegated click handler
+5. `#dashboards` (`.web-show`) — SEE. One block, `.dash-mock`
+6. `#automation` (`.web-show`) — AUTOMATE. Two blocks: workflow automation (`.flow-mock`, five nodes: WhatsApp → Order → Invoice → Payment → Dashboard) and `#ai` (`.ai-mock` assistant panel: question → sources it reads → answer)
+7. `#websites` (`.web-show band`) — GROW. One block: `.browser-mock` + `.search-mock` (a visitor journey, not a search-ranking claim)
+8. mid-page CTA
+9. `#work` — three example projects as Problem / Solution / Outcome (`.res-lines`), each tagged "Example project"
+10. `#process` (band) — **"How an engagement runs"**: Discover → Prioritise → Build → Improve. Retitled so it and the ladder never both claim "how we work" — the ladder is the arc across years, this is what happens after you sign
+11. `#about` — founder section, still sentinel-driven
+12. `#faq` — 13 questions, mirrored in the FAQPage schema
+13. `#cta` (band) — contact form + WhatsApp route
+14. Footer
 
-Note: the old `#solutions` section ("Four outcomes" grid: Automate Operations, Unlock BI, Build Digital Products, Scale with AI) was **removed** — it duplicated the hero service cards and the `#growth`/`#intelligence` showcases. Nav "Solutions" link and footer "Outcomes" column links now point to `#growth`/`#dashboards`/`#automation`/`#top` instead.
+`#tech` was removed: its tool lists now live in the ladder rung that uses them, and its trust line survives as `.ladder-runs` (cloud accounts you own · backed up daily · you keep the logins).
+
+The SEE/AUTOMATE/GROW pillar section was removed: its three `<h3>`s were the same sentences the three sections below use as their `<h2>`s. `.hero-services` is now the only pillar strip, and its cards name the capability ("Dashboards & analytics") while the sections below carry the promise. Nav "Solutions" points at `#dashboards`.
+
+Nav is deliberately short: Solutions / Work / How it works / About / FAQ, plus "Find your bottleneck". It collapses to the menu button at 900px (not 760px) because brand + five links + two buttons measured 845px against a 768px viewport.
 
 ## Visual rhythm
 - `.web-show` sections (`#growth`, `#intelligence`) get a full-bleed subtle panel background (`::before`, 100vw breakout) to visually separate the "showcase" sections from the plainer text sections. Adjacent `.web-show` sections share one continuous panel (no double border) via `.web-show + .web-show` / `:has()` selectors.
