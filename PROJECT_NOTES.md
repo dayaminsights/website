@@ -3,13 +3,18 @@
 Single self-contained `index.html` (no build step, GitHub Pages ready). Inline `<style>` + inline vanilla JS. Targets Tier-2 India audience — plain language, no jargon.
 
 ## Design system (CSS vars in `:root`)
-Light editorial palette (visual-system-migration), not the old dark one:
-- Ground: `--bg:#FAF9F7`-family with `--surface:#FFFFFF`, `--surface-sunken:#F2F2EF`, `--placeholder:#DCDBD5`; inverted panels `--panel:#111315`, `--panel-2:#1B1E21`
-- Lines: `--line:#E4E4E0`, `--line-strong:#C9C9C3`, `--line-invert:rgba(247,247,245,.14)`
-- Ink: `--ink:#111315`, `--ink-2:#3A3E44`, `--muted:#555B63`, `--muted-2:#676D75`; on panels `--on-panel:#F7F7F5`, `--on-panel-muted:#9BA0A6`
-- Accent is rust: `--accent:#A94F26` (+ `--accent-hover`, `--accent-soft`, `--accent-line`, `--accent-on-panel:#D7855C`); semantic `--good:#1F6B4A`, `--warn:#8A5A0B` with `-invert` variants for panels
-- Fonts: Instrument Sans (`--font-ui`), Source Serif 4 (`--font-body`, the default), IBM Plex Mono (`--font-mono` / `.mono`)
-- Scale: `--fs-h1`…`--fs-label` clamps, `--sp-1`…`--sp-10` spacing, `--r-sm/md/lg/pill` radii, `--maxw:1180px`, `--maxw-text:720px`, `--maxw-narrow:520px`
+Logo DNA restyle (2026-09-16): every visual decision derives from the mark — the blue square is the signal, the i-bar is input, the D is the system.
+- Ground `--bg:#F8FAFC`, bands `--bg-2`/`--surface:#FFFFFF`, `--surface-sunken:#F1F5F9`, `--placeholder:#DCE3EC`; navy panels `--panel:#07162D`, `--panel-2:#0D2240` (dashboard, flow, AI and signal mocks, CTA band, footer)
+- Lines `--line:#E5EAF2`, `--line-strong:#CBD5E1`, `--line-invert`
+- Ink `--ink:#07162D`, `--ink-2:#334155`, `--muted:#64748B` (15px and up only), `--muted-2:#475569` (labels under 15px); on panels `--on-panel:#F8FAFC`, `--on-panel-muted:#9FB0C8`
+- Accent is the mark's blue: `--accent:#1E7BFF` for nodes, lines and markers; `--accent-hover:#1668E6` wherever blue sits under or behind text (5.05:1 with white). `--good` is that deeper blue and `--warn` is ink: the DNA has no green or amber. Use blue sparingly — one active element per composition.
+- Font: Inter 400–800 for everything (`--font-ui`, `--font-body`, `--font-mono` all resolve to it); headings 700–800 tight-tracked; labels 11px caps .14em
+- Shape: all radii 0 (`--r-*` are 0 and no literal radius remains); nodes, dots and markers are squares, never circles; icons get butt caps and mitre joins via `svg [stroke-linecap]`
+- Elevation: hairlines, no resting shadows (`--shadow-sm/md:none`); cards lift 4px with `--lift` on hover only
+- Layout: `--maxw:1360px`, `--gutter:clamp(24px,4vw,64px)`, `--maxw-text:720px`, `--maxw-narrow:520px`; sections `.pad` 72→128px
+- Eyebrows read `02 ▪ LABEL`: chapter number, 5px blue square, label. The hero eyebrow is set like the tagline under the mark.
+- Hero: blueprint grid (64px lines at 9% navy) instead of the photograph; the headline's full stop is the blue square; h1 is `clamp(34px,3.95vw,54px)` (stacked: sized to the column) so the longest authored line ("Your business shouldn’t", 11.04em) never wraps. The laptop is a flat framed figure.
+- `hero-bg.jpg` is no longer referenced; `og-image.png` still shows the old brand.
 
 ## Animation conventions
 - `.reveal` + `.in` (toggled by IntersectionObserver) for scroll-triggered fade/slide-up. `data-d="1..4"` = stagger delay via `transition-delay`.
