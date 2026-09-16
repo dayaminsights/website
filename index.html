@@ -960,6 +960,36 @@ footer{border-top:1px solid var(--line);margin-top:var(--sp-9);padding:var(--sp-
   .ai-body{padding:var(--sp-4);gap:var(--sp-3)}
 }
 
+/* ===== Ladder heading =====
+   The sentence is the section's argument in miniature: one clause that is
+   theirs and finished, one that is ours and only starting. So it arrives as
+   two beats rather than one fade — the first clause settles, the handoff
+   clause follows it up, and the accent rule draws under "our job" with the
+   same left-to-right climb the rungs below use.
+
+   The container keeps .reveal so the existing observer still fires it, but
+   its own motion is cancelled: the parts move, the block does not. Two
+   overlapping fades read as mush.
+   Masked lines rather than a fade, matching the hero — one motion vocabulary
+   for headlines across the page. */
+.head-seq.reveal{opacity:1;transform:none;transition:none}
+.head-seq .eyebrow,.head-seq > p{opacity:0;transform:translateY(12px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
+.head-seq.in .eyebrow{opacity:1;transform:none}
+.head-seq.in > p{opacity:1;transform:none;transition-delay:520ms}
+.h-seq .ln{display:block;overflow:hidden}
+/* Room under the last line for the accent rule, which would otherwise be
+   clipped by the mask that hides the line before it arrives. */
+.h-seq .ln:last-child{padding-bottom:.26em}
+/* 120% clears the mask even with the padding-bottom above. */
+.h-seq .ln > span{display:block;transform:translateY(120%);transition:transform 700ms var(--ease-out)}
+.h-seq.in .ln > span{transform:none}
+.h-seq.in .ln:nth-child(1) > span{transition-delay:120ms}
+.h-seq.in .ln:nth-child(2) > span{transition-delay:240ms}
+.h-seq .mark{position:relative}
+/* Clears the descender of "job" rather than cutting through it. */
+.h-seq .mark::after{content:"";position:absolute;left:0;right:0;bottom:-.14em;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left center;transition:transform 560ms var(--ease-out)}
+.h-seq.in .mark::after{transform:scaleX(1);transition-delay:760ms}
+
 /* ===== The handoff ladder =====
    Rung 01 is the client's own finished work; everything under the handoff row
    is ours. Built on buttons rather than <details> because the climb rule has
@@ -1322,6 +1352,8 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   .reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:1!important;transform:none!important}
   .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
   .rung,.handoff,.tool{opacity:1!important;transform:none!important}
+  .head-seq .eyebrow,.head-seq > p,.h-seq .ln > span{opacity:1!important;transform:none!important}
+  .h-seq .mark::after{transform:scaleX(1)!important}
   .proc-line.reveal{transform:none!important}
   /* Pseudo-elements and the SVG points are not covered by the class resets
      above, and both hold their pre-state in a transform. Without these the
@@ -1340,6 +1372,8 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 <noscript><style>
   .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.ladder,.cta-band{opacity:1!important;transform:none!important}
   .points li,.uc,.res-lines > div,.rung,.handoff,.tool{opacity:1!important;transform:none!important}
+  .head-seq .eyebrow,.head-seq > p,.h-seq .ln > span{opacity:1!important;transform:none!important}
+  .h-seq .mark::after{transform:scaleX(1)!important}
   .rung::after{transform:scaleX(1)!important}
   .sy-step{opacity:1!important}
   .proc-line i{transform:scaleX(1)!important}
@@ -1610,9 +1644,12 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 
 <!-- LADDER: CREATE IS THEIRS, THE REST IS OURS -->
 <section class="pad wrap" id="ladder" aria-labelledby="h-ladder">
-  <div class="section-head center reveal">
+  <div class="section-head center reveal head-seq">
     <span class="eyebrow" data-ch="02"><span class="dot"></span>How we work</span>
-    <h2 class="title" id="h-ladder">You built the business. The rest is our job.</h2>
+    <h2 class="title h-seq" id="h-ladder">
+      <span class="ln"><span>You built the business.</span></span>
+      <span class="ln"><span>The rest is <span class="mark">our job</span>.</span></span>
+    </h2>
     <p>Every client reaches us having already done the hardest part &mdash; a business that works. What follows is the ladder we take it up, one rung at a time, with the tools each rung actually needs.</p>
   </div>
 
