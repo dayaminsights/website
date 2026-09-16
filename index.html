@@ -977,79 +977,142 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .ai-body{padding:var(--sp-4);gap:var(--sp-3)}
 }
 
-/* ===== The handoff ladder =====
-   Rung 01 is the client's own finished work; everything under the handoff row
-   is ours. Built on buttons rather than <details> because the climb rule has
-   to stay visible while a rung is closed, and <details> hides every
-   non-summary child. */
-.ladder{border-top:1px solid var(--line);margin-top:clamp(32px,4vw,48px)}
-.rung,.handoff{opacity:0;transform:translateY(10px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out);transition-delay:calc(var(--i) * 55ms)}
-.ladder.in .rung,.ladder.in .handoff{opacity:1;transform:none}
-.rung{border-bottom:1px solid var(--line);position:relative}
-/* The climb: a rule under each rung, longer the further up the ladder it is. */
-/* The climb draws itself rung by rung as the ladder arrives, so the section
-   reads as an ascent rather than six rules that were already there. The
-   transform delay is per-property: toggling a rung open must not wait on it. */
-.rung::after{content:"";position:absolute;left:0;bottom:-1px;height:2px;width:var(--w);background:var(--accent);opacity:.22;transform:scaleX(0);transform-origin:left center;transition:opacity var(--t-base) var(--ease),transform 720ms var(--ease-out)}
-.ladder.in .rung::after{transform:scaleX(1);transition:opacity var(--t-base) var(--ease),transform 720ms var(--ease-out) calc(var(--i) * 90ms + 160ms)}
-.rung.open::after{opacity:1}
-.rung.is-yours::after{background:var(--line-strong);opacity:.9}
-.rung.is-yours .r-name{color:var(--ink-2)}
+/* ===== 02 · The climb =====
+   The ladder drawn as a staircase on a drafting sheet. Rung 01 is solid: the
+   client's finished business, the foundation everything stands on. Rungs 02-06
+   are outlines, work still to be built. The blue square from the mark stands on
+   the rung being read, and reaches another rung by stepping through every rung
+   in between: you cannot skip one.
 
-.rung-head{width:100%;background:none;border:0;font:inherit;cursor:pointer;text-align:left;
-  display:grid;grid-template-columns:52px 168px 1fr auto;gap:var(--sp-4);align-items:center;
-  padding:var(--sp-5) var(--sp-2);transition:background var(--t-fast) var(--ease)}
-.rung-head:hover{background:var(--surface)}
-.rung-head:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-.r-num{font-size:var(--fs-label);letter-spacing:.1em;color:var(--muted-2)}
-.r-name{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink)}
-.r-line{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted)}
-.r-side{display:flex;align-items:center;gap:var(--sp-3)}
-.r-own{font-size:10px;letter-spacing:.11em;text-transform:uppercase;border-radius:0;padding:3px 9px;white-space:nowrap}
-.r-own.yours{color:var(--muted-2);border:1px solid var(--line-strong);background:var(--surface-sunken)}
-.r-own.ours{color:var(--on-panel);border:1px solid var(--ink);background:var(--ink)}
-.r-chev{color:var(--muted-2);display:grid;place-items:center;transition:transform var(--t-base) var(--ease)}
-.rung.open .r-chev{transform:rotate(90deg)}
+   Motion: one sequence when the sheet enters view (floor, then each riser and
+   tread left to right, rung 01 filling from the floor, the handoff line
+   dropping, the signal arriving and stepping up to where we start). After that
+   motion only answers a choice. Pre-states hang off .climb:not(.in); the
+   reduced-motion and no-JS blocks release them. */
+/* Head and foot share the instrument's tracks, so the right-hand copy starts on the panel's text edge. */
+.climb-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;margin-bottom:clamp(32px,4vw,56px)}
+.climb-head > div{padding-right:var(--sp-7)}
+.climb-head > p{padding-left:clamp(24px,2.6vw,40px)}
+.climb-head h2.title{margin-bottom:0}
+.climb-head p{margin:0;max-width:46ch;color:var(--muted);text-wrap:pretty}
 
-.rung-body{padding:0 var(--sp-2) var(--sp-6) calc(52px + 168px + var(--sp-4) * 2)}
-.rb-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:clamp(20px,3vw,40px)}
-.rb-grid p{margin:0;font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted);line-height:1.6}
+.climb{--stair-h:clamp(280px,24vw,360px);display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);border:1px solid var(--line-strong);background:var(--surface)}
+/* A drafting sheet: 24px construction grid at 3.5%. */
+.climb-sheet{position:relative;min-width:0;padding:clamp(24px,2.6vw,40px);border-right:1px solid var(--line);
+  background-image:linear-gradient(rgba(7,22,45,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(7,22,45,.035) 1px,transparent 1px);
+  background-size:24px 24px;background-position:-1px -1px}
+
+/* Dimension marks over the stair: what is theirs, what is ours. */
+.climb-dims{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));height:24px;margin-bottom:16px}
+.dim{position:relative;display:flex;align-items:center;justify-content:center;min-width:0}
+.dim::before{content:"";position:absolute;left:8px;right:8px;top:50%;height:9px;margin-top:-4.5px;
+  border-left:1px solid var(--ink-2);border-right:1px solid var(--ink-2);
+  background:linear-gradient(var(--ink-2),var(--ink-2)) center/100% 1px no-repeat;
+  transition:transform 520ms var(--ease-out) 900ms}
+.dim span{position:relative;padding:0 8px;background:var(--surface);font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);white-space:nowrap;transition:opacity 400ms var(--ease) 1100ms}
+.dim span b{font-weight:inherit}
+.dim-yours{grid-column:1}
+.dim-ours{grid-column:2 / 7}
+
+/* The stair. Each rung is a tab filling its column under its own tread, so the
+   whole face of a step is the hit area. */
+.stair{position:relative;display:grid;grid-template-columns:repeat(6,minmax(0,1fr));align-items:end;height:var(--stair-h)}
+.stair::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--ink);transform-origin:left;transition:transform 420ms var(--ease-out)}
+.stair::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:var(--ink);transform-origin:top;transition:transform 320ms var(--ease-out) 1020ms}
+.stair-handoff{position:absolute;left:calc(100% / 6);top:-40px;bottom:0;width:0;border-left:1px dashed rgba(7,22,45,.5);transform-origin:top;transition:transform 520ms var(--ease-out) 980ms;pointer-events:none;z-index:1}
+
+.step{position:relative;height:calc(var(--k) / 6 * 100%);min-width:0;display:flex;flex-direction:column;align-items:flex-start;gap:4px;
+  padding:12px 6px 0 12px;border:0;border-left:1px dashed rgba(7,22,45,.14);background:transparent;
+  font:inherit;text-align:left;color:var(--ink);cursor:pointer;transition:background-color var(--t-fast) var(--ease)}
+/* Riser: from the tread below up to this one. */
+.step::before{content:"";position:absolute;left:-1px;top:0;width:1px;height:calc(100% / var(--k));background:var(--ink);transform-origin:bottom;
+  transition:transform 260ms var(--ease-out) calc(var(--k) * 140ms)}
+/* Tread. */
+.step::after{content:"";position:absolute;left:-1px;right:0;top:0;height:1px;background:var(--ink);transform-origin:left;
+  transition:transform 260ms var(--ease-out) calc(var(--k) * 140ms + 160ms),height var(--t-fast) var(--ease),background-color 320ms var(--ease)}
+.step.is-handoff{border-left-color:transparent}
+.step-num{font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;line-height:1;color:var(--ink-2);font-variant-numeric:tabular-nums;transition:opacity 360ms var(--ease) calc(var(--k) * 140ms + 260ms)}
+.step-name{font-size:clamp(14px,1.1vw,16px);font-weight:600;letter-spacing:-.01em;line-height:1.2;color:var(--ink);transition:opacity 360ms var(--ease) calc(var(--k) * 140ms + 260ms)}
+.step:hover{background-color:rgba(7,22,45,.035)}
+.step[aria-selected="true"]::after{height:2px}
+.step.is-lit::after{background-color:var(--accent)}
+.step:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+
+/* Rung 01 is built: solid, filling from the floor as the stair draws. */
+.step.is-yours{background:linear-gradient(var(--ink),var(--ink)) bottom/100% 100% no-repeat;transition:background-size 520ms var(--ease-out) 300ms}
+.step.is-yours:hover{background-color:transparent}
+.step.is-yours .step-num{color:var(--on-panel-muted)}
+.step.is-yours .step-name{color:var(--on-panel)}
+
+/* The signal: the blue square from the mark, standing on the rung being read. */
+.signal{position:absolute;left:0;top:0;z-index:2;width:12px;height:12px;background:var(--accent);opacity:0;pointer-events:none;transition:opacity 240ms var(--ease)}
+.signal.on{opacity:1}
+.signal::after{content:"";position:absolute;inset:-5px;border:1px solid var(--accent);opacity:0}
+.signal.landed::after{animation:signalLand 720ms var(--ease-out)}
+@keyframes signalLand{from{opacity:.9;transform:scale(1)}to{opacity:0;transform:scale(2.3)}}
+
+.climb-note{margin:24px 0 0;max-width:56ch;font-size:var(--fs-small);line-height:1.55;color:var(--muted);text-wrap:pretty}
+.climb-note b{color:var(--ink);font-weight:600}
+
+/* The drawing before the sheet has been seen. */
+.climb:not(.in) .stair::before,.climb:not(.in) .step::after,.climb:not(.in) .dim::before{transform:scaleX(0)}
+.climb:not(.in) .step::before,.climb:not(.in) .stair::after,.climb:not(.in) .stair-handoff{transform:scaleY(0)}
+.climb:not(.in) .step-num,.climb:not(.in) .step-name,.climb:not(.in) .dim span{opacity:0}
+.climb:not(.in) .step.is-yours{background-size:100% 0%}
+
+/* Every rung's detail stacked in one grid cell: the panel is as tall as the
+   longest rung, so nothing below it moves when the rung changes. */
+.climb-panels{display:grid;min-width:0;padding:clamp(24px,2.6vw,40px);transition:opacity 500ms var(--ease) 400ms}
+.climb:not(.in) .climb-panels{opacity:0}
+.rung-panel{grid-area:1 / 1;min-width:0;opacity:0;visibility:hidden;transform:translateY(calc(var(--dir,1) * 12px));
+  transition:opacity 220ms var(--ease),transform 320ms var(--ease-out),visibility 0s linear 320ms}
+.rung-panel.is-leaving{transform:translateY(calc(var(--dir,1) * -12px))}
+.rung-panel.is-active{opacity:1;visibility:visible;transform:none;transition:opacity 320ms var(--ease) 90ms,transform 460ms var(--ease-out) 90ms,visibility 0s}
+.rung-panel:focus-visible{outline:2px solid var(--focus);outline-offset:6px}
+.rp-top{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-4)}
+.rp-num{font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--ink-2);font-variant-numeric:tabular-nums}
+.rp-own{font-size:10px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;padding:4px 9px;white-space:nowrap}
+.rp-own.yours{color:var(--ink-2);border:1px solid var(--line-strong)}
+.rp-own.ours{color:var(--on-panel);background:var(--ink);border:1px solid var(--ink)}
+.rp-name{font-size:var(--fs-h3);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:var(--sp-3) 0 var(--sp-2)}
+.rp-line{margin:0;font-size:clamp(17px,1.4vw,20px);font-weight:500;line-height:1.35;color:var(--ink);text-wrap:balance}
+.rp-body{margin:var(--sp-5) 0 0;padding-top:var(--sp-5);border-top:1px solid var(--line);font-size:16px;line-height:1.55;color:var(--muted);text-wrap:pretty}
+.rp-grid{display:grid;grid-template-columns:1fr 1fr;gap:var(--sp-5);margin-top:var(--sp-5)}
+.rp-grid p{margin:0;font-size:var(--fs-small);line-height:1.5;color:var(--ink-2);text-wrap:pretty}
+.rp-tools{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2);margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--line)}
+.rp-tools .rb-lab{margin:0 var(--sp-2) 0 0}
 .rb-lab{display:block;font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);margin-bottom:var(--sp-2)}
+.tool{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--ink-2);border:1px solid var(--line-strong);background:var(--surface);padding:5px 10px;white-space:nowrap}
+.tool.none{color:var(--muted-2);border-style:dashed;background:none;font-style:italic;white-space:normal}
 
-/* The "with so-and-so tools" part, shown in the rung that uses them. */
-.tools{margin-top:var(--sp-5);padding-top:var(--sp-4);border-top:1px solid var(--line);display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-2)}
-.tools .rb-lab{margin:0 var(--sp-2) 0 0}
-.tool{font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--ink-2);border:1px solid var(--line);background:var(--surface);border-radius:0;padding:5px 10px;white-space:nowrap;
-  opacity:0;transform:translateY(6px);transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out)}
-.rung.open .tool{opacity:1;transform:none}
-.rung.open .tool:nth-of-type(1){transition-delay:60ms}
-.rung.open .tool:nth-of-type(2){transition-delay:100ms}
-.rung.open .tool:nth-of-type(3){transition-delay:140ms}
-.rung.open .tool:nth-of-type(4){transition-delay:180ms}
-.rung.open .tool:nth-of-type(5){transition-delay:220ms}
-.rung.open .tool:nth-of-type(6){transition-delay:260ms}
-.tool.none{color:var(--muted-2);border-style:dashed;background:none;font-family:var(--font-ui);font-style:italic;white-space:normal}
-.tool.is-open{white-space:normal;max-width:100%}
+/* Under the instrument: the rule it demonstrates, and the way in. */
+.climb-foot{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;margin-top:clamp(40px,5vw,64px)}
+.climb-foot > .climb-act{padding-left:clamp(24px,2.6vw,40px)}
+.climb-pull{margin:0;max-width:34ch;padding-left:var(--sp-5);border-left:2px solid var(--ink);font-size:clamp(20px,1.9vw,26px);font-weight:600;letter-spacing:-.015em;line-height:1.3;color:var(--ink);text-wrap:pretty}
+.climb-act{display:flex;flex-direction:column;align-items:flex-start;gap:var(--sp-5)}
+.ladder-runs{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:var(--sp-2);font-size:var(--fs-micro);color:var(--muted-2)}
+.ladder-runs li{display:inline-flex;align-items:center;gap:var(--sp-2)}
+.ladder-runs i{display:block;width:5px;height:5px;background:var(--ink)}
 
-/* The handoff row is the point of the section, so it is a band of its own. */
-.handoff{display:grid;grid-template-columns:52px 1fr;gap:var(--sp-4);align-items:center;padding:var(--sp-6) var(--sp-2);background:var(--surface-sunken);border-bottom:1px solid var(--line)}
-.handoff-mark{font-size:var(--fs-label);font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--ink)}
-.handoff p{margin:0;font-size:var(--fs-h4);line-height:1.35;color:var(--ink);text-wrap:pretty}
-.handoff p b{color:var(--ink);font-weight:700}
-
-.ladder-runs{margin-top:var(--sp-7);display:flex;flex-wrap:wrap;gap:var(--sp-2) var(--sp-6);justify-content:center;font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted)}
-.ladder-runs span{display:inline-flex;align-items:center;gap:var(--sp-2)}
-.ladder-runs i{width:5px;height:5px;border-radius:0;background:var(--ink);display:block}
-.ladder-pull{max-width:var(--maxw-text);margin:var(--sp-7) auto 0;padding-left:var(--sp-4);border-left:2px solid var(--accent);font-size:var(--fs-h4);line-height:1.35;color:var(--ink)}
-.ladder-cta{text-align:center;margin-top:var(--sp-7)}
-
-@media(max-width:860px){
-  .rung-head{grid-template-columns:40px 1fr auto;gap:var(--sp-3);padding:var(--sp-4) var(--sp-2)}
-  .rung-head .r-line{display:none}
-  .rung-body{padding-left:var(--sp-2)}
-  .rb-grid{grid-template-columns:1fr;gap:var(--sp-4)}
-  .handoff{grid-template-columns:1fr;gap:var(--sp-2)}
-  .handoff p{font-size:var(--fs-body)}
+@media(max-width:1279px){
+  .climb{grid-template-columns:1fr;--stair-h:clamp(220px,30vw,320px)}
+  .climb-sheet{border-right:0;border-bottom:1px solid var(--line)}
+}
+@media(max-width:900px){
+  .climb-head,.climb-foot{grid-template-columns:1fr;gap:var(--sp-5)}
+  .climb-head > div{padding-right:0}
+  .climb-head > p,.climb-foot > .climb-act{padding-left:0}
+}
+@media(max-width:640px){
+  .climb{--stair-h:170px}
+  .climb-sheet{padding:var(--sp-5) var(--sp-4)}
+  .dim span{padding:0 4px;letter-spacing:.06em}
+  .dim span b{display:none}
+  .step{padding:10px 4px 0 8px}
+  /* Numbers only on a phone; the panel underneath names the rung. */
+  .step-name{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+  .signal{width:10px;height:10px}
+  .rp-grid{grid-template-columns:1fr}
 }
 
 /* ===== 03 · Signal: the one scroll interaction that argues something =====
@@ -1293,8 +1356,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .uc:hover::before{transform:scaleY(1)}
 .uc:hover h4,.uc:hover p{transform:translateX(var(--sp-4))}
 
-.tool{transition:opacity var(--t-base) var(--ease-out),transform var(--t-base) var(--ease-out),border-color var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
-.rung.open .tool:hover{border-color:var(--ink);color:var(--ink)}
 .hs-card .hs-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease)}
 .hs-card:hover .hs-icon{transform:translateY(-2px);border-color:var(--accent)}
 .hs-card:hover .hs-icon svg{color:var(--accent)}
@@ -1340,12 +1401,11 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   *{transition-duration:var(--t-fast)!important}
   .reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:1!important;transform:none!important}
   .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
-  .rung,.handoff,.tool{opacity:1!important;transform:none!important}
+  .climb *,.climb *::before,.climb *::after{transition-delay:0s!important}
   .proc-line.reveal{transform:none!important}
   /* Pseudo-elements and the SVG points are not covered by the class resets
      above, and both hold their pre-state in a transform. Without these the
      climb rule stays at zero width and the plotted series never arrives. */
-  .rung::after{transform:scaleX(1)!important}
   .proc-line i{transform:scaleX(var(--pp,1))!important}
   .sy-dot{transition:none!important}
   .sy-out{opacity:1!important;transform:none!important}
@@ -1357,9 +1417,15 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
      no-JS path is given the finished frame of everything, including the
      scrubbed section. -->
 <noscript><style>
-  .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.ladder,.cta-band{opacity:1!important;transform:none!important}
-  .points li,.uc,.res-lines > div,.rung,.handoff,.tool{opacity:1!important;transform:none!important}
-  .rung::after{transform:scaleX(1)!important}
+  .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.cta-band{opacity:1!important;transform:none!important}
+  .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
+  .climb .stair::before,.climb .stair::after,.climb .step::before,.climb .step::after,.climb .dim::before,.climb .stair-handoff{transform:none!important}
+  .climb .step-num,.climb .step-name,.climb .dim span,.climb-panels{opacity:1!important}
+  .climb .step.is-yours{background-size:100% 100%!important}
+  .climb .signal{display:none}
+  .climb-panels{display:block}
+  .rung-panel{opacity:1!important;visibility:visible!important;transform:none!important}
+  .rung-panel + .rung-panel{margin-top:40px;padding-top:40px;border-top:1px solid var(--line)}
   .sy-step{opacity:1!important}
   .proc-line i{transform:scaleX(1)!important}
 </style></noscript>
@@ -1629,193 +1695,113 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 
 <!-- LADDER: CREATE IS THEIRS, THE REST IS OURS -->
 <section class="pad wrap" id="ladder" aria-labelledby="h-ladder">
-  <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="02"><span class="dot"></span>How we work</span>
-    <h2 class="title" id="h-ladder">You built the business. The rest is our job.</h2>
-    <p>Every client reaches us having already done the hardest part &mdash; a business that works. What follows is the ladder we take it up, one rung at a time, with the tools each rung actually needs.</p>
+  <div class="climb-head">
+    <div class="reveal">
+      <span class="eyebrow" data-ch="02"><span class="dot"></span>How we work</span>
+      <h2 class="title" id="h-ladder">You built the business.<br>The rest is our job.</h2>
+    </div>
+    <p class="reveal" data-d="1">Every client reaches us having already done the hardest part &mdash; a business that works. What follows is the ladder we take it up, one rung at a time, with the tools each rung actually needs.</p>
   </div>
 
-  <div class="ladder reveal">
-      <div class="rung is-yours" style="--w:17%;--i:1">
-        <button class="rung-head" type="button" aria-expanded="false" aria-controls="rung-01">
-          <span class="r-num mono">01</span>
-          <span class="r-name">Create</span>
-          <span class="r-line">You built it. It already works.</span>
-          <span class="r-side">
-            <span class="r-own yours mono">Yours &middot; done</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-01" hidden>
-          <div class="rb-grid">
-            <p>A business that runs &mdash; on your judgement, your people and their memory. The processes exist; they just live in habits, sheets and heads rather than in systems.</p>
-            <p><span class="rb-lab mono">What we do</span>Nothing. This rung is yours, and you finished it before you met us. It is also the only reason the rest is worth doing.</p>
-            <p><span class="rb-lab mono">What changes</span>You arrive with something real to systematise, instead of a plan.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool none">Your business, as it runs today</span>
-          </div>
-        </div>
+  <div class="climb">
+    <div class="climb-sheet">
+      <div class="climb-dims" aria-hidden="true">
+        <span class="dim dim-yours"><span>Yours</span></span>
+        <span class="dim dim-ours"><span>Ours<b> &middot; five rungs</b></span></span>
       </div>
+      <div class="stair" role="tablist" aria-label="The ladder, rung by rung">
+        <span class="stair-handoff" aria-hidden="true"></span>
+        <button class="step is-yours" type="button" role="tab" id="rung-tab-1" aria-controls="rung-panel-1" aria-selected="false" tabindex="-1" style="--k:1"><span class="step-num">01</span><span class="step-name">Create</span></button>
+        <button class="step is-handoff" type="button" role="tab" id="rung-tab-2" aria-controls="rung-panel-2" aria-selected="true" tabindex="0" style="--k:2"><span class="step-num">02</span><span class="step-name">Innovate</span></button>
+        <button class="step" type="button" role="tab" id="rung-tab-3" aria-controls="rung-panel-3" aria-selected="false" tabindex="-1" style="--k:3"><span class="step-num">03</span><span class="step-name">Integrate</span></button>
+        <button class="step" type="button" role="tab" id="rung-tab-4" aria-controls="rung-panel-4" aria-selected="false" tabindex="-1" style="--k:4"><span class="step-num">04</span><span class="step-name">Automate</span></button>
+        <button class="step" type="button" role="tab" id="rung-tab-5" aria-controls="rung-panel-5" aria-selected="false" tabindex="-1" style="--k:5"><span class="step-num">05</span><span class="step-name">Accelerate</span></button>
+        <button class="step" type="button" role="tab" id="rung-tab-6" aria-controls="rung-panel-6" aria-selected="false" tabindex="-1" style="--k:6"><span class="step-num">06</span><span class="step-name">Elevate</span></button>
+        <span class="signal" aria-hidden="true"></span>
+      </div>
+      <p class="climb-note"><b>Handoff.</b> That is where most businesses stop, and where we start. Everything after it is our work &mdash; you keep running the business while we take it up the next five rungs.</p>
+    </div>
 
-      <div class="handoff" style="--i:2">
-        <span class="handoff-mark mono" aria-hidden="true">&darr; Handoff</span>
-        <p>That is where most businesses stop, and where we start. <b>Everything below this line is our work</b> &mdash; you keep running the business while we take it up the next five rungs.</p>
-      </div>
-
-      <div class="rung open" style="--w:33%;--i:3">
-        <button class="rung-head" type="button" aria-expanded="true" aria-controls="rung-02">
-          <span class="r-num mono">02</span>
-          <span class="r-name">Innovate</span>
-          <span class="r-line">Rethink the process before automating it.</span>
-          <span class="r-side">
-            <span class="r-own ours mono">Ours</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-02">
-          <div class="rb-grid">
-            <p>The obvious move is to automate exactly what you do today. Usually a third of it should not exist at all.</p>
-            <p><span class="rb-lab mono">What we do</span>We redesign the process on paper first &mdash; cut steps, merge approvals, and agree what each number actually means.</p>
-            <p><span class="rb-lab mono">What changes</span>You automate the process you should have, not the one you inherited.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool none">No software yet &mdash; your data, your team, a whiteboard</span>
-          </div>
+    <div class="climb-panels">
+      <div class="rung-panel" role="tabpanel" id="rung-panel-1" aria-labelledby="rung-tab-1" tabindex="-1">
+        <div class="rp-top"><span class="rp-num">Rung 01</span><span class="rp-own yours">Yours &middot; done</span></div>
+        <h3 class="rp-name">Create</h3>
+        <p class="rp-line">You built it. It already works.</p>
+        <p class="rp-body">A business that runs &mdash; on your judgement, your people and their memory. The processes exist; they just live in habits, sheets and heads rather than in systems.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>Nothing. This rung is yours, and you finished it before you met us. It is also the only reason the rest is worth doing.</p>
+          <p><span class="rb-lab">What changes</span>You arrive with something real to systematise, instead of a plan.</p>
         </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool none">Your business, as it runs today</span></div>
       </div>
-
-      <div class="rung" style="--w:50%;--i:4">
-        <button class="rung-head" type="button" aria-expanded="false" aria-controls="rung-03">
-          <span class="r-num mono">03</span>
-          <span class="r-name">Integrate</span>
-          <span class="r-line">One number, entered once.</span>
-          <span class="r-side">
-            <span class="r-own ours mono">Ours</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-03" hidden>
-          <div class="rb-grid">
-            <p>The same order lives in WhatsApp, a sheet and your billing software. People are the integration layer between them.</p>
-            <p><span class="rb-lab mono">What we do</span>We connect the systems you already use, so data moves between them without a person carrying it.</p>
-            <p><span class="rb-lab mono">What changes</span>One set of numbers that everybody trusts.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool">REST APIs</span>
-            <span class="tool">Webhooks</span>
-            <span class="tool">Python &amp; SQL</span>
-            <span class="tool">PostgreSQL</span>
-            <span class="tool">Microsoft 365</span>
-            <span class="tool">Google Sheets</span>
-          </div>
+      <div class="rung-panel is-active" role="tabpanel" id="rung-panel-2" aria-labelledby="rung-tab-2" tabindex="0">
+        <div class="rp-top"><span class="rp-num">Rung 02</span><span class="rp-own ours">Ours</span></div>
+        <h3 class="rp-name">Innovate</h3>
+        <p class="rp-line">Rethink the process before automating it.</p>
+        <p class="rp-body">The obvious move is to automate exactly what you do today. Usually a third of it should not exist at all.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>We redesign the process on paper first &mdash; cut steps, merge approvals, and agree what each number actually means.</p>
+          <p><span class="rb-lab">What changes</span>You automate the process you should have, not the one you inherited.</p>
         </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool none">No software yet &mdash; your data, your team, a whiteboard</span></div>
       </div>
-
-      <div class="rung" style="--w:67%;--i:5">
-        <button class="rung-head" type="button" aria-expanded="false" aria-controls="rung-04">
-          <span class="r-num mono">04</span>
-          <span class="r-name">Automate</span>
-          <span class="r-line">The repetitive steps stop being typed.</span>
-          <span class="r-side">
-            <span class="r-own ours mono">Ours</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-04" hidden>
-          <div class="rb-grid">
-            <p>Your team&rsquo;s day is made of steps a system could do: copying, chasing, sending, reconciling, reminding.</p>
-            <p><span class="rb-lab mono">What we do</span>Order to invoice. Enquiry to follow-up. Report to inbox. The steps run themselves, with a person only where judgement is needed.</p>
-            <p><span class="rb-lab mono">What changes</span>More capacity, without more headcount.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool">Python</span>
-            <span class="tool">Scheduled jobs</span>
-            <span class="tool">Your billing software</span>
-            <span class="tool">Document processing</span>
-          </div>
+      <div class="rung-panel" role="tabpanel" id="rung-panel-3" aria-labelledby="rung-tab-3" tabindex="-1">
+        <div class="rp-top"><span class="rp-num">Rung 03</span><span class="rp-own ours">Ours</span></div>
+        <h3 class="rp-name">Integrate</h3>
+        <p class="rp-line">One number, entered once.</p>
+        <p class="rp-body">The same order lives in WhatsApp, a sheet and your billing software. People are the integration layer between them.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>We connect the systems you already use, so data moves between them without a person carrying it.</p>
+          <p><span class="rb-lab">What changes</span>One set of numbers that everybody trusts.</p>
         </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">REST APIs</span><span class="tool">Webhooks</span><span class="tool">Python &amp; SQL</span><span class="tool">PostgreSQL</span><span class="tool">Microsoft 365</span><span class="tool">Google Sheets</span></div>
       </div>
-
-      <div class="rung" style="--w:83%;--i:6">
-        <button class="rung-head" type="button" aria-expanded="false" aria-controls="rung-05">
-          <span class="r-num mono">05</span>
-          <span class="r-name">Accelerate</span>
-          <span class="r-line">Decisions get made on today&rsquo;s numbers.</span>
-          <span class="r-side">
-            <span class="r-own ours mono">Ours</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-05" hidden>
-          <div class="rb-grid">
-            <p>You can get the number. It takes two days to prepare, so most decisions get made without it.</p>
-            <p><span class="rb-lab mono">What we do</span>Live dashboards, exception alerts, and the reporting that used to be rebuilt by hand every Monday.</p>
-            <p><span class="rb-lab mono">What changes</span>The business moves faster because the feedback loop got shorter.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool">Power BI</span>
-            <span class="tool">SQL</span>
-            <span class="tool">Automated reporting</span>
-            <span class="tool">Threshold alerts</span>
-          </div>
+      <div class="rung-panel" role="tabpanel" id="rung-panel-4" aria-labelledby="rung-tab-4" tabindex="-1">
+        <div class="rp-top"><span class="rp-num">Rung 04</span><span class="rp-own ours">Ours</span></div>
+        <h3 class="rp-name">Automate</h3>
+        <p class="rp-line">The repetitive steps stop being typed.</p>
+        <p class="rp-body">Your team&rsquo;s day is made of steps a system could do: copying, chasing, sending, reconciling, reminding.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>Order to invoice. Enquiry to follow-up. Report to inbox. The steps run themselves, with a person only where judgement is needed.</p>
+          <p><span class="rb-lab">What changes</span>More capacity, without more headcount.</p>
         </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Python</span><span class="tool">Scheduled jobs</span><span class="tool">Your billing software</span><span class="tool">Document processing</span></div>
       </div>
-
-      <div class="rung" style="--w:100%;--i:7">
-        <button class="rung-head" type="button" aria-expanded="false" aria-controls="rung-06">
-          <span class="r-num mono">06</span>
-          <span class="r-name">Elevate</span>
-          <span class="r-line">The business does what it could not before.</span>
-          <span class="r-side">
-            <span class="r-own ours mono">Ours</span>
-            <span class="r-chev" aria-hidden="true">
-              <svg viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M9 6l6 6-6 6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
-            </span>
-          </span>
-        </button>
-        <div class="rung-body" id="rung-06" hidden>
-          <div class="rb-grid">
-            <p>The plumbing is sound and the numbers are trusted. Now the limit is what you can imagine doing with them.</p>
-            <p><span class="rb-lab mono">What we do</span>AI assistants working on your own data, a website that sells while the shop is shut, and capability you did not have a year ago.</p>
-            <p><span class="rb-lab mono">What changes</span>You compete on a level the businesses still re-typing cannot reach.</p>
-          </div>
-          <div class="tools">
-            <span class="rb-lab mono">Tools</span>
-            <span class="tool">Claude</span>
-            <span class="tool">OpenAI</span>
-            <span class="tool">Websites &amp; landing pages</span>
-            <span class="tool">Your own cloud</span>
-          </div>
+      <div class="rung-panel" role="tabpanel" id="rung-panel-5" aria-labelledby="rung-tab-5" tabindex="-1">
+        <div class="rp-top"><span class="rp-num">Rung 05</span><span class="rp-own ours">Ours</span></div>
+        <h3 class="rp-name">Accelerate</h3>
+        <p class="rp-line">Decisions get made on today&rsquo;s numbers.</p>
+        <p class="rp-body">You can get the number. It takes two days to prepare, so most decisions get made without it.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>Live dashboards, exception alerts, and the reporting that used to be rebuilt by hand every Monday.</p>
+          <p><span class="rb-lab">What changes</span>The business moves faster because the feedback loop got shorter.</p>
         </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Power BI</span><span class="tool">SQL</span><span class="tool">Automated reporting</span><span class="tool">Threshold alerts</span></div>
       </div>
+      <div class="rung-panel" role="tabpanel" id="rung-panel-6" aria-labelledby="rung-tab-6" tabindex="-1">
+        <div class="rp-top"><span class="rp-num">Rung 06</span><span class="rp-own ours">Ours</span></div>
+        <h3 class="rp-name">Elevate</h3>
+        <p class="rp-line">The business does what it could not before.</p>
+        <p class="rp-body">The plumbing is sound and the numbers are trusted. Now the limit is what you can imagine doing with them.</p>
+        <div class="rp-grid">
+          <p><span class="rb-lab">What we do</span>AI assistants working on your own data, a website that sells while the shop is shut, and capability you did not have a year ago.</p>
+          <p><span class="rb-lab">What changes</span>You compete on a level the businesses still re-typing cannot reach.</p>
+        </div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Claude</span><span class="tool">OpenAI</span><span class="tool">Websites &amp; landing pages</span><span class="tool">Your own cloud</span></div>
+      </div>
+    </div>
   </div>
 
-  <div class="ladder-runs reveal" data-d="2">
-    <span><i aria-hidden="true"></i>Runs in cloud accounts you own</span>
-    <span><i aria-hidden="true"></i>Backed up daily</span>
-    <span><i aria-hidden="true"></i>You keep the logins</span>
-  </div>
-
-  <p class="ladder-pull reveal" data-d="3">You cannot skip a rung. An AI assistant sitting on five disconnected spreadsheets is just a faster way to be wrong.</p>
-
-  <div class="ladder-cta reveal" data-d="4">
-    <a href="#contact" class="btn btn-primary">Hand us the rest <span class="arrow">&rarr;</span></a>
+  <div class="climb-foot">
+    <p class="climb-pull reveal">You cannot skip a rung. An AI assistant sitting on five disconnected spreadsheets is just a faster way to be wrong.</p>
+    <div class="climb-act reveal" data-d="2">
+      <ul class="ladder-runs" aria-label="Where it runs">
+        <li><i aria-hidden="true"></i>Runs in cloud accounts you own</li>
+        <li><i aria-hidden="true"></i>Backed up daily</li>
+        <li><i aria-hidden="true"></i>You keep the logins</li>
+      </ul>
+      <a href="#contact" class="btn btn-primary">Hand us the rest <span class="arrow">&rarr;</span></a>
+    </div>
   </div>
 </section>
 
@@ -2789,21 +2775,106 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   // Nodes and arrows share the walk, so the pulse travels the connectors too.
   pulse(document.querySelector('.flow-mock .flow-row'), '.flow-node,.fl-arrow', 260, 780, 2600);
 
-  // ===== Ladder rungs =====
-  // One delegated handler: the rungs are static HTML so the copy is in the DOM
-  // (and indexable) whether or not this runs.
-  var ladder = document.querySelector('.ladder');
-  if (ladder){
-    ladder.addEventListener('click', function(e){
-      var head = e.target.closest('.rung-head');
-      if (!head) return;
-      var rung = head.closest('.rung');
-      var body = document.getElementById(head.getAttribute('aria-controls'));
-      var open = head.getAttribute('aria-expanded') === 'true';
-      head.setAttribute('aria-expanded', String(!open));
-      if (body) body.hidden = open;
-      rung.classList.toggle('open', !open);
+  // ===== 02 · The climb =====
+  // Tabs over a drawn staircase. Every rung's copy is static HTML, readable
+  // without this script; this only draws the stair, moves the signal and
+  // swaps the panels.
+  var climb = document.querySelector('.climb');
+  if (climb){
+    var stair = climb.querySelector('.stair');
+    var sig = climb.querySelector('.signal');
+    var rungTabs = Array.prototype.slice.call(climb.querySelectorAll('[role="tab"]'));
+    var rungPanels = rungTabs.map(function(t){ return document.getElementById(t.getAttribute('aria-controls')); });
+    var panelWrap = climb.querySelector('.climb-panels');
+    var current = 2;                 // the rung whose panel is showing
+    var at = 1;                      // the rung the signal is standing on
+    var run = 0;                     // bumped to abandon a climb when another rung is chosen
+    var inflight = Promise.resolve();
+    var ready = false;
+
+    // Where the signal stands on a rung: over the tread, in line with the label.
+    function spot(k){
+      var t = rungTabs[k - 1], s = stair.getBoundingClientRect(), r = t.getBoundingClientRect();
+      var pad = parseFloat(getComputedStyle(t).paddingLeft) || 0;
+      return { x: Math.round(r.left - s.left + pad), y: Math.round(r.top - s.top - sig.offsetHeight - 6) };
+    }
+    function put(k){ var p = spot(k); sig.style.transform = 'translate(' + p.x + 'px,' + p.y + 'px)'; at = k; }
+    function land(){ sig.classList.remove('landed'); void sig.offsetWidth; sig.classList.add('landed'); }
+    function light(k){ var t = rungTabs[k - 1]; t.classList.add('is-lit'); setTimeout(function(){ t.classList.remove('is-lit'); }, 460); }
+
+    // One rung at a time: up then across when climbing, across then down when
+    // descending. Choosing 05 from 02 visits 03 and 04 on the way.
+    function hop(to){
+      var a = spot(at), b = spot(to), mid = to > at ? { x: a.x, y: b.y } : { x: b.x, y: a.y };
+      put(to);
+      if (!sig.animate) return Promise.resolve();
+      return sig.animate([
+        { transform: 'translate(' + a.x + 'px,' + a.y + 'px)' },
+        { transform: 'translate(' + mid.x + 'px,' + mid.y + 'px)', offset: .42 },
+        { transform: 'translate(' + b.x + 'px,' + b.y + 'px)' }
+      ], { duration: 280, easing: 'cubic-bezier(.2,.7,.2,1)' }).finished.catch(function(){});
+    }
+    function climbTo(k){
+      var id = ++run;
+      if (reduce){ put(k); return; }
+      inflight = inflight.then(function next(){
+        if (id !== run) return;
+        if (at === k){ land(); return; }
+        var to = at + (k > at ? 1 : -1);
+        return hop(to).then(function(){ if (id === run){ light(to); return next(); } });
+      });
+    }
+    function select(k, byKey){
+      if (k === current){ if (byKey) rungTabs[k - 1].focus(); return; }
+      climb.style.setProperty('--dir', k > current ? 1 : -1);
+      var leaving = rungPanels[current - 1];
+      leaving.classList.add('is-leaving');
+      setTimeout(function(){ leaving.classList.remove('is-leaving'); }, 340);
+      rungTabs.forEach(function(t, i){
+        var on = i === k - 1;
+        t.setAttribute('aria-selected', String(on));
+        t.tabIndex = on ? 0 : -1;
+        rungPanels[i].classList.toggle('is-active', on);
+        rungPanels[i].tabIndex = on ? 0 : -1;
+      });
+      current = k;
+      if (byKey) rungTabs[k - 1].focus();
+      if (ready) climbTo(k);
+      // Stacked layouts put the panel under the stair; bring it up if it is out of sight.
+      var pr = panelWrap.getBoundingClientRect();
+      if (window.innerWidth < 1280 && pr.top > window.innerHeight * .8){
+        panelWrap.scrollIntoView({ behavior: reduce ? 'auto' : 'smooth', block: 'start' });
+      }
+    }
+    rungTabs.forEach(function(t, i){
+      t.addEventListener('click', function(){ select(i + 1, false); });
+      t.addEventListener('keydown', function(e){
+        var k = { ArrowRight: current + 1, ArrowUp: current + 1, ArrowLeft: current - 1, ArrowDown: current - 1, Home: 1, End: 6 }[e.key];
+        if (k === undefined) return;
+        e.preventDefault();
+        select(Math.max(1, Math.min(6, k)), true);
+      });
     });
+
+    // The one unprompted moment: draw the stair, then walk the signal from the
+    // client's finished rung up to the rung we start on.
+    function begin(){
+      climb.classList.add('in');
+      if (reduce){ put(current); sig.classList.add('on'); ready = true; return; }
+      setTimeout(function(){
+        put(1); sig.classList.add('on'); ready = true;
+        setTimeout(function(){ climbTo(current); }, 380);
+      }, 1250);
+    }
+    if ('IntersectionObserver' in window){
+      var climbIo = new IntersectionObserver(function(entries){
+        if (entries[0].isIntersecting){ climbIo.disconnect(); begin(); }
+      }, { threshold: .35 });
+      climbIo.observe(climb);
+    } else {
+      begin();
+    }
+    window.addEventListener('resize', function(){ if (ready) put(at); });
   }
 
   // ===== Nav scroll-spy =====
