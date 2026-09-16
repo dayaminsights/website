@@ -626,64 +626,12 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
 /* Browser mockup */
 /* Real browser chrome is light. On the dark version this was dark-on-dark and
    read as an illustration rather than a window. */
-.browser-mock{position:relative;z-index:1;border:1px solid var(--line);border-radius:0;overflow:hidden;background:var(--surface);box-shadow:var(--shadow-md)}
 .bm-bar{display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-3) var(--sp-4);border-bottom:1px solid var(--line);background:var(--surface-sunken)}
 .bm-dot{width:9px;height:9px;border-radius:0;display:block;background:var(--line-strong)}
 .bm-url{display:flex;align-items:center;gap:var(--sp-1);margin:0 auto;padding:5px 14px;border-radius:0;background:var(--bg);border:1px solid var(--line);color:var(--muted-2);font-family:var(--font-mono);font-size:var(--fs-label)}
 .bm-url svg{color:var(--muted-2)}
 .bm-live{font-family:var(--font-mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--good);opacity:0;transition:opacity var(--t-base) var(--ease)}
 .web-visual.in .bm-live{opacity:1;transition-delay:700ms}
-
-.bm-body{padding:var(--sp-5);display:flex;flex-direction:column;gap:var(--sp-4)}
-.bm-block{display:block;border-radius:0;background:var(--placeholder);opacity:0;transform:translateY(10px) scaleX(.85);transform-origin:left;transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
-.web-visual.in .bm-block{opacity:1;transform:none}
-
-.bm-nav{display:flex;align-items:center;gap:12px}
-.bm-logo{width:34px;height:14px;border-radius:0;background:var(--ink)!important}
-.bm-link{width:46px;height:9px}
-.bm-cta{margin-left:auto;width:74px;height:24px;border-radius:0;background:var(--accent)!important}
-.web-visual.in .bm-nav .bm-block:nth-child(1){transition-delay:60ms}
-.web-visual.in .bm-nav .bm-block:nth-child(2){transition-delay:100ms}
-.web-visual.in .bm-nav .bm-block:nth-child(3){transition-delay:140ms}
-.web-visual.in .bm-nav .bm-block:nth-child(4){transition-delay:180ms}
-
-.bm-hero{display:flex;flex-direction:column;gap:10px;padding:8px 0}
-.bm-h1{width:78%;height:22px}
-.bm-h2{width:58%;height:12px;opacity:.7}
-.bm-btn{width:120px;height:34px;border-radius:0;margin-top:var(--sp-2);background:var(--ink)!important}
-.web-visual.in .bm-hero .bm-h1{transition-delay:240ms}
-.web-visual.in .bm-hero .bm-h2{transition-delay:280ms}
-.web-visual.in .bm-hero .bm-btn{transition-delay:320ms}
-
-.bm-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-.bm-card{display:flex;flex-direction:column;gap:9px;padding:14px;border:1px solid var(--line);border-radius:0}
-.bm-icon{width:26px;height:26px;border-radius:0;background:var(--surface-sunken)!important;border:1px solid var(--line-strong)}
-.bm-line{width:100%;height:8px}
-.bm-line.short{width:60%}
-.web-visual.in .bm-cards .bm-card:nth-child(1) .bm-block:nth-child(1){transition-delay:380ms}
-.web-visual.in .bm-cards .bm-card:nth-child(1) .bm-block:nth-child(2){transition-delay:410ms}
-.web-visual.in .bm-cards .bm-card:nth-child(1) .bm-block:nth-child(3){transition-delay:440ms}
-.web-visual.in .bm-cards .bm-card:nth-child(2) .bm-block:nth-child(1){transition-delay:420ms}
-.web-visual.in .bm-cards .bm-card:nth-child(2) .bm-block:nth-child(2){transition-delay:450ms}
-.web-visual.in .bm-cards .bm-card:nth-child(2) .bm-block:nth-child(3){transition-delay:480ms}
-.web-visual.in .bm-cards .bm-card:nth-child(3) .bm-block:nth-child(1){transition-delay:460ms}
-.web-visual.in .bm-cards .bm-card:nth-child(3) .bm-block:nth-child(2){transition-delay:490ms}
-.web-visual.in .bm-cards .bm-card:nth-child(3) .bm-block:nth-child(3){transition-delay:520ms}
-
-
-/* Search results ranking card — overlaps bottom-left of browser */
-.search-mock{position:relative;z-index:2;margin:-32px 0 0 auto;width:min(290px,78%);border:1px solid var(--line);border-radius:0;padding:var(--sp-4);background:var(--surface);box-shadow:var(--shadow-md);opacity:0;transform:translateY(16px);transition:opacity var(--t-reveal) var(--ease-out) 600ms,transform var(--t-reveal) var(--ease-out) 600ms}
-.web-visual.in .search-mock{opacity:1;transform:none}
-.sm-bar{display:flex;align-items:center;gap:var(--sp-2);color:var(--muted-2);font-family:var(--font-mono);font-size:var(--fs-label);padding-bottom:var(--sp-2);border-bottom:1px solid var(--line);margin-bottom:var(--sp-2)}
-.sm-result{display:flex;align-items:center;gap:var(--sp-2);padding:var(--sp-2) 0}
-.sm-rank{flex:0 0 auto;width:20px;height:20px;border-radius:0;display:grid;place-items:center;font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;background:var(--placeholder);color:var(--muted)}
-.sm-text{display:flex;flex-direction:column;gap:2px;min-width:0}
-.sm-text b{font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600}
-.sm-text span{font-family:var(--font-ui);font-size:var(--fs-label);color:var(--muted-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.sm-you{border-radius:0;background:var(--accent-soft);border:1px solid var(--accent-line);padding:var(--sp-2) var(--sp-3);margin:0 calc(var(--sp-3) * -1) var(--sp-1)}
-.sm-you .sm-rank{background:var(--accent-hover);color:#fff}
-.sm-rise{margin-left:auto;flex:0 0 auto;color:var(--good)}
-
 
 /* ===== Dashboards: KPI + chart mock ===== */
 /* Inverted panel. A black dashboard on a white page reads as a real product
@@ -907,10 +855,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 }
 
 /* ===== Website use cases ===== */
-.use-cards{margin-top:var(--sp-5);border-top:1px solid var(--line);max-width:var(--maxw-narrow)}
-.uc{padding:var(--sp-4) 0;border-bottom:1px solid var(--line)}
-.uc h4{font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--ink);margin:0 0 var(--sp-1)}
-.uc p{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted);margin:0}
 
 /* ===== AI assistant mock ===== */
 .ai-mock{
@@ -966,7 +910,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 @media(max-width:1000px){
   .stmt-band{grid-template-columns:1fr;gap:var(--sp-5)}
   .points{max-width:100%}
-  .use-cards{max-width:100%}
 }
 @media(max-width:760px){
   .points{grid-template-columns:1fr}
@@ -1115,6 +1058,164 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .rp-grid{grid-template-columns:1fr}
 }
 
+/* ===== 06 · The working page =====
+   A website drawn as a system, not a brochure. The wireframe builds itself
+   block by block, and each block carries the number of the job it does:
+   explain, build trust, answer the obvious questions, capture the enquiry.
+   The legend ticks each job off as its block arrives. Then the form's button
+   presses, a wire draws out of the page, and the blue signal runs along it to
+   a phone: the enquiry lands the moment it is sent.
+
+   One sequence on first view, driven by classes .p1-.p7 on .webx. After
+   that, pointing at a job (or its block) lights that block, and pointing at
+   job 4 sends the enquiry again. Reduced motion and no-JS get the final frame. */
+.webx-head{display:grid;grid-template-columns:minmax(0,7fr) minmax(0,5fr);align-items:end;margin-bottom:clamp(32px,4vw,56px)}
+.webx-head > div{padding-right:var(--sp-7)}
+.webx-head > p{margin:0;max-width:46ch;padding-left:clamp(24px,2.6vw,40px);color:var(--muted);text-wrap:pretty}
+
+.webx{--pad:clamp(24px,2.6vw,40px);display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);border:1px solid var(--line-strong);background:var(--surface)}
+.webx-copy{min-width:0;padding:var(--pad);border-right:1px solid var(--line);display:flex;flex-direction:column}
+.webx-copy h3{font-size:var(--fs-h3);font-weight:700;letter-spacing:-.02em;line-height:1.15;margin:0;max-width:18ch;text-wrap:balance}
+.webx-copy > p{margin:var(--sp-4) 0 0;font-size:16px;line-height:1.55;color:var(--muted);max-width:48ch;text-wrap:pretty}
+
+/* The legend: the four jobs, keyed to the numbered blocks in the drawing. */
+.jobs{list-style:none;margin:var(--sp-6) 0 0;padding:0;border-top:1px solid var(--line)}
+.job{display:grid;grid-template-columns:22px minmax(0,1fr);gap:var(--sp-4);padding:var(--sp-4) 0;border-bottom:1px solid var(--line);cursor:default;transition:background-color var(--t-fast) var(--ease)}
+.job b{display:block;font-size:var(--fs-small);font-weight:600;color:var(--ink);letter-spacing:-.005em}
+.job span:not(.key){display:block;margin-top:2px;font-size:var(--fs-small);line-height:1.45;color:var(--muted)}
+.key{display:grid;place-items:center;width:22px;height:22px;margin-top:-1px;border:1px solid var(--ink);background:var(--surface);color:var(--ink);font-size:11px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1;transition:background-color 260ms var(--ease),color 260ms var(--ease)}
+
+/* The drafting sheet. */
+.webx-sheet{--gap:clamp(28px,3.4vw,48px);position:relative;min-width:0;padding:var(--pad);display:grid;grid-template-columns:minmax(0,1fr) clamp(120px,13vw,164px);gap:var(--sp-3) var(--gap);align-items:end;align-content:center;
+  background-image:linear-gradient(rgba(7,22,45,.035) 1px,transparent 1px),linear-gradient(90deg,rgba(7,22,45,.035) 1px,transparent 1px);
+  background-size:24px 24px;background-position:-1px -1px}
+.webx-sheet .fig{grid-column:1 / -1;align-self:start;margin:0 0 var(--sp-2);font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+
+/* Wireframe browser. */
+.wf{position:relative;border:1px solid var(--ink);background:var(--surface)}
+.wf-bar{display:flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-bottom:1px solid var(--line-strong)}
+.wf-bar i{width:6px;height:6px;background:var(--line-strong)}
+.wf-url{margin-left:10px;padding:2px 8px;border:1px solid var(--line);font-size:10px;letter-spacing:.02em;color:var(--muted-2)}
+.wf-page{--pp:16px;padding:14px var(--pp) 16px;display:grid;grid-template-columns:minmax(0,1fr);gap:10px}
+.wf-nav{display:flex;align-items:center;gap:10px;min-width:0;padding-bottom:10px;border-bottom:1px solid var(--line)}
+.wf-nav .logo{width:30px;height:9px;background:var(--ink)}
+.wf-nav .lk{flex:0 1 22px;min-width:8px;height:4px;background:var(--placeholder)}
+.wf-nav .lk:nth-of-type(2){margin-left:auto}
+.wf-nav .cta{width:40px;height:13px;border:1px solid var(--ink)}
+.bar{display:block;height:6px;background:var(--placeholder);transform-origin:left}
+.bar.ink{background:var(--ink)}
+
+/* A block of the page and its number, sitting on the frame's left edge. */
+.wf-part{position:relative;padding:10px 0 10px 18px;transition:opacity 380ms var(--ease),transform 480ms var(--ease-out),filter 260ms var(--ease)}
+.wf-part .key{position:absolute;left:-28px;top:50%;margin-top:-11px}
+.wf-part .outline{position:absolute;inset:0 -6px 0 6px;border:1px solid transparent;pointer-events:none;transition:border-color var(--t-fast) var(--ease)}
+.wf-hero{display:grid;gap:7px}
+.wf-hero .bar.ink{height:11px}
+.wf-hero .btn-bar{width:64px;height:15px;margin-top:5px;background:var(--ink);transform-origin:left}
+.wf-proof{display:grid;gap:8px}
+.wf-proof .logos{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+.wf-proof .logos i{height:16px;border:1px solid var(--line-strong);transform-origin:bottom}
+.wf-faq{display:grid;gap:0}
+.wf-faq .row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;border-bottom:1px solid var(--line)}
+.wf-faq .row:last-child{border-bottom:0}
+.wf-faq .plus{position:relative;width:8px;height:8px;flex:0 0 auto}
+.wf-faq .plus::before,.wf-faq .plus::after{content:"";position:absolute;background:var(--ink-2)}
+.wf-faq .plus::before{left:0;right:0;top:3.5px;height:1px}
+.wf-faq .plus::after{top:0;bottom:0;left:3.5px;width:1px}
+.wf-form{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
+.wf-form .in{height:22px;border:1px solid var(--line-strong)}
+.wf-form .send{position:relative;width:62px;height:22px;background:var(--ink);transition:transform 160ms var(--ease)}
+
+/* The wire out of the page and the phone it ends at. */
+.wire{position:absolute;left:100%;top:50%;height:1px;width:calc(var(--pp) + 1px + var(--gap));background:var(--ink);transform-origin:left}
+.wf-form-row{position:relative}
+.signal-run{position:absolute;left:0;top:-4px;width:9px;height:9px;background:var(--accent);opacity:0}
+.phone{position:relative;align-self:end;border:1px solid var(--ink);background:var(--surface);aspect-ratio:9 / 17;padding:18px 9px 10px;display:flex;flex-direction:column;gap:8px}
+.phone .note{margin-top:auto}
+.phone::before{content:"";position:absolute;top:7px;left:50%;width:22px;height:3px;margin-left:-11px;background:var(--line-strong)}
+.phone .ph-bar{height:5px;background:var(--placeholder)}
+.phone .ph-bar.short{width:60%}
+.note{position:relative;display:grid;grid-template-columns:8px 1fr;gap:6px;align-items:start;padding:8px;border:1px solid var(--ink);background:var(--surface);transform-origin:top}
+.note i{width:8px;height:8px;margin-top:3px;background:var(--accent)}
+.note b{display:block;font-size:11px;font-weight:600;line-height:1.25;color:var(--ink)}
+.note small{display:block;font-size:10px;line-height:1.3;color:var(--muted-2)}
+.phone-cap{position:absolute;left:0;right:0;bottom:-24px;font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);text-align:center;white-space:nowrap}
+.webx-sheet{padding-bottom:calc(var(--pad) + 24px)}
+
+/* ---- The sequence. Pre-states apply only once JS has marked the figure (.webx.js-armed). ---- */
+/* The reveal clip leaves room either side for the keys on the left edge and the wire leaving on the right. */
+.webx.js-armed .wf{clip-path:inset(-2px -90px 100% -44px);transition:clip-path 700ms var(--ease-out)}
+.webx.js-armed.p0 .wf{clip-path:inset(-2px -90px -2px -44px)}
+.webx.js-armed .wf-part{opacity:0;transform:translateY(6px)}
+.webx.js-armed .wf-part .bar,.webx.js-armed .wf-part .btn-bar{transform:scaleX(0);transition:transform 520ms var(--ease-out) var(--d,0ms)}
+.webx.js-armed .wf-proof .logos i{transform:scaleY(0);transition:transform 360ms var(--ease-out) var(--d,0ms)}
+.webx.js-armed .wire{transform:scaleX(0);transition:transform 420ms var(--ease-out)}
+.webx.js-armed .phone{opacity:0;transform:translateY(10px);transition:opacity 420ms var(--ease),transform 520ms var(--ease-out)}
+.webx.js-armed .note{opacity:0;transform:translateY(-6px) scaleY(.9);transition:opacity 280ms var(--ease),transform 420ms var(--ease-out)}
+.webx.js-armed .job .key{background:var(--surface);color:var(--ink)}
+
+.webx.js-armed.p1 [data-part="1"],.webx.js-armed.p2 [data-part="2"],.webx.js-armed.p3 [data-part="3"],.webx.js-armed.p4 [data-part="4"]{opacity:1;transform:none}
+.webx.js-armed.p1 [data-part="1"] .bar,.webx.js-armed.p1 [data-part="1"] .btn-bar,
+.webx.js-armed.p2 [data-part="2"] .bar,.webx.js-armed.p3 [data-part="3"] .bar,.webx.js-armed.p4 [data-part="4"] .bar{transform:none}
+.webx.js-armed.p2 .wf-proof .logos i{transform:none}
+.webx.js-armed.p0 .phone{opacity:1;transform:none;transition-delay:300ms}
+/* Keys fill as each job is done. */
+.webx.js-armed.p1 [data-job="1"] .key,.webx.js-armed.p2 [data-job="2"] .key,.webx.js-armed.p3 [data-job="3"] .key,.webx.js-armed.p4 [data-job="4"] .key,
+.webx:not(.js-armed) .key{background:var(--ink);color:var(--on-panel)}
+/* The enquiry: button press, wire, signal, notification. */
+.webx.p5 .wf-form .send{transform:scale(.94)}
+.webx.wired .wire{transform:none}
+.webx.p6 .signal-run{opacity:1;transform:translateX(var(--run,40px));transition:transform 620ms cubic-bezier(.5,0,.2,1),opacity 120ms var(--ease)}
+.webx.p7 .signal-run{opacity:0;transition:opacity 160ms var(--ease)}
+.webx.p7 .note{opacity:1;transform:none}
+
+/* Pointing at a job lights its block; the others step back. */
+.webx[data-focus] .wf-part{filter:opacity(.3)}
+.webx[data-focus="1"] .wf-part[data-part="1"],.webx[data-focus="2"] .wf-part[data-part="2"],
+.webx[data-focus="3"] .wf-part[data-part="3"],.webx[data-focus="4"] .wf-part[data-part="4"]{filter:none}
+.webx[data-focus="1"] [data-part="1"] .outline,.webx[data-focus="2"] [data-part="2"] .outline,
+.webx[data-focus="3"] [data-part="3"] .outline,.webx[data-focus="4"] [data-part="4"] .outline{border-color:var(--ink)}
+.webx[data-focus="1"] [data-job="1"],.webx[data-focus="2"] [data-job="2"],
+.webx[data-focus="3"] [data-job="3"],.webx[data-focus="4"] [data-job="4"]{background-color:var(--bg)}
+
+/* Where most projects start, and the way in. */
+.webx-start{display:grid;grid-template-columns:repeat(3,minmax(0,1fr)) auto;gap:0;align-items:end;margin-top:clamp(40px,5vw,64px);border-top:1px solid var(--line-strong)}
+.webx-start .lab{grid-column:1 / -1;margin:var(--sp-5) 0 var(--sp-2);font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+.ws{align-self:stretch;padding:var(--sp-3) var(--sp-6) 0 0}
+.ws + .ws{padding-left:var(--sp-6);border-left:1px solid var(--line)}
+.ws h4{margin:0;font-size:var(--fs-small);font-weight:600;color:var(--ink)}
+.ws p{margin:4px 0 0;font-size:var(--fs-small);line-height:1.45;color:var(--muted)}
+.webx-start .btn{margin-left:var(--sp-6)}
+
+@media(max-width:1199px){
+  .webx{grid-template-columns:1fr}
+  .webx-copy{border-right:0;border-bottom:1px solid var(--line)}
+  .jobs{display:grid;grid-template-columns:1fr 1fr;column-gap:var(--sp-6)}
+  .webx-start{grid-template-columns:repeat(3,minmax(0,1fr))}
+  .webx-start .btn{grid-column:1 / -1;justify-self:start;margin:var(--sp-6) 0 0}
+}
+@media(max-width:900px){
+  .webx-head{grid-template-columns:1fr;gap:var(--sp-5)}
+  .webx-head > div{padding-right:0}
+  .webx-head > p{padding-left:0}
+  .webx-start{grid-template-columns:1fr}
+  .ws,.ws + .ws{padding:var(--sp-3) 0;border-left:0;border-bottom:1px solid var(--line)}
+  .webx-start .btn{margin:var(--sp-5) 0 0;justify-self:start}
+}
+@media(max-width:640px){
+  .jobs{grid-template-columns:1fr}
+  .webx-sheet{--gap:22px;grid-template-columns:minmax(0,1fr) 92px;padding-left:calc(var(--pad) + 16px)}
+  .wf-page{--pp:12px;padding:12px var(--pp) 14px}
+  .wf-part{padding-left:12px}
+  .wf-part .key{left:-24px;width:20px;height:20px;margin-top:-10px;font-size:10px}
+  .wf-form{grid-template-columns:1fr auto}
+  .wf-form .in:nth-child(2){display:none}
+  .phone{padding:16px 6px 10px}
+  .note{grid-template-columns:1fr;padding:6px}
+  .note i,.note small{display:none}
+  .phone-cap{letter-spacing:.06em}
+}
+
 /* ===== 03 · Signal: the one scroll interaction that argues something =====
    Everywhere else on this page motion reveals content that was already
    written. Here the motion IS the content: the same eighteen data points are
@@ -1230,14 +1331,14 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 /* ===== Motion: lists arrive in reading order =====
    The heading lands first, then its supporting rows, so the eye is led down
    the column instead of the whole block appearing at once. */
-.points li,.uc,.res-lines > div{
+.points li,.res-lines > div{
   opacity:0;transform:translateY(10px);
   transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out);
 }
-.in .points li,.in .uc,.in .res-lines > div{opacity:1;transform:none}
-.in .points li:nth-child(1),.in .uc:nth-child(1),.in .res-lines > div:nth-child(1){transition-delay:180ms}
-.in .points li:nth-child(2),.in .uc:nth-child(2),.in .res-lines > div:nth-child(2){transition-delay:240ms}
-.in .points li:nth-child(3),.in .uc:nth-child(3),.in .res-lines > div:nth-child(3){transition-delay:300ms}
+.in .points li,.in .res-lines > div{opacity:1;transform:none}
+.in .points li:nth-child(1),.in .res-lines > div:nth-child(1){transition-delay:180ms}
+.in .points li:nth-child(2),.in .res-lines > div:nth-child(2){transition-delay:240ms}
+.in .points li:nth-child(3),.in .res-lines > div:nth-child(3){transition-delay:300ms}
 .in .points li:nth-child(4){transition-delay:360ms}
 .in .points li:nth-child(5){transition-delay:420ms}
 .in .points li:nth-child(6){transition-delay:480ms}
@@ -1299,7 +1400,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .web-grid.rev{grid-template-columns:1fr}
   .web-grid.rev .web-copy,.web-grid.rev .web-visual{order:initial}
   .web-copy p{max-width:100%}
-  .search-mock{width:min(290px,100%)}
   .prob-grid{grid-template-columns:repeat(2,1fr)}
   .proc-grid{grid-template-columns:repeat(2,1fr);gap:40px 0}
   .proc-line{display:none}
@@ -1322,9 +1422,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .prob-grid{grid-template-columns:1fr}
   .proc-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
-  .bm-cards{grid-template-columns:1fr 1fr}
-  .bm-cards .bm-card:nth-child(3){display:none}
-  .search-mock{margin-top:-24px;padding:var(--sp-3)}
   .foot-col a{padding:var(--sp-3) 0}
   .cta-band{padding:var(--sp-7) var(--sp-5)}
   .dash-kpis{grid-template-columns:1fr 1fr}
@@ -1350,11 +1447,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 /* The step-across is a transform on the text, not padding on the row: padding
    would relayout the list on every hover, and the rule has to stay put at
    left:0 while the copy moves away from it. */
-.uc{position:relative}
-.uc::before{content:"";position:absolute;left:0;top:var(--sp-4);bottom:var(--sp-4);width:2px;background:var(--accent);transform:scaleY(0);transform-origin:top;transition:transform var(--t-base) var(--ease-out)}
-.uc h4,.uc p{transition:transform var(--t-base) var(--ease-out)}
-.uc:hover::before{transform:scaleY(1)}
-.uc:hover h4,.uc:hover p{transform:translateX(var(--sp-4))}
 
 .hs-card .hs-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease)}
 .hs-card:hover .hs-icon{transform:translateY(-2px);border-color:var(--accent)}
@@ -1390,7 +1482,6 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 @media(prefers-reduced-motion:reduce){
   .cta-band::before{transform:scaleX(1)!important}
   .cta-band h2 .ln > span{transform:none!important}
-  .uc:hover h4,.uc:hover p{transform:none}
 }
 
 /* Positional motion goes; colour and opacity feedback stays. A blanket
@@ -1400,8 +1491,9 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   *{animation:none!important}
   *{transition-duration:var(--t-fast)!important}
   .reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:1!important;transform:none!important}
-  .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
+  .points li,.res-lines > div{opacity:1!important;transform:none!important}
   .climb *,.climb *::before,.climb *::after{transition-delay:0s!important}
+  .webx *,.webx *::before,.webx *::after{transition-delay:0s!important}
   .proc-line.reveal{transform:none!important}
   /* Pseudo-elements and the SVG points are not covered by the class resets
      above, and both hold their pre-state in a transform. Without these the
@@ -1418,7 +1510,7 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
      scrubbed section. -->
 <noscript><style>
   .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.cta-band{opacity:1!important;transform:none!important}
-  .points li,.uc,.res-lines > div{opacity:1!important;transform:none!important}
+  .points li,.res-lines > div{opacity:1!important;transform:none!important}
   .climb .stair::before,.climb .stair::after,.climb .step::before,.climb .step::after,.climb .dim::before,.climb .stair-handoff{transform:none!important}
   .climb .step-num,.climb .step-name,.climb .dim span,.climb-panels{opacity:1!important}
   .climb .step.is-yours{background-size:100% 100%!important}
@@ -2095,91 +2187,65 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 
 <!-- GROW: WEBSITES & DIGITAL -->
 <section class="pad wrap web-show band" id="websites" aria-labelledby="h-websites">
-  <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="06"><span class="dot"></span>Websites &amp; digital</span>
-    <h2 class="title" id="h-websites">Your website should do more than look good.</h2>
-    <p>It should explain what you do, build trust, answer the obvious questions and turn visitors into enquiries.</p>
+  <div class="webx-head">
+    <div class="reveal">
+      <span class="eyebrow" data-ch="06"><span class="dot"></span>Websites &amp; digital</span>
+      <h2 class="title" id="h-websites">Your website should do more than look good.</h2>
+    </div>
+    <p class="reveal" data-d="1">It should explain what you do, build trust, answer the obvious questions and turn visitors into enquiries.</p>
   </div>
 
-  <div class="web-grid web-block reveal-left">
-    <div class="web-copy">
-      <span class="eyebrow"><span class="dot"></span>What we build</span>
-      <h3 class="title sm">Look as credible online as you are in person.</h3>
+  <div class="webx">
+    <div class="webx-copy">
+      <h3>Look as credible online as you are in person.</h3>
       <p>Fast, conversion-focused sites for businesses ready to be taken seriously online: structured around the questions a real buyer asks, quick on a phone, and wired so an enquiry reaches you the moment it is sent.</p>
-
-      <div class="use-cards">
-        <div class="uc">
-          <h4>Need more enquiries?</h4>
-          <p>Build a site designed around conversion, not decoration.</p>
-        </div>
-        <div class="uc">
-          <h4>Site feels outdated?</h4>
-          <p>Redesign it around the business you run today.</p>
-        </div>
-        <div class="uc">
-          <h4>Launching something new?</h4>
-          <p>Create a presence that gets people to take action.</p>
-        </div>
-      </div>
-
-      <div class="hero-cta">
-        <a href="#cta" class="btn btn-primary">Build my website <span class="arrow">→</span></a>
-      </div>
+      <ol class="jobs">
+        <li class="job" data-job="1"><span class="key" aria-hidden="true">1</span><div><b>Explains what you do</b><span>In the first few seconds, in the words your buyers use.</span></div></li>
+        <li class="job" data-job="2"><span class="key" aria-hidden="true">2</span><div><b>Builds trust</b><span>With proof a buyer can check: your work, reviews, the people behind it.</span></div></li>
+        <li class="job" data-job="3"><span class="key" aria-hidden="true">3</span><div><b>Answers the obvious questions</b><span>Price, timelines, where you work &mdash; before anyone has to ask.</span></div></li>
+        <li class="job" data-job="4"><span class="key" aria-hidden="true">4</span><div><b>Turns visitors into enquiries</b><span>And sends each one straight to your phone.</span></div></li>
+      </ol>
     </div>
 
-    <!-- Animated build + search ranking visual -->
-    <div class="web-visual" id="webVisual">
-
-      <!-- Browser mockup that builds itself -->
-      <div class="browser-mock">
-        <div class="bm-bar">
-          <span class="bm-dot r"></span><span class="bm-dot y"></span><span class="bm-dot g"></span>
-          <div class="bm-url"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="11" height="11"><rect x="5" y="11" width="14" height="9" rx="1.5" stroke="currentColor" stroke-width="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3" stroke="currentColor" stroke-width="2"/></svg><span>yourbusiness.com</span></div>
-          <span class="bm-live">■ LIVE</span>
-        </div>
-        <div class="bm-body">
-          <div class="bm-row bm-nav">
-            <span class="bm-block bm-logo"></span>
-            <span class="bm-block bm-link"></span>
-            <span class="bm-block bm-link"></span>
-            <span class="bm-block bm-cta"></span>
+    <div class="webx-sheet" aria-hidden="true">
+      <p class="fig">Fig. &mdash; A page built around four jobs</p>
+      <div class="wf">
+        <div class="wf-bar"><i></i><i></i><i></i><span class="wf-url">yourbusiness.com</span></div>
+        <div class="wf-page">
+          <div class="wf-nav"><span class="logo"></span><span class="lk"></span><span class="lk"></span><span class="lk"></span><span class="cta"></span></div>
+          <div class="wf-part wf-hero" data-part="1"><span class="key">1</span><span class="outline"></span>
+            <span class="bar ink" style="width:78%"></span><span class="bar ink" style="width:56%;--d:70ms"></span><span class="bar" style="width:66%;--d:140ms"></span><span class="btn-bar" style="--d:220ms"></span>
           </div>
-          <div class="bm-row bm-hero">
-            <span class="bm-block bm-h1"></span>
-            <span class="bm-block bm-h2"></span>
-            <span class="bm-block bm-btn"></span>
+          <div class="wf-part wf-proof" data-part="2"><span class="key">2</span><span class="outline"></span>
+            <div class="logos"><i></i><i style="--d:60ms"></i><i style="--d:120ms"></i><i style="--d:180ms"></i></div>
+            <span class="bar" style="width:84%;--d:200ms"></span><span class="bar" style="width:34%;--d:260ms"></span>
           </div>
-          <div class="bm-row bm-cards">
-            <span class="bm-card"><span class="bm-block bm-icon"></span><span class="bm-block bm-line"></span><span class="bm-block bm-line short"></span></span>
-            <span class="bm-card"><span class="bm-block bm-icon"></span><span class="bm-block bm-line"></span><span class="bm-block bm-line short"></span></span>
-            <span class="bm-card"><span class="bm-block bm-icon"></span><span class="bm-block bm-line"></span><span class="bm-block bm-line short"></span></span>
+          <div class="wf-part wf-faq" data-part="3"><span class="key">3</span><span class="outline"></span>
+            <div class="row"><span class="bar" style="width:62%"></span><span class="plus"></span></div>
+            <div class="row"><span class="bar" style="width:48%;--d:90ms"></span><span class="plus"></span></div>
+            <div class="row"><span class="bar" style="width:56%;--d:180ms"></span><span class="plus"></span></div>
+          </div>
+          <div class="wf-part wf-form-row" data-part="4"><span class="key">4</span><span class="outline"></span>
+            <div class="wf-form"><span class="in"></span><span class="in"></span><span class="send"></span></div>
+            <span class="wire"><span class="signal-run"></span></span>
           </div>
         </div>
       </div>
-
-      <!-- Search results ranking card -->
-      <div class="search-mock">
-        <div class="sm-bar">
-          <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="13" height="13"><circle cx="12" cy="8" r="3.4" stroke="currentColor" stroke-width="2"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
-          <span>What a visitor actually does</span>
-        </div>
-        <div class="sm-result">
-          <span class="sm-rank">1</span>
-          <div class="sm-text"><b>Finds you</b><span>Search, a referral, or your profile</span></div>
-        </div>
-        <div class="sm-result">
-          <span class="sm-rank">2</span>
-          <div class="sm-text"><b>Understands what you do</b><span>In about eight seconds</span></div>
-        </div>
-        <div class="sm-result sm-you">
-          <span class="sm-rank">3</span>
-          <div class="sm-text"><b>Sends an enquiry</b><span>Straight to your phone</span></div>
-          <span class="sm-rise"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="14" height="14"><path d="M4 12h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-        </div>
+      <div class="phone">
+        <span class="ph-bar"></span><span class="ph-bar short"></span><span class="ph-bar"></span><span class="ph-bar short"></span>
+        <div class="note"><i></i><div><b>New enquiry</b><small>From your website &middot; just now</small></div></div>
+        <span class="phone-cap">Your phone</span>
       </div>
     </div>
   </div>
 
+  <div class="webx-start reveal">
+    <p class="lab">Where most projects start</p>
+    <div class="ws"><h4>Need more enquiries?</h4><p>Build a site designed around conversion, not decoration.</p></div>
+    <div class="ws"><h4>Site feels outdated?</h4><p>Redesign it around the business you run today.</p></div>
+    <div class="ws"><h4>Launching something new?</h4><p>Create a presence that gets people to take action.</p></div>
+    <a href="#cta" class="btn btn-primary">Build my website <span class="arrow">&rarr;</span></a>
+  </div>
 </section>
 
 <!-- MID-PAGE CTA -->
@@ -2875,6 +2941,70 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
       begin();
     }
     window.addEventListener('resize', function(){ if (ready) put(at); });
+  }
+
+  // ===== 06 · The working page =====
+  // The page builds one job at a time, the legend ticks each off, then an
+  // enquiry runs down the wire to the phone. Pointing at a job lights its
+  // block; pointing at job 4 sends the enquiry again.
+  var webx = document.querySelector('.webx');
+  if (webx){
+    var wireEl = webx.querySelector('.wire');
+    var parts = ['p0','p1','p2','p3','p4','p5','p6','p7'];
+    var webTimers = [];
+    var webDone = false;
+    function measureWire(){ webx.style.setProperty('--run', Math.max(0, wireEl.getBoundingClientRect().width - 9) + 'px'); }
+    function at(ms, fn){ webTimers.push(setTimeout(fn, ms)); }
+    function sendEnquiry(delay){
+      webx.classList.remove('p5','p6','p7');
+      void webx.offsetWidth;
+      measureWire();
+      var first = !webx.classList.contains('wired');
+      at(delay, function(){ webx.classList.add('p5', 'wired'); });
+      at(delay + 180, function(){ webx.classList.remove('p5'); });
+      at(delay + (first ? 460 : 220), function(){ webx.classList.add('p6'); });
+      at(delay + (first ? 1080 : 840), function(){ webx.classList.add('p7'); webDone = true; });
+    }
+    function build(){
+      if (reduce){ parts.forEach(function(p){ webx.classList.add(p); }); webx.classList.remove('p5'); webx.classList.add('wired'); webDone = true; return; }
+      webx.classList.add('js-armed');
+      void webx.offsetWidth;
+      at(60,   function(){ webx.classList.add('p0'); });
+      at(700,  function(){ webx.classList.add('p1'); });
+      at(1250, function(){ webx.classList.add('p2'); });
+      at(1800, function(){ webx.classList.add('p3'); });
+      at(2350, function(){ webx.classList.add('p4'); });
+      sendEnquiry(2950);
+    }
+    // Arm before first paint of the section so nothing flashes finished, then build on view.
+    if (!reduce && 'IntersectionObserver' in window){
+      webx.classList.add('js-armed');
+      var webIo = new IntersectionObserver(function(entries){
+        if (entries[0].isIntersecting){ webIo.disconnect(); build(); }
+      }, { threshold: .3 });
+      webIo.observe(webx);
+    } else {
+      build();
+    }
+
+    function focusJob(k){
+      if (k) webx.setAttribute('data-focus', k); else webx.removeAttribute('data-focus');
+    }
+    Array.prototype.forEach.call(webx.querySelectorAll('[data-job]'), function(li){
+      var k = li.getAttribute('data-job');
+      li.addEventListener('mouseenter', function(){
+        focusJob(k);
+        if (k === '4' && webDone && !reduce) sendEnquiry(80);
+      });
+      li.addEventListener('mouseleave', function(){ focusJob(null); });
+      // Touch: a tap pins the highlight; a second tap clears it.
+      li.addEventListener('click', function(){ focusJob(webx.getAttribute('data-focus') === k ? null : k); });
+    });
+    Array.prototype.forEach.call(webx.querySelectorAll('.wf-part'), function(part){
+      part.addEventListener('mouseenter', function(){ focusJob(part.getAttribute('data-part')); });
+      part.addEventListener('mouseleave', function(){ focusJob(null); });
+    });
+    window.addEventListener('resize', measureWire);
   }
 
   // ===== Nav scroll-spy =====
