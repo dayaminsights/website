@@ -299,10 +299,10 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 @keyframes markCurl{from{transform:scaleX(0)}}
 .mark .mk-draw{fill:none;stroke:#fff;stroke-width:50;stroke-linecap:butt;stroke-dasharray:272;stroke-dashoffset:0}
 .mark .mk-stem,.mark .mk-curl{transform-box:fill-box}
-.sign .mark .mk-dot{animation:markOn 140ms linear both}
-.sign .mark .mk-draw{animation:markDraw 520ms var(--ease-out) 100ms both}
-.sign .mark .mk-stem{transform-origin:50% 100%;animation:markRise 380ms var(--ease-out) 500ms both}
-.sign .mark .mk-curl{transform-origin:0 50%;animation:markCurl 260ms var(--ease-out) 760ms both}
+.mark .mk-dot{animation:markOn 140ms linear both}
+.mark .mk-draw{animation:markDraw 520ms var(--ease-out) 100ms both}
+.mark .mk-stem{transform-origin:50% 100%;animation:markRise 380ms var(--ease-out) 500ms both}
+.mark .mk-curl{transform-origin:0 50%;animation:markCurl 260ms var(--ease-out) 760ms both}
 .hs-row:nth-child(2){animation-delay:900ms}
 .hs-row:nth-child(3){animation-delay:980ms}
 .hs-row:nth-child(4){animation-delay:1060ms}
@@ -1149,10 +1149,6 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 @supports (backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px)){
   header.nav.scrolled{-webkit-backdrop-filter:blur(12px) saturate(1.4);backdrop-filter:blur(12px) saturate(1.4)}
 }
-/* scale(), not width/height: the mark shrinking must not shift the wordmark
-   beside it, and a transform keeps the whole thing off the layout path. */
-.brand .glyph{transition:transform var(--t-base) var(--ease)}
-header.nav.scrolled .brand .glyph{transform:scale(.85)}
 
 /* ===== Final CTA =====
    The last panel on the page gets one moment and no more: a rust rule drawing

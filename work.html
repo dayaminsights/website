@@ -36,11 +36,6 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="assets/css/site.css">
-<script>
-/* Runs before first paint: the mark draws itself once a visit, then stays put on
-   every page the visitor opens after that. No JS, no class, finished mark. */
-try{ if(!sessionStorage.getItem('dayamMark')){ document.documentElement.className += ' sign'; sessionStorage.setItem('dayamMark','1'); } }catch(e){ document.documentElement.className += ' sign'; }
-</script>
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
      no-JS path is given the finished frame of everything, including the
