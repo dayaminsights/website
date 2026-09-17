@@ -1401,6 +1401,7 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   .points li,.res-lines > div{opacity:1!important;transform:none!important}
   .climb *,.climb *::before,.climb *::after{transition-delay:0s!important}
   .webx *,.webx *::before,.webx *::after{transition-delay:0s!important}
+  .bp .draw{stroke-dashoffset:0!important}
   .proc-line.reveal{transform:none!important}
   /* Pseudo-elements and the SVG points are not covered by the class resets
      above, and both hold their pre-state in a transform. Without these the
@@ -1411,6 +1412,70 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   html{scroll-behavior:auto}
 }
 
+/* ===== Home: where next =====
+   Three doors before the form, so the homepage hands the reader on instead
+   of ending on an ask. */
+.where-next{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:clamp(48px,6vw,80px) 0 0;border:1px solid var(--line-strong);background:var(--surface)}
+.where-next a{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:var(--sp-4);row-gap:var(--sp-2);align-content:start;padding:var(--sp-6) var(--sp-6) var(--sp-7);border-right:1px solid var(--line);color:var(--ink);transition:background var(--t-fast) var(--ease)}
+.where-next a:last-child{border-right:0}
+.where-next a:hover{background:var(--bg)}
+.where-next .wn-num{grid-row:1 / span 2;font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--muted-2);font-variant-numeric:tabular-nums;padding-top:6px}
+.where-next b{font-size:var(--fs-h4);font-weight:700;letter-spacing:-.015em}
+.where-next span:not(.wn-num){font-size:var(--fs-small);line-height:1.5;color:var(--muted);max-width:32ch}
+.where-next .arrow{position:absolute;right:var(--sp-6);bottom:var(--sp-5);font-style:normal;color:var(--ink);transition:transform var(--t-fast) var(--ease)}
+.where-next a:hover .arrow{transform:translateX(4px);color:var(--accent)}
+@media(max-width:900px){
+  .where-next{grid-template-columns:1fr}
+  .where-next a{border-right:0;border-bottom:1px solid var(--line);padding:var(--sp-5) var(--sp-5) var(--sp-6)}
+  .where-next a:last-child{border-bottom:0}
+}
+
+/* ===== Solutions: the example under each block ===== */
+.example-link{margin:var(--sp-4) 0 0;font-family:var(--font-ui);font-size:var(--fs-small)}
+.example-link a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:5px;text-decoration-thickness:1px}
+.example-link .arrow{display:inline-block;transition:transform var(--t-fast) var(--ease)}
+.example-link a:hover .arrow{transform:translateX(3px)}
+
+/* ===== Work: each example with its drawing ===== */
+.res-list{margin-top:var(--sp-7);border-top:1px solid var(--line-strong)}
+.res-list .res{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:clamp(32px,5vw,72px);align-items:center;padding:clamp(40px,5vw,64px) 0;border:0;border-bottom:1px solid var(--line-strong);background:transparent;transition:none}
+.res-list .res:hover{transform:none;box-shadow:none;border-color:var(--line-strong)}
+.res-list .res:nth-child(even) .res-copy{order:2}
+.res-copy{display:flex;flex-direction:column;gap:var(--sp-4);align-items:flex-start}
+.res-meta{display:flex;flex-wrap:wrap;align-items:center;gap:var(--sp-3)}
+.res-title{font-family:var(--font-ui);font-size:clamp(26px,2.6vw,36px);font-weight:700;letter-spacing:-.025em;line-height:1.1;margin:0;max-width:16ch;text-wrap:balance}
+.res-list .res-lines{gap:var(--sp-3);max-width:52ch}
+.res-link{margin:var(--sp-2) 0 0;font-family:var(--font-ui);font-size:var(--fs-small)}
+.res-link a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:5px;text-decoration-thickness:1px}
+.res-link .arrow{display:inline-block;transition:transform var(--t-fast) var(--ease)}
+.res-link a:hover .arrow{transform:translateX(3px)}
+.res-fig{position:relative;border:1px solid var(--line-strong);background:var(--surface)}
+.res-fig .bp{display:block;width:100%;height:auto}
+.res-fig .fig{position:absolute;left:var(--sp-4);bottom:var(--sp-3);font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2)}
+/* Blueprint drawing: a 32-unit construction grid, measured rectangles, one blue marker. Lines draw on reveal. */
+.bp .bp-grid{fill:none;stroke:var(--ink);stroke-opacity:.09;stroke-width:1}
+.bp .g-line{fill:none;stroke:var(--ink);stroke-opacity:.5;stroke-width:1}
+.bp .g-lbl{font-family:var(--font-ui);font-size:7px;font-weight:600;letter-spacing:1px;fill:var(--ink-2);text-transform:uppercase}
+.bp .g-sig{fill:var(--accent)}
+.bp .draw{stroke-dasharray:1;stroke-dashoffset:1;transition:stroke-dashoffset 900ms var(--ease-out) calc(var(--i,0) * 120ms + 200ms)}
+.in .bp .draw{stroke-dashoffset:0}
+@media(max-width:1000px){
+  .res-list .res{grid-template-columns:1fr;gap:var(--sp-5)}
+  .res-list .res:nth-child(even) .res-copy{order:0}
+  .res-fig{max-width:560px}
+}
+
+/* ===== FAQ: four groups ===== */
+.faq-groups{max-width:var(--maxw-text);margin:var(--sp-7) auto 0;display:grid;gap:clamp(40px,5vw,64px)}
+.faq-group-title{display:flex;align-items:baseline;gap:var(--sp-3);margin:0 0 var(--sp-2);font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:700;letter-spacing:-.01em}
+.faq-group-title .ch{font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--muted-2);font-variant-numeric:tabular-nums}
+.faq-groups .faq-list{margin-top:0}
+
+/* ===== How we work: the rung's link to its solution ===== */
+.tool-link{color:var(--ink);font-weight:600;border-color:var(--ink);text-decoration:none}
+.tool-link .arrow{display:inline-block;transition:transform var(--t-fast) var(--ease)}
+.tool-link:hover .arrow{transform:translateX(3px)}
+
 /* ===== Inner pages =====
    Each inner page opens on its own h1. The page head on Solutions indexes
    the three sections below it. */
@@ -1420,7 +1485,7 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 .page-head{padding-block:clamp(56px,7vw,104px) clamp(24px,3vw,40px)}
 .page-head .page-title{max-width:16ch}
 .page-head > p{max-width:60ch;margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:var(--muted);text-wrap:pretty}
-.page-index{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin-top:clamp(32px,4vw,56px);border-top:1px solid var(--line-strong)}
+.page-index{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(32px,4vw,56px);border-top:1px solid var(--line-strong)}
 .page-index a{display:flex;align-items:baseline;gap:var(--sp-3);padding:var(--sp-4) var(--sp-5) var(--sp-4) 0;font-weight:600;color:var(--ink);transition:color var(--t-fast) var(--ease)}
 .page-index a + a{padding-left:var(--sp-5);border-left:1px solid var(--line)}
 .page-index a span{font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--muted-2);font-variant-numeric:tabular-nums}

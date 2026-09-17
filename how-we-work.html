@@ -52,6 +52,7 @@
   .rung-panel + .rung-panel{margin-top:40px;padding-top:40px;border-top:1px solid var(--line)}
   .sy-step{opacity:1!important}
   .proc-line i{transform:scaleX(1)!important}
+  .bp .draw{stroke-dashoffset:0!important}
 </style></noscript>
 </head>
 <body>
@@ -74,7 +75,6 @@
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="work.html" class="btn btn-ghost">See the work</a>
       <a href="./#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
       <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="nt-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="nt-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -159,7 +159,7 @@
           <p><span class="rb-lab">What we do</span>We connect the systems you already use, so data moves between them without a person carrying it.</p>
           <p><span class="rb-lab">What changes</span>One set of numbers that everybody trusts.</p>
         </div>
-        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">REST APIs</span><span class="tool">Webhooks</span><span class="tool">Python &amp; SQL</span><span class="tool">PostgreSQL</span><span class="tool">Microsoft 365</span><span class="tool">Google Sheets</span></div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">REST APIs</span><span class="tool">Webhooks</span><span class="tool">Python &amp; SQL</span><span class="tool">PostgreSQL</span><span class="tool">Microsoft 365</span><span class="tool">Google Sheets</span><a class="tool tool-link" href="solutions.html#automation">See integration work <span class="arrow">&rarr;</span></a></div>
       </div>
       <div class="rung-panel" role="tabpanel" id="rung-panel-4" aria-labelledby="rung-tab-4" tabindex="-1">
         <div class="rp-top"><span class="rp-num">Rung 04</span><span class="rp-own ours">Ours</span></div>
@@ -170,7 +170,7 @@
           <p><span class="rb-lab">What we do</span>Order to invoice. Enquiry to follow-up. Report to inbox. The steps run themselves, with a person only where judgement is needed.</p>
           <p><span class="rb-lab">What changes</span>More capacity, without more headcount.</p>
         </div>
-        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Python</span><span class="tool">Scheduled jobs</span><span class="tool">Your billing software</span><span class="tool">Document processing</span></div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Python</span><span class="tool">Scheduled jobs</span><span class="tool">Your billing software</span><span class="tool">Document processing</span><a class="tool tool-link" href="solutions.html#automation">See workflow automation <span class="arrow">&rarr;</span></a></div>
       </div>
       <div class="rung-panel" role="tabpanel" id="rung-panel-5" aria-labelledby="rung-tab-5" tabindex="-1">
         <div class="rp-top"><span class="rp-num">Rung 05</span><span class="rp-own ours">Ours</span></div>
@@ -181,7 +181,7 @@
           <p><span class="rb-lab">What we do</span>Live dashboards, exception alerts, and the reporting that used to be rebuilt by hand every Monday.</p>
           <p><span class="rb-lab">What changes</span>The business moves faster because the feedback loop got shorter.</p>
         </div>
-        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Power BI</span><span class="tool">SQL</span><span class="tool">Automated reporting</span><span class="tool">Threshold alerts</span></div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Power BI</span><span class="tool">SQL</span><span class="tool">Automated reporting</span><span class="tool">Threshold alerts</span><a class="tool tool-link" href="solutions.html#dashboards">See dashboards <span class="arrow">&rarr;</span></a></div>
       </div>
       <div class="rung-panel" role="tabpanel" id="rung-panel-6" aria-labelledby="rung-tab-6" tabindex="-1">
         <div class="rp-top"><span class="rp-num">Rung 06</span><span class="rp-own ours">Ours</span></div>
@@ -192,7 +192,7 @@
           <p><span class="rb-lab">What we do</span>AI assistants working on your own data, a website that sells while the shop is shut, and capability you did not have a year ago.</p>
           <p><span class="rb-lab">What changes</span>You compete on a level the businesses still re-typing cannot reach.</p>
         </div>
-        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Claude</span><span class="tool">OpenAI</span><span class="tool">Websites &amp; landing pages</span><span class="tool">Your own cloud</span></div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Claude</span><span class="tool">OpenAI</span><span class="tool">Websites &amp; landing pages</span><span class="tool">Your own cloud</span><a class="tool tool-link" href="solutions.html#ai">See AI and websites <span class="arrow">&rarr;</span></a></div>
       </div>
     </div>
   </div>
@@ -205,7 +205,6 @@
         <li><i aria-hidden="true"></i>Backed up daily</li>
         <li><i aria-hidden="true"></i>You keep the logins</li>
       </ul>
-      <a href="./#contact" class="btn btn-primary">Hand us the rest <span class="arrow">&rarr;</span></a>
     </div>
   </div>
 </section>
@@ -249,10 +248,10 @@
 <section class="pad wrap" id="next" aria-labelledby="h-next">
   <div class="cta-band reveal">
     <span class="eyebrow"><span class="dot"></span>Let&rsquo;s find the bottleneck</span>
-    <h2 id="h-next"><span class="ln"><span>What&rsquo;s slowing your business down?</span></span></h2>
-    <p>Tell us what is taking too much time, causing too many mistakes, or hiding what is really happening. We&rsquo;ll come back with the first process we would improve and what we would build. No sales pitch, no obligation.</p>
+    <h2 id="h-next"><span class="ln"><span>Ready to hand us the rest?</span></span></h2>
+    <p>Tell us where the week gets stuck. We&rsquo;ll tell you which rung you are on, what we would build first, and what it would cost &mdash; before anything starts.</p>
     <div class="hero-cta">
-      <a href="./#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
+      <a href="./#contact" class="btn btn-primary">Hand us the rest <span class="arrow">&rarr;</span></a>
       <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener" class="btn btn-ghost">Chat on WhatsApp</a>
     </div>
   </div>
@@ -281,9 +280,10 @@
       <div class="foot-col">
         <h2>Built for</h2>
         <span>Retail &amp; multi-store</span>
-        <span>Distribution &amp; wholesale</span>
-        <span>E-commerce</span>
         <span>Manufacturing</span>
+        <span>Distribution &amp; wholesale</span>
+        <span>Clinics</span>
+        <span>Professional services</span>
       </div>
       <div class="foot-col">
         <h2>Company</h2>
@@ -295,7 +295,7 @@
     </div>
     <div class="foot-bottom">
       <span>&copy; <span id="yr"></span> Dayam Insights. All rights reserved.</span>
-      <span class="mono">See. Automate. Grow.</span>
+      <span class="mono">Data &middot; Automation &middot; AI &middot; Websites</span>
     </div>
   </div>
 </footer>

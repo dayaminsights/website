@@ -52,6 +52,7 @@
   .rung-panel + .rung-panel{margin-top:40px;padding-top:40px;border-top:1px solid var(--line)}
   .sy-step{opacity:1!important}
   .proc-line i{transform:scaleX(1)!important}
+  .bp .draw{stroke-dashoffset:0!important}
 </style></noscript>
 </head>
 <body>
@@ -74,7 +75,6 @@
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="work.html" class="btn btn-ghost">See the work</a>
       <a href="./#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
       <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="nt-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="nt-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
@@ -103,35 +103,96 @@
   <div class="section-head center reveal">
     <span class="eyebrow"><span class="dot"></span>The work</span>
     <h1 class="title page-title" id="h-work">Real business problems, and the systems that solve them.</h1>
-    <p>The three shapes of work we are asked for most often. Written as examples, not client case studies — named projects replace them as clients agree to be named.</p>
+    <p>The three shapes of work we are asked for most often, drawn as the systems they became.</p>
   </div>
-  <div class="res-grid">
-    <article class="res reveal" data-d="1">
-      <div class="sector">Retail</div>
-      <span class="res-tag mono">Example project</span>
-      <dl class="res-lines">
-        <div><dt>Problem</dt><dd>Weekly reporting depended on several spreadsheets, each maintained by a different person.</dd></div>
-        <div><dt>Solution</dt><dd>A central sales and inventory dashboard, fed straight from billing and stock data.</dd></div>
-        <div><dt>Outcome</dt><dd>Management gained one view of performance, refreshed daily instead of assembled weekly.</dd></div>
-      </dl>
+  <div class="res-list">
+    <article class="res reveal" id="retail">
+      <div class="res-copy">
+        <div class="res-meta"><span class="sector">Retail</span><span class="res-tag mono">Example project</span></div>
+        <h2 class="res-title">One view of sales and stock, refreshed daily.</h2>
+        <dl class="res-lines">
+          <div><dt>Problem</dt><dd>Weekly reporting depended on several spreadsheets, each maintained by a different person.</dd></div>
+          <div><dt>Solution</dt><dd>A central sales and inventory dashboard, fed straight from billing and stock data.</dd></div>
+          <div><dt>Outcome</dt><dd>Management gained one view of performance, refreshed daily instead of assembled weekly.</dd></div>
+        </dl>
+        <p class="res-link"><a href="solutions.html#dashboards">Dashboards &amp; analytics <span class="arrow">&rarr;</span></a></p>
+      </div>
+      <div class="res-fig" aria-hidden="true">
+      <svg class="bp" viewBox="0 0 480 320" role="img" aria-labelledby="bp-a-t">
+        <title id="bp-a-t">Blueprint of a sales and stock dashboard fed by billing and stock data</title>
+        <defs><pattern id="bpg-a" width="32" height="32" patternUnits="userSpaceOnUse"><path class="bp-grid" d="M32 0H0V32"/></pattern></defs>
+        <rect width="480" height="320" fill="url(#bpg-a)"/>
+        <rect class="g-line draw" pathLength="1" x="64" y="64" width="192" height="128" style="--i:0"/>
+        <rect class="g-line draw" pathLength="1" x="288" y="64" width="128" height="56" style="--i:1"/>
+        <rect class="g-line draw" pathLength="1" x="288" y="136" width="128" height="56" style="--i:2"/>
+        <path class="g-line draw" pathLength="1" d="M256 92H288M256 164H288" style="--i:3"/>
+        <path class="g-line draw dim" pathLength="1" d="M64 224V240M256 224V240M64 232H256" style="--i:4"/>
+        <path class="g-line draw dim" pathLength="1" d="M416 120a96 96 0 0 1-32 72" style="--i:5"/>
+        <g class="g-lbl sm"><text x="66" y="58">Module A — Sales &amp; stock dashboard</text><text x="290" y="58">Billing</text><text x="290" y="130">Stock</text><text x="160" y="254" text-anchor="middle">refresh: daily</text><text x="404" y="212" text-anchor="end">r = 96</text></g>
+        <rect class="g-sig" x="252" y="122" width="8" height="8"/>
+      </svg>
+        <span class="fig">Fig. 01 &mdash; Dashboard</span>
+      </div>
     </article>
-    <article class="res reveal" data-d="2">
-      <div class="sector">Distribution</div>
-      <span class="res-tag mono">Example project</span>
-      <dl class="res-lines">
-        <div><dt>Problem</dt><dd>Orders and stock updates were handled by hand, across WhatsApp, email and a billing system.</dd></div>
-        <div><dt>Solution</dt><dd>An automated order-to-invoice workflow connecting the tools already in use.</dd></div>
-        <div><dt>Outcome</dt><dd>Less repetitive admin, fewer manual handoffs, and a clear record of where each order stands.</dd></div>
-      </dl>
+    <article class="res reveal" id="distribution">
+      <div class="res-copy">
+        <div class="res-meta"><span class="sector">Distribution</span><span class="res-tag mono">Example project</span></div>
+        <h2 class="res-title">Order to invoice, without the re-typing.</h2>
+        <dl class="res-lines">
+          <div><dt>Problem</dt><dd>Orders and stock updates were handled by hand, across WhatsApp, email and a billing system.</dd></div>
+          <div><dt>Solution</dt><dd>An automated order-to-invoice workflow connecting the tools already in use.</dd></div>
+          <div><dt>Outcome</dt><dd>Less repetitive admin, fewer manual handoffs, and a clear record of where each order stands.</dd></div>
+        </dl>
+        <p class="res-link"><a href="solutions.html#automation">Workflow automation <span class="arrow">&rarr;</span></a></p>
+      </div>
+      <div class="res-fig" aria-hidden="true">
+      <svg class="bp" viewBox="0 0 480 320" role="img" aria-labelledby="bp-b-t">
+        <title id="bp-b-t">Blueprint of an order-to-invoice workflow connecting three input channels</title>
+        <defs><pattern id="bpg-b" width="32" height="32" patternUnits="userSpaceOnUse"><path class="bp-grid" d="M32 0H0V32"/></pattern></defs>
+        <rect width="480" height="320" fill="url(#bpg-b)"/>
+        <rect class="g-line draw" pathLength="1" x="32" y="64" width="96" height="40" style="--i:0"/>
+        <rect class="g-line draw" pathLength="1" x="32" y="136" width="96" height="40" style="--i:0"/>
+        <rect class="g-line draw" pathLength="1" x="32" y="208" width="96" height="40" style="--i:0"/>
+        <path class="g-line draw" pathLength="1" d="M128 84H160V156H192M128 156H192M128 228H160V156" style="--i:1"/>
+        <rect class="g-line draw" pathLength="1" x="192" y="128" width="80" height="56" style="--i:2"/>
+        <path class="g-line draw" pathLength="1" d="M272 156H304" style="--i:3"/>
+        <rect class="g-line draw" pathLength="1" x="304" y="128" width="80" height="56" style="--i:3"/>
+        <path class="g-line draw" pathLength="1" d="M384 156H416" style="--i:4"/>
+        <rect class="g-line draw" pathLength="1" x="416" y="128" width="40" height="56" style="--i:4"/>
+        <path class="g-line draw dim" pathLength="1" d="M192 256V272M456 256V272M192 264H456" style="--i:5"/>
+        <g class="g-lbl sm"><text x="34" y="58">WhatsApp</text><text x="34" y="130">Email</text><text x="34" y="202">Billing</text><text x="194" y="122">Order</text><text x="306" y="122">Invoice</text><text x="418" y="122">Paid</text><text x="324" y="286" text-anchor="middle">retyping: 0</text></g>
+        <rect class="g-sig" x="228" y="152" width="8" height="8"/>
+      </svg>
+        <span class="fig">Fig. 02 &mdash; Workflow</span>
+      </div>
     </article>
-    <article class="res reveal" data-d="3">
-      <div class="sector">Professional services</div>
-      <span class="res-tag mono">Example project</span>
-      <dl class="res-lines">
-        <div><dt>Problem</dt><dd>Enquiries were tracked in an inbox and followed up whenever somebody remembered.</dd></div>
-        <div><dt>Solution</dt><dd>An automated enquiry, follow-up and CRM workflow with reminders built in.</dd></div>
-        <div><dt>Outcome</dt><dd>Faster first response, and far less leakage between enquiry and quote.</dd></div>
-      </dl>
+    <article class="res reveal" id="services">
+      <div class="res-copy">
+        <div class="res-meta"><span class="sector">Professional services</span><span class="res-tag mono">Example project</span></div>
+        <h2 class="res-title">Every enquiry answered, every follow-up on time.</h2>
+        <dl class="res-lines">
+          <div><dt>Problem</dt><dd>Enquiries were tracked in an inbox and followed up whenever somebody remembered.</dd></div>
+          <div><dt>Solution</dt><dd>An automated enquiry, follow-up and CRM workflow with reminders built in.</dd></div>
+          <div><dt>Outcome</dt><dd>Faster first response, and far less leakage between enquiry and quote.</dd></div>
+        </dl>
+        <p class="res-link"><a href="solutions.html#automation">Workflow automation <span class="arrow">&rarr;</span></a></p>
+      </div>
+      <div class="res-fig" aria-hidden="true">
+      <svg class="bp" viewBox="0 0 480 320" role="img" aria-labelledby="bp-c-t">
+        <title id="bp-c-t">Blueprint of an enquiry, follow-up and quote pipeline with automatic reminders</title>
+        <defs><pattern id="bpg-c" width="32" height="32" patternUnits="userSpaceOnUse"><path class="bp-grid" d="M32 0H0V32"/></pattern></defs>
+        <rect width="480" height="320" fill="url(#bpg-c)"/>
+        <rect class="g-line draw" pathLength="1" x="64" y="64" width="352" height="48" style="--i:0"/>
+        <rect class="g-line draw" pathLength="1" x="112" y="136" width="256" height="48" style="--i:1"/>
+        <rect class="g-line draw" pathLength="1" x="160" y="208" width="160" height="48" style="--i:2"/>
+        <path class="g-line draw" pathLength="1" d="M240 112V136M240 184V208" style="--i:3"/>
+        <path class="g-line draw dim" pathLength="1" d="M368 160h32a48 48 0 0 1-48 48" style="--i:4"/>
+        <path class="g-line draw dim" pathLength="1" d="M48 64H32V256H48" style="--i:5"/>
+        <g class="g-lbl sm"><text x="66" y="58">Enquiry — inbox, form, WhatsApp</text><text x="114" y="130">Follow-up — reminders automatic</text><text x="162" y="202">Quote</text><text x="20" y="168" transform="rotate(-90 20 168)" text-anchor="middle">pipeline: 1</text></g>
+        <rect class="g-sig" x="236" y="228" width="8" height="8"/>
+      </svg>
+        <span class="fig">Fig. 03 &mdash; Pipeline</span>
+      </div>
     </article>
   </div>
   <p class="res-note reveal" data-d="4">Working with us and happy to say so? A named case study here — your company, your numbers, your words — replaces all three of these. <a href="./#contact">Tell us</a>.</p>
@@ -142,8 +203,8 @@
 <section class="pad wrap band" id="next" aria-labelledby="h-next">
   <div class="cta-band reveal">
     <span class="eyebrow"><span class="dot"></span>Let&rsquo;s find the bottleneck</span>
-    <h2 id="h-next"><span class="ln"><span>What&rsquo;s slowing your business down?</span></span></h2>
-    <p>Tell us what is taking too much time, causing too many mistakes, or hiding what is really happening. We&rsquo;ll come back with the first process we would improve and what we would build. No sales pitch, no obligation.</p>
+    <h2 id="h-next"><span class="ln"><span>Want a system like one of these?</span></span></h2>
+    <p>Tell us which of the three looks most like your week. We&rsquo;ll come back with the first process we would improve and what we would build &mdash; and if your project runs, a named case study here can replace the example. No sales pitch, no obligation.</p>
     <div class="hero-cta">
       <a href="./#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
       <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener" class="btn btn-ghost">Chat on WhatsApp</a>
@@ -174,9 +235,10 @@
       <div class="foot-col">
         <h2>Built for</h2>
         <span>Retail &amp; multi-store</span>
-        <span>Distribution &amp; wholesale</span>
-        <span>E-commerce</span>
         <span>Manufacturing</span>
+        <span>Distribution &amp; wholesale</span>
+        <span>Clinics</span>
+        <span>Professional services</span>
       </div>
       <div class="foot-col">
         <h2>Company</h2>
@@ -188,7 +250,7 @@
     </div>
     <div class="foot-bottom">
       <span>&copy; <span id="yr"></span> Dayam Insights. All rights reserved.</span>
-      <span class="mono">See. Automate. Grow.</span>
+      <span class="mono">Data &middot; Automation &middot; AI &middot; Websites</span>
     </div>
   </div>
 </footer>
