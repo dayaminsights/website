@@ -134,7 +134,7 @@ header.nav{position:sticky;top:0;z-index:100;background:var(--bg);border-bottom:
 header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .nav-inner{display:flex;align-items:center;justify-content:space-between;height:72px}
 .brand{display:flex;align-items:center;gap:var(--sp-3);font-family:var(--font-ui);font-weight:700;letter-spacing:-.02em;font-size:18px;color:var(--ink)}
-.brand .glyph{height:32px;width:auto;display:block;flex:0 0 auto}
+.brand .glyph{height:32px;width:auto;display:block;flex:0 0 auto;color:var(--ink)}
 /* The separator between mark and name is the hairline from the lockup. */
 .brand .wm{position:relative;padding-left:var(--sp-3);white-space:nowrap}
 .brand .wm::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:1px;background:currentColor;opacity:.4}
@@ -288,6 +288,21 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .hero-stage::before{animation:heroFrame 900ms var(--ease) 300ms both}
 .hero-system{animation:heroFrame 500ms var(--ease) 700ms both}
 .hs-row{animation:heroRise 520ms var(--ease-out) both}
+/* The mark signs the page before the headline speaks: the blue square switches on,
+   the D is drawn outward from its curve (a stroke mask sweeping both ways from the
+   rightmost point), both stems rise from the baseline, the curl unfolds from the stem.
+   Pre-states live only in the from keyframes, so reduced motion lands on the finished mark.
+   Timeline: dot 0 · ring 100-620 · stems 500-880 · curl 760-1020 */
+@keyframes markOn{from{opacity:0}}
+@keyframes markDraw{from{stroke-dashoffset:272}}
+@keyframes markRise{from{transform:scaleY(0)}}
+@keyframes markCurl{from{transform:scaleX(0)}}
+.mark .mk-draw{fill:none;stroke:#fff;stroke-width:50;stroke-linecap:butt;stroke-dasharray:272;stroke-dashoffset:0}
+.mark .mk-stem,.mark .mk-curl{transform-box:fill-box}
+.sign .mark .mk-dot{animation:markOn 140ms linear both}
+.sign .mark .mk-draw{animation:markDraw 520ms var(--ease-out) 100ms both}
+.sign .mark .mk-stem{transform-origin:50% 100%;animation:markRise 380ms var(--ease-out) 500ms both}
+.sign .mark .mk-curl{transform-origin:0 50%;animation:markCurl 260ms var(--ease-out) 760ms both}
 .hs-row:nth-child(2){animation-delay:900ms}
 .hs-row:nth-child(3){animation-delay:980ms}
 .hs-row:nth-child(4){animation-delay:1060ms}
