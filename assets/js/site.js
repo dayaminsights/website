@@ -281,25 +281,65 @@
 
 
   // ===== Contact form =====
-  // Until a real endpoint is pasted into action=, intercept the submit and
-  // hand the visitor to WhatsApp with their message pre-filled, so the form
-  // is never a dead end in the interim.
+  // action= points at FormSubmit. With JS we post to its /ajax/ endpoint so
+  // the visitor stays on the page and sees .cf-success in place of the form.
+  // If the request fails (offline, blocked, FormSubmit down) we fall back to
+  // a native POST, which lands on FormSubmit and bounces back to ?sent=1 via
+  // the _next field — so the form is never a dead end.
   var contactForm = document.querySelector('.contact-form');
+  var contactDone = document.querySelector('.cf-success');
+  function showContactDone(){
+    if (!contactForm || !contactDone) return;
+    contactForm.hidden = true;
+    contactDone.hidden = false;
+    contactDone.focus({ preventScroll: true });
+  }
   if (contactForm){
+    var cfSubmit = contactForm.querySelector('.cf-submit');
+    var cfNote = contactForm.querySelector('.cf-note');
+    var cfBusy = false;
+
     contactForm.addEventListener('submit', function(e){
+      var action = contactForm.getAttribute('action') || '';
+      var ajax = action.replace('formsubmit.co/', 'formsubmit.co/ajax/');
+      if (ajax === action || typeof window.fetch !== 'function') return; // not FormSubmit, or no fetch: native post
+      e.preventDefault();
+      if (cfBusy) return;
+      cfBusy = true;
+      if (cfSubmit) cfSubmit.disabled = true;
+      var label = cfSubmit ? cfSubmit.innerHTML : '';
+      if (cfSubmit) cfSubmit.textContent = 'Sending…';
+
+      fetch(ajax, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        body: new FormData(contactForm)
+      }).then(function(r){
+        return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status));
+      }).then(function(){
+        if (typeof window.gtag === 'function'){
+          window.gtag('event', 'generate_lead', { method: 'form' });
+        }
+        showContactDone();
+      }).catch(function(){
+        // Network or service failure: let the browser do a plain POST.
+        cfBusy = false;
+        if (cfSubmit){ cfSubmit.disabled = false; cfSubmit.innerHTML = label; }
+        if (cfNote) cfNote.textContent = 'Couldn’t send from here — trying the long way round…';
+        contactForm.submit();
+      });
+    });
+
+    // Came back from the no-JS path (FormSubmit redirected to _next).
+    if (/[?&]sent=1(&|$)/.test(location.search)){
+      showContactDone();
       if (typeof window.gtag === 'function'){
         window.gtag('event', 'generate_lead', { method: 'form' });
       }
-      var action = contactForm.getAttribute('action') || '';
-      if (action.indexOf('FORM_ENDPOINT') === -1) return; // real endpoint: let it post
-      e.preventDefault();
-      var d = new FormData(contactForm);
-      var text = 'Hi Dayam Insights, I am ' + (d.get('name') || '') +
-                 ' from ' + (d.get('business') || '') + '. ' +
-                 (d.get('message') || '') +
-                 ' You can reach me on ' + (d.get('phone') || '') + '.';
-      window.open('https://wa.me/917877640693?text=' + encodeURIComponent(text), '_blank', 'noopener');
-    });
+      if (history.replaceState){
+        history.replaceState(null, '', location.pathname + '#contact');
+      }
+    }
   }
 
 

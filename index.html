@@ -135,11 +135,13 @@
         WhatsApp is the Business API or manual. Add as another
         span.tool chip.
 
-     3. FORM ENDPOINT  (#contact)
-        action="FORM_ENDPOINT" is deliberate: the submit handler tests
-        for that exact string and hands the visitor to WhatsApp with
-        their message pre-filled. Paste a Formspree / Web3Forms /
-        Netlify URL over it and the handler steps aside on its own.
+     3. FORM ENDPOINT  (#contact)  -- DONE, one manual step left
+        Wired to FormSubmit (formsubmit.co/dayaminsights@gmail.com).
+        The FIRST submission emails an activation link to that inbox;
+        click it once and every later submission is delivered. After
+        activation FormSubmit also offers a random-string alias for the
+        address; paste it over the email in action= (site.js derives
+        the /ajax/ URL from it) to keep the address out of page source.
 
      4. CITY / STATE
         Needed for local SEO and for the ProfessionalService schema
@@ -477,7 +479,16 @@
     <h2 id="h-cta"><span class="ln"><span>What&rsquo;s slowing your business down?</span></span></h2>
     <p>Tell us what is taking too much time, causing too many mistakes, or hiding what is really happening. We&rsquo;ll come back with the first process we would improve and what we would build. No sales pitch, no obligation.</p>
 
-    <form class="contact-form" action="FORM_ENDPOINT" method="POST">
+    <form class="contact-form" action="https://formsubmit.co/dayaminsights@gmail.com" method="POST">
+      <!-- FormSubmit config. Without JS the browser posts straight to FormSubmit
+           and comes back to _next; with JS site.js posts to the /ajax/ endpoint
+           and shows .cf-success in place. _honey is a bot trap: hidden from
+           people, and any submission that fills it is dropped server-side. -->
+      <input type="hidden" name="_subject" value="New enquiry from dayaminsights.com">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://dayaminsights.com/?sent=1#contact">
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="cf-honey">
       <div class="cf-row">
         <label class="cf-field">
           <span>Your name</span>
@@ -506,8 +517,14 @@
         <button type="submit" class="btn btn-primary cf-submit">Show me what to fix <span class="arrow">&rarr;</span></button>
         <a class="cf-alt" href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener">Prefer WhatsApp? Let&rsquo;s talk <span class="arrow">&rarr;</span></a>
       </div>
-      <p class="cf-note">We reply within one working day. No sales pitch, no obligation, and we don&rsquo;t add you to a mailing list.</p>
+      <p class="cf-note" aria-live="polite">We reply within one working day. No sales pitch, no obligation, and we don&rsquo;t add you to a mailing list.</p>
     </form>
+
+    <div class="cf-success" role="status" aria-live="polite" hidden tabindex="-1">
+      <span class="eyebrow"><span class="dot"></span>Got it</span>
+      <h3>Thanks &mdash; we&rsquo;ll read this today.</h3>
+      <p>Expect a reply within one working day with the first process we&rsquo;d improve. In a hurry? <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%20just%20sent%20the%20form%20on%20your%20site." target="_blank" rel="noopener">Message us on WhatsApp <span class="arrow">&rarr;</span></a></p>
+    </div>
 
     <div class="cta-alt">
       <span class="cta-alt-label">Or reach us directly</span>
