@@ -217,26 +217,22 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 }
 
 /* ===== Hero =====
-   Composition follows the reference: copy column on the left, a full-bleed
-   visual field on the right holding a five-card pipeline above a laptop
-   showing the dashboard, then a three-card service panel underneath.
-   Palette stays ours — cream ground, ink type, rust accent, green for gains. */
-.hero{padding-block:clamp(28px,3.4vw,48px) 0;position:relative}
-/* The copy column carries the headline at its new size, so it takes a little
-   width back off the stage. 1.06fr against 1fr leaves ~560px for three
-   authored lines at the 52px cap, which is where they measure. */
-.hero-grid{display:grid;grid-template-columns:minmax(0,1.06fr) minmax(0,1fr);gap:clamp(24px,3vw,44px);align-items:center}
+   One message, one figure, one action. The headline and a single sentence on
+   the left; on the right the four things we build, drawn as one system on the
+   drafting sheet; the audience line underneath. Nothing else. */
+.hero{padding-block:clamp(40px,5vw,72px) clamp(40px,5vw,64px);position:relative}
+.hero-grid{display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);grid-template-rows:auto auto;column-gap:clamp(32px,5vw,80px);row-gap:clamp(32px,4vw,56px);align-items:center}
+.hero-copy{grid-column:1;grid-row:1;position:relative;z-index:2}
+.hero-stage{grid-column:2;grid-row:1 / span 2;position:relative;align-self:center}
+.hero-trust{grid-column:1;grid-row:2;align-self:start}
 /* Sized so the longest authored line ("Your business shouldn’t", 11.04em in Inter 800) fits its column:
-   the copy column is ~45.75% of the viewport in the two-column layout, and full width when stacked. */
-.hero h1{font-size:clamp(34px,3.95vw,54px);line-height:1.02;letter-spacing:-.04em;font-weight:800;margin-top:var(--sp-5)}
+   the copy column is ~48% of the viewport in the two-column layout, and full width when stacked. */
+.hero h1{font-size:clamp(34px,3.75vw,54px);line-height:1.02;letter-spacing:-.04em;font-weight:800;margin:0}
 /* The full stop is the signal square. */
 .hero h1 .accent{color:var(--accent)}
-/* The mask. overflow:hidden on an auto-height block clips the pre-state
-   translate without ever clipping a line that wraps — the block just grows —
-   so a long word at a narrow width degrades instead of disappearing. */
 .hero h1 .ln{display:block;overflow:hidden}
 .hero h1 .ln > span{display:block}
-.hero p.sub{margin:var(--sp-5) 0 0;font-size:var(--fs-body);line-height:1.6;color:var(--muted);max-width:44ch;text-wrap:pretty}
+.hero p.sub{margin:var(--sp-5) 0 0;font-size:clamp(17px,1.3vw,19px);line-height:1.5;color:var(--muted);max-width:38ch;text-wrap:pretty}
 .hero-cta{display:flex;align-items:center;gap:var(--sp-5);margin-top:var(--sp-6);flex-wrap:wrap}
 .hero .hero-cta .btn-primary{padding:16px 26px}
 .link-cta{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px;min-height:44px}
@@ -244,271 +240,84 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .link-cta .arrow{transition:transform var(--t-fast) var(--ease)}
 .link-cta:hover .arrow{transform:translateX(3px)}
 
-/* Trust strip — caption over a row of wordmarks, as in the reference. */
-.hero-trust{margin-top:var(--sp-7)}
-.hero-trust .ht-cap{font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2)}
-.hero-logos{display:flex;align-items:center;flex-wrap:wrap;gap:var(--sp-3) clamp(14px,1.5vw,20px);margin-top:var(--sp-4)}
-.hero-logos .hl{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;letter-spacing:-.01em;color:var(--ink-2);opacity:.82}
+/* Audience line: caption over a row of sectors. */
+.hero-trust .ht-cap{margin:0;font-family:var(--font-ui);font-size:var(--fs-micro);color:var(--muted-2);max-width:52ch}
+.hero-logos{display:flex;align-items:center;flex-wrap:wrap;gap:var(--sp-3) clamp(14px,1.5vw,20px);margin-top:var(--sp-3)}
+.hero-logos .hl{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;letter-spacing:-.01em;color:var(--ink-2)}
 .hero-logos .hl svg{width:15px;height:15px;color:var(--muted-2);flex:0 0 auto}
 
-/* Eyebrow — dot, then the three service categories, dot-separated. */
-.hero-eyebrow{display:inline-flex;align-items:center;flex-wrap:wrap;gap:var(--sp-2) var(--sp-3);font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--muted-2)}
-/* Set like the tagline under the mark: caps, with the signal square between the words. */
-.hero-eyebrow .dot{display:none}
-.hero-eyebrow em{font-style:normal;font-size:0;width:5px;height:5px;background:var(--accent);display:inline-block;flex:0 0 auto}
-.hero-eyebrow b{font-weight:500;color:var(--ink-2)}
-
-/* ===== Hero stage — full-bleed visual field on the right ===== */
-.hero-stage{position:relative;padding:clamp(20px,2.4vw,32px) 0 clamp(24px,3vw,40px)}
-/* Two stacked layers fill the stage, both bleeding past the wrap on the
-   right (main{overflow-x:clip} contains the overhang).
-   ::before is the photograph, defocused so it reads as a backdrop rather
-   than competing with the pipeline and the laptop sitting on it; the warm
-   gradient underneath it is what shows if hero-bg.jpg is ever missing.
-   ::after is the palette layer: a cream fade that dissolves the photo into
-   the copy column, and a rust/green wash that ties it to our accents. */
-.hero-stage::before,
-.hero-stage::after{
-  content:"";position:absolute;top:-160px;right:-50vw;bottom:-24px;left:calc(-1 * clamp(24px,3vw,44px) / 2);z-index:0;
-  background-repeat:no-repeat;
-}
-.hero-stage::before{
-  /* Blueprint grid: 64px construction lines, the DNA's background, not a photograph. */
+/* The drafting sheet behind the system: 64px construction lines, bleeding to
+   the right edge and fading toward the copy. */
+.hero-stage::before{content:"";position:absolute;top:-24px;bottom:-24px;left:-32px;right:-50vw;z-index:0;
   background-image:linear-gradient(rgba(7,22,45,.09) 1px,transparent 1px),linear-gradient(90deg,rgba(7,22,45,.09) 1px,transparent 1px);
-  background-size:64px 64px,64px 64px;
-  background-position:-1px -1px,-1px -1px;
-  background-repeat:repeat;
-  /* The layer's own top edge is a hard line wherever it lands — under the
-     header on desktop, mid-copy once the grid stacks. Fading the layer
-     itself rather than painting white over it keeps the dissolve correct at
-     every breakpoint, including the ones that reset the offsets below.
-     Lengths, not percentages: the ramp has to clear the 160px the layer
-     overhangs upward plus the header sitting on it, and that offset is
-     fixed while the stage height is not. The tail fade covers the layer's
-     bottom edge where it bleeds past the service panel. */
-  -webkit-mask-image:linear-gradient(180deg,transparent 0,transparent 120px,#000 300px,#000 calc(100% - 130px),transparent 100%);
-  mask-image:linear-gradient(180deg,transparent 0,transparent 120px,#000 300px,#000 calc(100% - 130px),transparent 100%);
-}
-.hero-stage::after{
-  /* Fades the grid out toward the copy column so the headline sits on clean ground. */
-  background-image:linear-gradient(96deg,#F8FAFC 0%,rgba(248,250,252,.94) 8%,rgba(248,250,252,0) 34%);
-  background-size:cover;
-  background-position:center;
-}
-.hero-stage > *{position:relative;z-index:1}
-/* The stage bleed is a positioned pseudo-element, so the copy column needs a
-   stacking position of its own or the photograph paints over the headline.
-   The padding keeps the trust row clear of the service panel that rides up
-   over the stage below it. */
-.hero-copy{position:relative;z-index:2;padding-bottom:clamp(28px,3vw,48px)}
+  background-size:64px 64px;background-position:-1px -1px;
+  -webkit-mask-image:linear-gradient(90deg,transparent 0,#000 120px,#000 calc(100% - 40vw),transparent 100%);
+  mask-image:linear-gradient(90deg,transparent 0,#000 120px,#000 calc(100% - 40vw),transparent 100%)}
+.hero-system{position:relative;z-index:1;display:block;border:1px solid var(--ink);background:var(--surface)}
+.hs-row{position:relative;display:grid;grid-template-columns:clamp(84px,7vw,104px) minmax(0,1fr) 20px;gap:var(--sp-4);align-items:baseline;
+  padding:clamp(16px,1.7vw,22px) clamp(20px,2vw,28px);border-bottom:1px solid var(--line);color:var(--ink);transition:background-color var(--t-fast) var(--ease)}
+.hs-row:last-child{border-bottom:0}
+.hs-row b{font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;text-transform:uppercase;color:var(--ink-2);transition:color var(--t-fast) var(--ease)}
+.hs-body{display:block;min-width:0}
+.hs-name{display:block;font-size:clamp(16px,1.25vw,18px);font-weight:600;letter-spacing:-.012em;line-height:1.25}
+.hs-line{display:block;margin-top:3px;font-size:var(--fs-small);line-height:1.45;color:var(--muted)}
+.hs-row .arrow{font-style:normal;color:var(--ink);justify-self:end;transition:transform var(--t-fast) var(--ease),color var(--t-fast) var(--ease)}
+.hs-row:hover{background:var(--bg)}
+.hs-row:hover b{color:var(--ink)}
+.hs-row:hover .arrow{transform:translateX(4px);color:var(--accent)}
+.hs-row:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
+/* The signal: the blue square from the mark, on the frame's left edge, beside the row being read. */
+.hs-signal{position:absolute;left:-6px;top:0;z-index:2;width:11px;height:11px;background:var(--accent);opacity:0;
+  transition:transform 300ms var(--ease-out),opacity 200ms var(--ease)}
+.hs-signal.on{opacity:1}
 
 /* ===== Hero entrance =====
-   One choreographed sequence, not eight independent reveals. The hero is
-   above the fold, so it is driven by CSS animation on load rather than by the
-   IntersectionObserver the rest of the page uses — an observer that fires
-   immediately is just a slower way to do this, and it made the hero depend
-   on JS to become visible at all.
-
-   Every pre-state lives in a `from` keyframe with fill-mode:both and nowhere
-   else. That is deliberate: the global prefers-reduced-motion rule sets
-   animation:none, which drops the keyframes and leaves each element at its
-   natural opacity:1 / transform:none. Reduced motion therefore needs no
-   override here, and no element can be stranded invisible if animation is
-   disabled for any other reason.
-
-   Timeline:  ground 0-700 · eyebrow 200 · headline 380/470/560
-              subhead 800 · CTA 960 · trust 1080 · pillars 1200 */
-@keyframes heroGround{from{opacity:0}to{opacity:1}}
+   One choreographed sequence on load, driven by CSS animation rather than the
+   scroll observer: the hero is above the fold. Every pre-state lives in a
+   `from` keyframe with fill-mode:both, so reduced motion (animation:none) and
+   any other failure leave each element at its natural state.
+   Timeline: headline 380/470/560 · sub 800 · CTA 960 · rows 900-1140 · trust 1200 */
 @keyframes heroLine{from{transform:translateY(112%)}to{transform:translateY(0)}}
 @keyframes heroRise{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
-@keyframes heroPanel{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:none}}
-
-.hero-stage::before,.hero-stage::after{animation:heroGround 700ms var(--ease) both}
-.hero-eyebrow{animation:heroRise 520ms var(--ease-out) 200ms both}
+@keyframes heroFrame{from{opacity:0}to{opacity:1}}
 .hero h1 .ln > span{animation:heroLine 760ms var(--ease-out) both}
 .hero h1 .ln:nth-child(1) > span{animation-delay:380ms}
 .hero h1 .ln:nth-child(2) > span{animation-delay:470ms}
 .hero h1 .ln:nth-child(3) > span{animation-delay:560ms}
 .hero p.sub{animation:heroRise 620ms var(--ease-out) 800ms both}
 .hero .hero-cta{animation:heroRise 620ms var(--ease-out) 960ms both}
-.hero-trust{animation:heroRise 620ms var(--ease-out) 1080ms both}
-.hero-services{animation:heroPanel 700ms var(--ease-out) 1200ms both}
+.hero-trust{animation:heroRise 620ms var(--ease-out) 1200ms both}
+.hero-stage::before{animation:heroFrame 900ms var(--ease) 300ms both}
+.hero-system{animation:heroFrame 500ms var(--ease) 700ms both}
+.hs-row{animation:heroRise 520ms var(--ease-out) both}
+.hs-row:nth-child(2){animation-delay:900ms}
+.hs-row:nth-child(3){animation-delay:980ms}
+.hs-row:nth-child(4){animation-delay:1060ms}
+.hs-row:nth-child(5){animation-delay:1140ms}
 
-/* Five-step pipeline: card, arrow, card … */
-.hero-pipe{display:grid;grid-template-columns:repeat(5,1fr);gap:clamp(12px,1.2vw,17px);align-items:stretch;margin-bottom:clamp(20px,2.4vw,32px)}
-.hero-pipe .pipe-step{
-  position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:6px;
-  padding:var(--sp-4) 8px;border:1px solid var(--line);border-radius:0;
-  background:var(--surface);box-shadow:var(--shadow-sm);
-  opacity:0;transform:translateY(12px);
-}
-/* Offset to sit after the copy sequence above, so the hero reads as one
-   composition assembling left-to-right rather than two things racing. */
-.web-visual.in .hero-pipe .pipe-step{opacity:1;transform:none}
-.web-visual.in .hero-pipe .pipe-step:nth-child(1){transition-delay:860ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(2){transition-delay:920ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(3){transition-delay:980ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(4){transition-delay:1040ms}
-.web-visual.in .hero-pipe .pipe-step:nth-child(5){transition-delay:1100ms}
-/* The connector is the arrow glyph itself, centred in the grid gap. */
-.hero-pipe .pipe-step + .pipe-step::before{
-  content:"\2192";position:absolute;left:calc(-1 * clamp(12px,1.2vw,17px));top:50%;
-  width:clamp(12px,1.2vw,17px);transform:translateY(-50%);
-  text-align:center;line-height:1;font-size:14px;color:var(--muted-2);
-}
-.hero-pipe .pipe-icon{width:34px;height:34px;border-radius:0;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line-strong);flex:0 0 auto}
-.hero-pipe .pipe-icon svg{width:18px;height:18px;color:var(--ink)}
-.hero-pipe .pipe-step b{font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;color:var(--ink);line-height:1.25;text-wrap:balance}
-/* Titles wrap to two lines in the narrow cards ("Stock updates") and one in
-   the rest, which left the sub-labels on five different baselines. Reserve
-   two title lines where the cards are narrow enough to wrap, and pin the
-   sub-label to the bottom of the (already equal-height) card. */
-.hero-pipe .pipe-step span{font-family:var(--font-ui);font-size:var(--fs-label);color:var(--muted-2);line-height:1.3;margin-top:auto}
-@media(min-width:1001px){
-  .hero-pipe .pipe-step b{min-height:2.5em}
-}
-/* Opaque tints, not alpha: these cards sit on the photograph, and a
-   translucent fill let the office show through the label. */
-/* The outcome step is the system itself: a navy node. */
-.hero-pipe .pipe-step.is-end{border-color:var(--ink);background:var(--surface)}
-.hero-pipe .pipe-step.is-end .pipe-icon{background:var(--ink);border-color:var(--ink)}
-.hero-pipe .pipe-step.is-end .pipe-icon svg{color:var(--on-panel)}
-
-/* One pass of the order travelling through the pipeline when the
-   hero enters view, and again on hover — the only motion on the page that
-   is not a scroll reveal. */
-.hero-pipe .pipe-step{transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out),border-color var(--t-base) var(--ease),background var(--t-base) var(--ease)}
-.hero-pipe .pipe-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease),border-color var(--t-base) var(--ease)}
-.hero-pipe .pipe-step.lit{border-color:var(--accent);background:var(--surface)}
-.hero-pipe .pipe-step.lit .pipe-icon{transform:scale(1.12);background:var(--accent);border-color:var(--accent)}
-.hero-pipe .pipe-step.lit .pipe-icon svg{color:#fff}
-.hero-pipe .pipe-step.is-end.lit{border-color:var(--accent);background:var(--surface)}
-.hero-pipe .pipe-step.is-end.lit .pipe-icon{background:var(--accent);border-color:var(--accent)}
-.hero-pipe .pipe-step.lit::before{color:var(--accent)}
-.hero-pipe{cursor:default}
-@media(prefers-reduced-motion:reduce){
-  .hero-pipe .pipe-step.lit .pipe-icon{transform:none}
-}
-
-/* ===== Laptop + dashboard ===== */
-.lap{position:relative;opacity:0;transform:translateY(18px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out);transition-delay:1140ms}
-.web-visual.in .lap{opacity:1;transform:none}
-/* A framed figure, not a device: the laptop bezel and base are gone. */
-.lap-screen{background:var(--surface);border:1px solid var(--line-strong);border-radius:0;padding:0;box-shadow:none}
-.lap-inner{background:var(--surface);border-radius:0;padding:clamp(12px,1.4vw,18px);display:grid;gap:clamp(9px,1vw,12px)}
-.lap-base{display:none}
-.lap-base::after{content:"";position:absolute;top:0;left:50%;transform:translateX(-50%);width:13%;height:4px;background:rgba(7,22,45,.16);border-radius:0}
-
-.lp-row{display:grid;grid-template-columns:1fr 1fr;gap:clamp(9px,1vw,12px)}
-.lp{border:1px solid var(--line);border-radius:0;background:var(--surface);padding:clamp(10px,1.1vw,14px);display:flex;flex-direction:column;gap:7px;min-width:0}
-.lp-head{display:flex;align-items:center;justify-content:space-between;gap:var(--sp-2)}
-.lp-head span{font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;color:var(--ink-2)}
-.lp-head svg{width:13px;height:13px;color:var(--muted-2);flex:0 0 auto}
-.lp-val{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
-.lp-val b{font-family:var(--font-ui);font-size:clamp(19px,1.9vw,25px);font-weight:700;letter-spacing:-.02em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
-.lp-delta{font-family:var(--font-ui);font-size:var(--fs-label);font-weight:600;color:var(--ink-2)}
-.lp-line{width:100%;height:clamp(46px,4.6vw,62px);display:block}
-.lp-line .lp-path{fill:none;stroke:var(--accent);stroke-width:2;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:520;stroke-dashoffset:520;transition:stroke-dashoffset 1200ms var(--ease-out);transition-delay:1320ms}
-.web-visual.in .lp-line .lp-path{stroke-dashoffset:0}
-.lp-line .lp-fill{fill:var(--accent-soft);opacity:0;transition:opacity var(--t-data) var(--ease);transition-delay:1700ms}
-.web-visual.in .lp-line .lp-fill{opacity:1}
-.lp-bars{display:flex;align-items:flex-end;gap:clamp(4px,.6vw,7px);height:clamp(46px,4.6vw,62px)}
-.lp-bars i{display:block;flex:1 1 auto;height:0;border-radius:0;background:var(--ink);opacity:.2;transition:height var(--t-data) var(--ease-out)}
-.lp-bars i.hi{opacity:1}
-.web-visual.in .lp-bars i{height:var(--h)}
-.web-visual.in .lp-bars i:nth-child(1){transition-delay:1260ms}
-.web-visual.in .lp-bars i:nth-child(2){transition-delay:1310ms}
-.web-visual.in .lp-bars i:nth-child(3){transition-delay:1360ms}
-.web-visual.in .lp-bars i:nth-child(4){transition-delay:1410ms}
-.web-visual.in .lp-bars i:nth-child(5){transition-delay:1460ms}
-.web-visual.in .lp-bars i:nth-child(6){transition-delay:1510ms}
-.web-visual.in .lp-bars i:nth-child(7){transition-delay:1560ms}
-.web-visual.in .lp-bars i:nth-child(8){transition-delay:1610ms}
-.lp-tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(9px,1vw,12px)}
-.lp-tile{border:1px solid var(--line);border-radius:0;background:var(--surface);padding:clamp(10px,1.1vw,13px);display:flex;flex-direction:column;gap:6px;min-width:0}
-.lp-tile .lp-cap{font-family:var(--font-ui);font-size:var(--fs-label);font-weight:600;color:var(--muted-2)}
-.lp-tile b{font-family:var(--font-ui);font-size:clamp(15px,1.5vw,19px);font-weight:700;letter-spacing:-.015em;color:var(--ink);font-variant-numeric:tabular-nums;line-height:1}
-.lp-tile .lp-sub{font-family:var(--font-ui);font-size:var(--fs-label);color:var(--muted-2)}
-.lp-meter{height:4px;border-radius:0;background:var(--surface-sunken);overflow:hidden}
-.lp-meter i{display:block;height:100%;width:0;border-radius:0;background:var(--ink);transition:width var(--t-data) var(--ease-out);transition-delay:1500ms}
-.lp-meter.is-good i{background:var(--ink)}
-.web-visual.in .lp-meter i{width:var(--w)}
-
-/* ===== Hero service cards (panel below the fold line) ===== */
-.hero-services{
-  display:grid;grid-template-columns:repeat(3,1fr);gap:0;
-  position:relative;z-index:2;
-  margin-top:clamp(-30px,-1.5vw,-14px);
-  border:1px solid var(--line);border-radius:0;background:var(--surface);box-shadow:var(--shadow-md);
-  overflow:hidden;
-}
-.hs-card{display:flex;flex-direction:column;gap:var(--sp-3);padding:clamp(24px,3vw,32px);border-right:1px solid var(--line);text-decoration:none;transition:background var(--t-fast) var(--ease)}
-.hs-card:last-child{border-right:none}
-.hs-card:hover{background:var(--bg)}
-.hs-card .hs-icon{width:44px;height:44px;border-radius:0;display:grid;place-items:center;background:var(--surface);border:1px solid var(--line-strong)}
-.hs-card .hs-icon svg{width:21px;height:21px;color:var(--ink);transition:color var(--t-base) var(--ease)}
-.hs-card h2{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);margin:var(--sp-2) 0 0}
-.hs-card p{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--muted);margin:0;line-height:1.5}
-.hs-more{margin-top:auto;padding-top:var(--sp-3);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--ink);text-decoration-color:var(--accent);display:inline-flex;align-items:center;gap:var(--sp-2);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px}
-.hs-card:hover .hs-more .arrow{transform:translateX(3px)}
-.hs-more .arrow{transition:transform var(--t-fast) var(--ease)}
-
-@media(max-width:1140px){
-  .hero-pipe .pipe-step span{display:none}
-  /* The base is drawn 112% of the screen width. Once the stage stops having
-     room either side of it, that overhang reaches past the viewport. */
-  .lap-base{width:100%;margin-left:0}
-}
 @media(max-width:1000px){
+  .hero{padding-block:clamp(28px,4vw,48px) clamp(40px,5vw,56px)}
+  .hero-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:var(--sp-6)}
+  .hero-copy{grid-column:1;grid-row:1}
+  .hero-stage{grid-column:1;grid-row:2;align-self:auto}
+  .hero-trust{grid-column:1;grid-row:3}
   .hero h1{font-size:min(calc((100vw - 2 * var(--gutter)) / 11.3),60px)}
-  .hero-grid{grid-template-columns:1fr;gap:var(--sp-6)}
   .hero p.sub{max-width:none}
-  /* The copy column's bottom padding only exists to clear the service panel
-     that rides over the stage in the two-column layout. Stacked, it is dead
-     space between the trust row and the stage. */
-  .hero-copy{padding-bottom:0}
-  .hero-stage{margin-inline:calc(50% - 50vw);padding:clamp(24px,4vw,36px) var(--sp-5)}
-  /* Both layers have to move together — resetting only the photo left the
-     cream wash 160px high and half a viewport wide of where the photo was. */
-  .hero-stage::before,
-  .hero-stage::after{top:0;left:0;right:0;bottom:0}
-  /* No upward overhang left to clear, so the ramp starts at the layer's own
-     top edge and stays short of eating the stage. */
-  .hero-stage::before{
-    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 140px,#000 calc(100% - 90px),transparent 100%);
-    mask-image:linear-gradient(180deg,transparent 0,#000 140px,#000 calc(100% - 90px),transparent 100%);
-  }
-  /* Stacked, the copy sits above the stage rather than beside it, so the
-     fade that dissolves photo into copy has to run down, not across. */
-  .hero-stage::after{
-    background-image:linear-gradient(180deg,#F8FAFC 0%,rgba(248,250,252,0) 28%);
-  }
-  .lap-base{width:100%;margin-left:0}
-  .hero-services{grid-template-columns:1fr}
-  .hs-card{border-right:none;border-bottom:1px solid var(--line)}
-  .hs-card:last-child{border-bottom:none}
-  .hero-pipe .pipe-step span{display:block}
+  .hero-stage::before{left:-50vw;right:-50vw;top:-16px;bottom:-16px;
+    -webkit-mask-image:linear-gradient(180deg,transparent 0,#000 24px,#000 calc(100% - 24px),transparent 100%);
+    mask-image:linear-gradient(180deg,transparent 0,#000 24px,#000 calc(100% - 24px),transparent 100%)}
 }
-@media(max-width:760px){
-  /* On a phone the dashboard alone tells the hero's story; the pipeline cards would push the first sentence 2.5 screens down. */
-  .hero-pipe{display:none}
-  /* Service cards become one compact row each: icon, name, arrow. */
-  .hs-card{flex-direction:row;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5)}
-  .hs-card .hs-icon{width:36px;height:36px;flex:0 0 auto}
-  .hs-card .hs-icon svg{width:18px;height:18px}
-  .hs-card .hs-tag,.hs-card p{display:none}
-  .hs-card h2{margin:0;flex:1 1 auto;font-size:var(--fs-small)}
-  .hs-card .hs-more{margin:0;padding:0;font-size:0;text-decoration:none}
-  /* Stacked, the dashboard is the first thing after the copy: no desktop-sequence delay. */
-  .lap{transition-delay:160ms}
-  .hs-card .hs-more .arrow{font-size:var(--fs-small)}
-  .hero-pipe{grid-template-columns:repeat(2,1fr)}
-  .hero-pipe .pipe-step + .pipe-step::before{display:none}
-  .hero-pipe .pipe-step:last-child{grid-column:span 2}
-  .lp-row{grid-template-columns:1fr}
-  .lp-tiles{grid-template-columns:1fr 1fr}
-  .lp-tiles .lp-tile:last-child{grid-column:span 2}
-  .hero-logos{gap:var(--sp-3) var(--sp-5)}
+@media(max-width:640px){
+  .hs-row{grid-template-columns:minmax(0,1fr) 20px;row-gap:2px;padding:14px 16px}
+  .hs-row b{grid-column:1}
+  .hs-body{grid-column:1}
+  .hs-row .arrow{grid-column:2;grid-row:1 / span 2;align-self:center}
+  .hs-line{display:none}
+  .hs-signal{width:9px;height:9px;left:-5px}
+}
+@media(max-height:560px) and (orientation:landscape){
+  .hero{padding-block:var(--sp-4) var(--sp-5)}
+  .hero-grid{row-gap:var(--sp-5)}
 }
 
 /* ===== Growth & Intelligence showcases (Websites/Marketing/Dashboards/Automation) ===== */
@@ -743,18 +552,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 }
 .stmt{font-family:var(--font-ui);font-size:clamp(24px,2.8vw,36px);font-weight:600;line-height:1.18;letter-spacing:-.025em;color:var(--ink);margin:0;text-wrap:pretty}
 .stmt-sub{font-family:var(--font-ui);font-size:var(--fs-small);line-height:1.6;color:var(--muted);margin:0;max-width:44ch;padding-top:6px}
-
-/* ===== Hero: pillar tag on the service cards, example label on the laptop ===== */
-.hs-tag{display:inline-flex;align-items:center;gap:10px;font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-2);margin-top:calc(var(--sp-1) * -1)}
-.hs-tag::before{content:"";width:5px;height:5px;background:var(--accent);flex:0 0 auto}
-.lap-tag{
-  /* justify-self, not align-self: .lap-inner is a grid, so align-self ran on
-     the block axis and the tag stretched the full width of the screen. */
-  display:inline-block;justify-self:start;margin-bottom:var(--sp-2);
-  font-family:var(--font-mono);font-size:var(--fs-label);font-weight:500;letter-spacing:.14em;text-transform:uppercase;
-  color:var(--muted-2);background:none;border:0;
-  border-radius:0;padding:0;
-}
 
 /* ===== Problem cards: step numbers ===== */
 .prob .pnum{
@@ -1284,44 +1081,9 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .fl-arrow{transition:opacity var(--t-reveal) var(--ease-out),color var(--t-base) var(--ease),transform var(--t-base) var(--ease-out)}
 .fl-arrow.lit{color:var(--accent-on-panel);transform:translateX(2px)}
 
-/* ===== Hero mockup proportions =====
-   Measured across 21:9 → 3:4: the laptop held ~1.56 (16:10) on desktop but
-   stretched to 2.5 on landscape phones and inverted to 0.6 in portrait, where
-   a portrait "laptop" reads as a mistake. Below the two-column breakpoint the
-   frame is capped so it keeps a screen-like ratio, and on phones the laptop
-   chrome is dropped entirely: what is worth showing there is the dashboard,
-   not the furniture around it. */
-@media(max-width:1000px){
-  .lap{max-width:560px;margin-inline:auto}
-}
-@media(max-width:760px){
-  .lap-screen{padding:8px;border-radius:0}
-  .lap-base{display:none}
-  /* Stacked, four panels made the card twice as tall as it is wide. The
-     revenue panel and the three tiles are the legible part on a phone; the
-     second chart is dropped rather than squeezed. */
-  .lp-row .lp:nth-child(2){display:none}
-  .lp-tiles{grid-template-columns:repeat(3,1fr);gap:var(--sp-2)}
-  .lp-tiles .lp-tile:last-child{grid-column:auto}
-  .lp-tile b{font-size:var(--fs-small)}
-  .lp-tile .lp-sub{display:none}
-  .hero-grid{gap:var(--sp-6)}
-  .hero-stage{padding-block:var(--sp-5)}
-}
-/* Landscape phones and other short viewports: the hero was running to four
-   screens before the first section. Trim the vertical air, not the content. */
-@media(max-height:560px) and (orientation:landscape){
-  .hero{padding-block:var(--sp-4) 0}
-  .hero-grid{gap:var(--sp-5)}
-  .hero-stage{padding:var(--sp-4) 0}
-  .hero-trust{margin-top:var(--sp-5)}
-  .lap{max-width:420px}
-}
-
 /* ===== Responsive ===== */
+@media(max-width:1000px){/* ===== Responsive ===== */
 @media(max-width:1000px){
-  .hero-grid{grid-template-columns:1fr;gap:40px}
-  .hero p.sub{max-width:100%}
   .web-grid{grid-template-columns:1fr;gap:48px}
   .web-grid.rev{grid-template-columns:1fr}
   .web-grid.rev .web-copy,.web-grid.rev .web-visual{order:initial}
@@ -1374,9 +1136,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
    would relayout the list on every hover, and the rule has to stay put at
    left:0 while the copy moves away from it. */
 
-.hs-card .hs-icon{transition:transform var(--t-base) var(--ease-out),background var(--t-base) var(--ease)}
-.hs-card:hover .hs-icon{transform:translateY(-2px);border-color:var(--accent)}
-.hs-card:hover .hs-icon svg{color:var(--accent)}
 
 /* ===== Nav: compaction without layout shift =====
    Shrinking the header's height would move every pixel of the page under it,

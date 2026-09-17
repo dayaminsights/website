@@ -390,7 +390,36 @@
     return pass;
   }
 
-  pulse(document.querySelector('.hero-pipe'), '.pipe-step', 220, 700, 3400);
+  // ===== Hero: the signal on the system =====
+  // Walks the four rows once after they have risen, rests on the first, and
+  // follows the pointer after that. Static on the first row under reduced motion.
+  var heroSys = document.querySelector('.hero-system');
+  if (heroSys){
+    var hsRows = Array.prototype.slice.call(heroSys.querySelectorAll('.hs-row'));
+    var hsSig = heroSys.querySelector('.hs-signal');
+    var hsHome = 0, hsTimers = [];
+    function hsPut(i){
+      var r = hsRows[i].getBoundingClientRect(), s = heroSys.getBoundingClientRect();
+      var nameEl = hsRows[i].querySelector('.hs-name'), n = nameEl.getBoundingClientRect();
+      hsSig.style.transform = 'translateY(' + Math.round(n.top + n.height / 2 - s.top - hsSig.offsetHeight / 2) + 'px)';
+    }
+    function hsWalk(){
+      hsTimers.forEach(clearTimeout); hsTimers = [];
+      hsPut(0); hsSig.classList.add('on');
+      if (reduce) return;
+      hsRows.forEach(function(_, i){ if (i) hsTimers.push(setTimeout(function(){ hsPut(i); }, 340 + i * 300)); });
+      hsTimers.push(setTimeout(function(){ hsPut(0); }, 340 + hsRows.length * 300 + 260));
+    }
+    hsRows.forEach(function(row, i){
+      row.addEventListener('mouseenter', function(){ hsTimers.forEach(clearTimeout); hsTimers = []; hsPut(i); });
+      row.addEventListener('focus', function(){ hsTimers.forEach(clearTimeout); hsTimers = []; hsPut(i); });
+      row.addEventListener('mouseleave', function(){ hsPut(hsHome); });
+      row.addEventListener('blur', function(){ hsPut(hsHome); });
+    });
+    // After the last row has risen (1140ms delay + 520ms).
+    setTimeout(hsWalk, reduce ? 0 : 1700);
+    window.addEventListener('resize', function(){ hsPut(hsHome); }, {passive:true});
+  }
   // Nodes and arrows share the walk, so the pulse travels the connectors too.
   pulse(document.querySelector('.flow-mock .flow-row'), '.flow-node,.fl-arrow', 260, 780, 2600);
 

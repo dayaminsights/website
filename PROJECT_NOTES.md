@@ -22,7 +22,7 @@ Logo DNA restyle (2026-09-16): every visual decision derives from the mark — t
 - Elevation: hairlines, no resting shadows (`--shadow-sm/md:none`); cards lift 4px with `--lift` on hover only
 - Layout: `--maxw:1360px`, `--gutter:clamp(24px,4vw,64px)`, `--maxw-text:720px`, `--maxw-narrow:520px`; sections `.pad` 72→128px
 - Eyebrows read `02 ▪ LABEL`: chapter number, 5px blue square, label. The hero eyebrow is set like the tagline under the mark.
-- Hero: blueprint grid (64px lines at 9% navy) instead of the photograph; the headline's full stop is the blue square; h1 is `clamp(34px,3.95vw,54px)` (stacked: sized to the column) so the longest authored line ("Your business shouldn’t", 11.04em) never wraps. The laptop is a flat framed figure.
+- Hero (rebuilt 2026-09-17): headline, one sentence, one button + one link on the left; on the right `.hero-system`, the four things we build as one framed panel of rows (Data · Automation · AI · Websites, each a link to Solutions) on the blueprint grid; the audience line beneath. The blue `.hs-signal` walks the rows once on load (site.js `hsWalk`), rests on Data, and follows the pointer. The old pipeline cards, laptop dashboard and three service cards are gone. h1 is `clamp(34px,3.75vw,54px)` (stacked: sized to the column) so the longest authored line ("Your business shouldn’t", 11.04em) never wraps.
 - `hero-bg.jpg` is no longer referenced; `og-image.png` still shows the old brand.
 
 ## Animation conventions
