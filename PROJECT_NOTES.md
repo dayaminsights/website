@@ -3,8 +3,8 @@
 Five static pages, no build step, GitHub Pages ready. Shared `assets/css/site.css` and `assets/js/site.js` (every feature in the script guards for its own elements, so one file serves every page). Targets Tier-2 India audience — plain language, no jargon.
 
 ## Pages (split 2026-09-17)
-- `index.html` — hero, positioning statement, `#problem`, `#signal` (the scroll argument), `#cta` with the contact form (`#contact`). Carries the ProfessionalService schema.
-- `solutions.html` — page head with an on-page index, then `#dashboards`, `#automation` (with `#ai`), `#websites`, the mid-page CTA.
+- `index.html` — hero, positioning statement, `#problem`, the three doors (`.where-next`), `#cta` with the contact form (`#contact`). Carries the ProfessionalService schema.
+- `solutions.html` — page head with an on-page index, `#signal` (the scroll argument, unnumbered), then `#dashboards`, `#automation` (with `#ai`), `#websites`, the mid-page CTA.
 - `work.html` — the three example projects.
 - `how-we-work.html` — the ladder (`#ladder`, the climb) and `#process`.
 - `faq.html` — the 13 questions; carries the FAQPage schema.

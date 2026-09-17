@@ -339,7 +339,7 @@
 <!-- PROBLEM -->
 <section class="pad wrap band" id="problem" aria-labelledby="h-problem">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="01"><span class="dot"></span>Sound familiar?</span>
+    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
     <h2 class="title" id="h-problem">Four things quietly cost you money every week.</h2>
     <p>None of these show up as a line on your P&amp;L. They show up as <strong>late answers, repeated work and mistakes nobody catches until a customer does</strong>.</p>
   </div>
@@ -371,111 +371,10 @@
   </div>
 </section>
 
-<!-- SIGNAL: THE SCROLL ARGUMENT — DATA → INSIGHT → ACTION -->
-<section class="pad wrap scrolly" id="signal" aria-labelledby="h-signal" data-stage="1">
-  <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="02"><span class="dot"></span>What actually changes</span>
-    <h2 class="title" id="h-signal">One week of your business, from noise to a decision.</h2>
-    <p>Every business already produces this data. What a system changes is what happens to it between Monday and the moment somebody acts on it.</p>
-  </div>
-
-  <div class="sy-grid">
-    <div class="sy-steps">
-      <div class="sy-step" data-stage="1">
-        <span class="sy-num">01</span>
-        <h3>It exists. It is just everywhere.</h3>
-        <p>Orders in WhatsApp. Stock in a sheet. Payments in the billing software. Every number your business needs already got created &mdash; it just never got put next to anything else.</p>
-      </div>
-      <div class="sy-step" data-stage="2">
-        <span class="sy-num">02</span>
-        <h3>One place, one definition.</h3>
-        <p>The first job is the boring one, and it is the one that matters: get it into a single place, and agree what each number actually means. Half the arguments in a business are two people using one word for two different things.</p>
-      </div>
-      <div class="sy-step" data-stage="3">
-        <span class="sy-num">03</span>
-        <h3>A week stops being a list.</h3>
-        <p>Once the same numbers sit on the same timeline, a week has a shape. Not a report somebody has to read &mdash; a line anybody recognises in a second.</p>
-      </div>
-      <div class="sy-step" data-stage="4">
-        <span class="sy-num">04</span>
-        <h3>The shape is the insight.</h3>
-        <p>Weekend trade is carrying the week and midweek is soft. Nobody ran an analysis to find that. It is simply visible now, every day, without anyone preparing anything.</p>
-      </div>
-      <div class="sy-step" data-stage="5">
-        <span class="sy-num">05</span>
-        <h3>And then something happens about it.</h3>
-        <p>This is the part most dashboards skip. Stock crosses a level and the reorder drafts itself. An invoice ages past thirty days and the reminder sends. The insight stops waiting for someone to notice it.</p>
-      </div>
-    </div>
-
-    <div class="sy-stage">
-      <div class="sy-panel">
-        <div class="sy-head">
-          <b>Example &mdash; one week of orders</b>
-          <span class="sy-state mono" aria-hidden="true"></span>
-        </div>
-
-        <!-- Cropped off the top: the plotted series peaks at y=62 and the
-             scattered set never rises above y=33, so the first 16 units were
-             always empty and read as a gap under the panel header. -->
-        <svg class="sy-svg" viewBox="0 16 380 240" role="img" aria-label="The same week of order data shown three ways: scattered across disconnected tools, collected into one table, then plotted as a rising line where the weekend is the strongest trade.">
-          <!-- Table rules, stage 2 only -->
-          <g class="sy-rule" fill="none">
-            <path d="M28 90h324M28 135h324M28 180h324"/>
-          </g>
-          <!-- Series, stages 3+ -->
-          <path class="sy-area" d="M40 168L92 150L143 158L195 124L247 132L298 88L350 62L350 210L40 210Z"/>
-          <path class="sy-line" pathLength="1" d="M40 168L92 150L143 158L195 124L247 132L298 88L350 62"/>
-          <rect class="sy-peak" x="339" y="51" width="22" height="22"/>
-          <!-- Eighteen points. Seven carry the series and hold a third position. -->
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:0;--sx:62px;--sy:196px;--gx:40px;--gy:90px;--cx:40px;--cy:168px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:1;--sx:148px;--sy:44px;--gx:102px;--gy:90px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:2;--sx:214px;--sy:168px;--gx:164px;--gy:90px;--cx:92px;--cy:150px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:3;--sx:36px;--sy:112px;--gx:226px;--gy:90px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:4;--sx:300px;--sy:72px;--gx:288px;--gy:90px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:5;--sx:96px;--sy:138px;--gx:350px;--gy:90px;--cx:143px;--cy:158px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:6;--sx:342px;--sy:204px;--gx:40px;--gy:135px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:7;--sx:178px;--sy:96px;--gx:102px;--gy:135px;--cx:195px;--cy:124px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:8;--sx:258px;--sy:224px;--gx:164px;--gy:135px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:9;--sx:118px;--sy:232px;--gx:226px;--gy:135px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:10;--sx:330px;--sy:128px;--gx:288px;--gy:135px;--cx:247px;--cy:132px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:11;--sx:24px;--sy:58px;--gx:350px;--gy:135px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:12;--sx:236px;--sy:38px;--gx:40px;--gy:180px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:13;--sx:82px;--sy:84px;--gx:102px;--gy:180px;--cx:298px;--cy:88px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:14;--sx:292px;--sy:180px;--gx:164px;--gy:180px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:15;--sx:160px;--sy:214px;--gx:226px;--gy:180px"/>
-          <rect class="sy-dot key" x="-4" y="-4" width="8" height="8" style="--i:16;--sx:200px;--sy:124px;--gx:288px;--gy:180px;--cx:350px;--cy:62px"/>
-          <rect class="sy-dot" x="-4" y="-4" width="8" height="8" style="--i:17;--sx:356px;--sy:52px;--gx:350px;--gy:180px"/>
-          <g class="sy-axis">
-            <text x="40" y="236" text-anchor="middle">M</text>
-            <text x="92" y="236" text-anchor="middle">T</text>
-            <text x="143" y="236" text-anchor="middle">W</text>
-            <text x="195" y="236" text-anchor="middle">T</text>
-            <text x="247" y="236" text-anchor="middle">F</text>
-            <text x="298" y="236" text-anchor="middle">S</text>
-            <text x="350" y="236" text-anchor="middle">S</text>
-          </g>
-        </svg>
-
-        <div class="sy-out">
-          <span class="sy-row warn">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3l9.5 17h-19L12 3z"/><path d="M12 10v4M12 17.5h.01"/></svg>
-            <span><b>Purchase order drafted.</b> Stock crossed its reorder level while the shop was open, not at the end of the month.</span>
-          </span>
-          <span class="sy-row good">
-            <svg aria-hidden="true" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 17l6-6 4 3 6-8"/><path d="M20 6h-4M20 6v4"/></svg>
-            <span><b>The weekend is your strongest trade.</b> Surfaced on Monday, to the person who can staff for it.</span>
-          </span>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
 <!-- WHERE NEXT: the three pages, one line each -->
 <div class="wrap">
   <nav class="where-next reveal" aria-label="Explore">
-    <a href="solutions.html"><span class="wn-num">01</span><b>What we build</b><span>Dashboards, automation, AI assistants and websites &mdash; usually in that order.</span><i class="arrow" aria-hidden="true">&rarr;</i></a>
+    <a href="solutions.html"><span class="wn-num">01</span><b>What we build</b><span>One week of a business from noise to a decision, then the four things that make it happen.</span><i class="arrow" aria-hidden="true">&rarr;</i></a>
     <a href="work.html"><span class="wn-num">02</span><b>The work</b><span>Three example projects, drawn as the systems they became.</span><i class="arrow" aria-hidden="true">&rarr;</i></a>
     <a href="how-we-work.html"><span class="wn-num">03</span><b>How we work</b><span>The ladder we take a business up, and how an engagement runs.</span><i class="arrow" aria-hidden="true">&rarr;</i></a>
   </nav>
