@@ -22,7 +22,7 @@ Logo DNA restyle (2026-09-16): every visual decision derives from the mark — t
 - Layout: `--maxw:1360px`, `--gutter:clamp(24px,4vw,64px)`, `--maxw-text:720px`, `--maxw-narrow:520px`; sections `.pad` 72→128px
 - Eyebrows read `02 ▪ LABEL`: chapter number, 5px blue square, label. The hero eyebrow is set like the tagline under the mark.
 - Hero (rebuilt 2026-09-17): headline, one sentence, one button + one link on the left; on the right `.hero-system`, the four things we build as one framed panel of rows (Data · Automation · AI · Websites, each a link to Solutions) on the blueprint grid; the audience line beneath. The blue `.hs-signal` walks the rows once on load (site.js `hsWalk`), rests on Data, and follows the pointer. The old pipeline cards, laptop dashboard and three service cards are gone. h1 is `clamp(34px,3.75vw,54px)` (stacked: sized to the column) so the longest authored line ("Your business shouldn’t", 11.04em) never wraps.
-- `hero-bg.jpg` is no longer referenced; `og-image.png` still shows the old brand.
+- Logo (2026-09-17): `assets/img/logo.svg` is the vector master, traced from the supplied bitmap (viewBox 283×297: blue 48px square, i stem, D ring with an inner crescent). `logo.png` / `logo-white.png` (1024px) are its renders for the nav and the navy footer; `touch-icon.png`, `favicon.svg` and `og-image.png` are built from the same mark. If the mark changes, edit the SVG and re-render the PNGs from it.
 
 ## Animation conventions
 - `.reveal` + `.in` (toggled by IntersectionObserver) for scroll-triggered fade/slide-up. `data-d="1..4"` = stagger delay via `transition-delay`.
