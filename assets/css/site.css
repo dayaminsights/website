@@ -92,7 +92,7 @@
   /* motion — engineered, never playful */
   --t-fast:200ms;
   --t-base:280ms;
-  --t-reveal:600ms;
+  --t-reveal:480ms;
   --t-data:900ms;
   --ease-out:cubic-bezier(.2,.7,.2,1);
   --ease:cubic-bezier(.4,0,.2,1);
@@ -194,7 +194,11 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
 /* padding-block, not the four-side shorthand: .pad and .wrap share a
    specificity, so `padding: X 0` zeroed .wrap's 24px gutter and every
    section touched the viewport edge below 1180px. */
-.pad{padding-block:clamp(72px,9vw,128px)}
+.pad{padding-block:clamp(64px,7vw,104px)}
+/* The first section on an inner page opens on its own h1; the nav already sits above it. */
+main > section:first-child.pad{padding-top:clamp(48px,6vw,88px)}
+/* The closing band is one sentence and two buttons: half the air of a content section. */
+section#next.pad{padding-block:clamp(48px,5vw,72px)}
 
 /* ===== Section rhythm =====
    Sections alternate white / --bg-2 down the whole page. Without this the
@@ -235,10 +239,10 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
 .hero p.sub{margin:var(--sp-5) 0 0;font-size:var(--fs-body);line-height:1.6;color:var(--muted);max-width:44ch;text-wrap:pretty}
 .hero-cta{display:flex;align-items:center;gap:var(--sp-5);margin-top:var(--sp-6);flex-wrap:wrap}
 .hero .hero-cta .btn-primary{padding:16px 26px}
-.hero-cta .link-cta{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px;min-height:44px}
-.hero-cta .link-cta:hover{color:var(--ink);text-decoration-color:var(--accent)}
-.hero-cta .link-cta .arrow{transition:transform var(--t-fast) var(--ease)}
-.hero-cta .link-cta:hover .arrow{transform:translateX(3px)}
+.link-cta{display:inline-flex;align-items:center;gap:var(--sp-2);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:600;color:var(--ink);text-decoration:underline;text-underline-offset:5px;text-decoration-thickness:1px;min-height:44px}
+.link-cta:hover{color:var(--ink);text-decoration-color:var(--accent)}
+.link-cta .arrow{transition:transform var(--t-fast) var(--ease)}
+.link-cta:hover .arrow{transform:translateX(3px)}
 
 /* Trust strip — caption over a row of wordmarks, as in the reference. */
 .hero-trust{margin-top:var(--sp-7)}
@@ -486,6 +490,18 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
   .hero-pipe .pipe-step span{display:block}
 }
 @media(max-width:760px){
+  /* On a phone the dashboard alone tells the hero's story; the pipeline cards would push the first sentence 2.5 screens down. */
+  .hero-pipe{display:none}
+  /* Service cards become one compact row each: icon, name, arrow. */
+  .hs-card{flex-direction:row;align-items:center;gap:var(--sp-4);padding:var(--sp-4) var(--sp-5)}
+  .hs-card .hs-icon{width:36px;height:36px;flex:0 0 auto}
+  .hs-card .hs-icon svg{width:18px;height:18px}
+  .hs-card .hs-tag,.hs-card p{display:none}
+  .hs-card h2{margin:0;flex:1 1 auto;font-size:var(--fs-small)}
+  .hs-card .hs-more{margin:0;padding:0;font-size:0;text-decoration:none}
+  /* Stacked, the dashboard is the first thing after the copy: no desktop-sequence delay. */
+  .lap{transition-delay:160ms}
+  .hs-card .hs-more .arrow{font-size:var(--fs-small)}
   .hero-pipe{grid-template-columns:repeat(2,1fr)}
   .hero-pipe .pipe-step + .pipe-step::before{display:none}
   .hero-pipe .pipe-step:last-child{grid-column:span 2}
@@ -648,7 +664,7 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
 .mid-cta p{font-family:var(--font-ui);font-size:var(--fs-h4);font-weight:600;color:var(--ink);margin:0}
 
 /* ===== CTA ===== */
-.cta-band{position:relative;border-radius:0;padding:clamp(40px,7vw,96px);text-align:center;background:var(--panel);color:var(--on-panel)}
+.cta-band{position:relative;border-radius:0;padding:clamp(40px,6vw,80px);text-align:center;background:var(--panel);color:var(--on-panel)}
 .cta-band h2{font-family:var(--font-ui);font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-height:1.10;color:var(--on-panel);text-wrap:balance}
 .cta-band p{color:var(--on-panel-muted);font-size:var(--fs-body);margin:var(--sp-4) auto 0;max-width:var(--maxw-narrow);text-wrap:pretty}
 .cta-band .hero-cta{justify-content:center;margin-top:var(--sp-6)}
@@ -710,7 +726,10 @@ footer :focus-visible{outline-color:var(--focus-invert)}
    All four variants collapse to one behaviour. The directional and scale
    variants existed to manufacture scroll rhythm that the section grounds
    now supply. Class names are kept so no markup changes. */
-.reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:0;transform:translateY(16px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
+/* Headings and page heads are static: a headline that fades in on every section reads as a template,
+   and the reader is waiting on the one thing they came to read. Figures, lists and cards keep the reveal. */
+.section-head.reveal,.section-head.reveal-scale,.page-head .reveal,.climb-head .reveal,.webx-head .reveal,.stmt-band.reveal,.climb-pull.reveal{opacity:1!important;transform:none!important;transition:none!important}
+.reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:0;transform:translateY(12px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
 .reveal.in,.reveal-scale.in,.reveal-left.in,.reveal-right.in{opacity:1;transform:none}
 .reveal[data-d="1"]{transition-delay:60ms}
 .reveal[data-d="2"]{transition-delay:120ms}
@@ -1142,7 +1161,7 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .scrolly{position:relative}
 .sy-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:clamp(32px,5vw,72px);margin-top:var(--sp-8);align-items:start}
 
-.sy-step{min-height:58vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
+.sy-step{min-height:50vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
 .sy-step.is-on{opacity:1}
 .sy-num{font-family:var(--font-mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.14em;color:var(--ink-2)}
 .sy-step h3{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.014em;line-height:1.2;margin:var(--sp-3) 0;text-wrap:balance}
@@ -1482,7 +1501,9 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 .page-title{font-size:clamp(40px,5.2vw,68px);font-weight:800;letter-spacing:-.038em;line-height:1.02;margin:var(--sp-5) 0 var(--sp-4);text-wrap:balance}
 .section-head .page-title{margin-inline:auto}
 .climb-head .page-title{margin-bottom:0}
-.page-head{padding-block:clamp(56px,7vw,104px) clamp(24px,3vw,40px)}
+.section-head:has(> .page-title){max-width:960px}
+.page-head{padding-block:clamp(48px,6vw,88px) clamp(16px,2vw,32px)}
+.page-head + section.pad{padding-top:clamp(40px,5vw,72px)}
 .page-head .page-title{max-width:16ch}
 .page-head > p{max-width:60ch;margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:var(--muted);text-wrap:pretty}
 .page-index{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin-top:clamp(32px,4vw,56px);border-top:1px solid var(--line-strong)}
