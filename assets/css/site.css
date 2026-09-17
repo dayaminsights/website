@@ -537,21 +537,13 @@ footer :focus-visible{outline-color:var(--focus-invert)}
    now supply. Class names are kept so no markup changes. */
 /* Headings and page heads are static: a headline that fades in on every section reads as a template,
    and the reader is waiting on the one thing they came to read. Figures, lists and cards keep the reveal. */
-.section-head.reveal,.section-head.reveal-scale,.page-head .reveal,.climb-head .reveal,.webx-head .reveal,.stmt-band.reveal,.climb-pull.reveal{opacity:1!important;transform:none!important;transition:none!important}
+.section-head.reveal,.section-head.reveal-scale,.page-head .reveal,.climb-head .reveal,.webx-head .reveal,.climb-pull.reveal{opacity:1!important;transform:none!important;transition:none!important}
 .reveal,.reveal-scale,.reveal-left,.reveal-right{opacity:0;transform:translateY(12px);transition:opacity var(--t-reveal) var(--ease-out),transform var(--t-reveal) var(--ease-out)}
 .reveal.in,.reveal-scale.in,.reveal-left.in,.reveal-right.in{opacity:1;transform:none}
 .reveal[data-d="1"]{transition-delay:60ms}
 .reveal[data-d="2"]{transition-delay:120ms}
 .reveal[data-d="3"]{transition-delay:180ms}
 .reveal[data-d="4"]{transition-delay:180ms}
-
-/* ===== Positioning statement ===== */
-.stmt-band{
-  display:grid;grid-template-columns:1.15fr 1fr;gap:clamp(24px,4vw,64px);align-items:start;
-  padding:clamp(40px,5vw,64px) 0;border-top:1px solid var(--line);border-bottom:1px solid var(--line);
-}
-.stmt{font-family:var(--font-ui);font-size:clamp(24px,2.8vw,36px);font-weight:600;line-height:1.18;letter-spacing:-.025em;color:var(--ink);margin:0;text-wrap:pretty}
-.stmt-sub{font-family:var(--font-ui);font-size:var(--fs-small);line-height:1.6;color:var(--muted);margin:0;max-width:44ch;padding-top:6px}
 
 /* ===== Problem cards: step numbers ===== */
 .prob .pnum{
@@ -631,7 +623,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 
 /* ===== Responsive ===== */
 @media(max-width:1000px){
-  .stmt-band{grid-template-columns:1fr;gap:var(--sp-5)}
   .points{max-width:100%}
 }
 @media(max-width:760px){
@@ -1190,24 +1181,6 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
   html{scroll-behavior:auto}
 }
 
-/* ===== Home: where next =====
-   Three doors before the form, so the homepage hands the reader on instead
-   of ending on an ask. */
-.where-next{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));margin:clamp(48px,6vw,80px) 0 0;border:1px solid var(--line-strong);background:var(--surface)}
-.where-next a{position:relative;display:grid;grid-template-columns:auto 1fr;grid-template-rows:auto auto;column-gap:var(--sp-4);row-gap:var(--sp-2);align-content:start;padding:var(--sp-6) var(--sp-6) var(--sp-7);border-right:1px solid var(--line);color:var(--ink);transition:background var(--t-fast) var(--ease)}
-.where-next a:last-child{border-right:0}
-.where-next a:hover{background:var(--bg)}
-.where-next .wn-num{grid-row:1 / span 2;font-size:var(--fs-label);font-weight:600;letter-spacing:.12em;color:var(--muted-2);font-variant-numeric:tabular-nums;padding-top:6px}
-.where-next b{font-size:var(--fs-h4);font-weight:700;letter-spacing:-.015em}
-.where-next span:not(.wn-num){font-size:var(--fs-small);line-height:1.5;color:var(--muted);max-width:32ch}
-.where-next .arrow{position:absolute;right:var(--sp-6);bottom:var(--sp-5);font-style:normal;color:var(--ink);transition:transform var(--t-fast) var(--ease)}
-.where-next a:hover .arrow{transform:translateX(4px);color:var(--accent)}
-@media(max-width:900px){
-  .where-next{grid-template-columns:1fr}
-  .where-next a{border-right:0;border-bottom:1px solid var(--line);padding:var(--sp-5) var(--sp-5) var(--sp-6)}
-  .where-next a:last-child{border-bottom:0}
-}
-
 /* ===== Solutions: the example under each block ===== */
 .example-link{margin:var(--sp-4) 0 0;font-family:var(--font-ui);font-size:var(--fs-small)}
 .example-link a{color:var(--ink);font-weight:600;text-decoration:underline;text-decoration-color:var(--accent);text-underline-offset:5px;text-decoration-thickness:1px}
@@ -1261,7 +1234,8 @@ header.nav.scrolled .brand .glyph{transform:scale(.85)}
 .section-head .page-title{margin-inline:auto}
 .climb-head .page-title{margin-bottom:0}
 .section-head:has(> .page-title){max-width:960px}
-.page-head{padding-block:clamp(48px,6vw,88px) clamp(16px,2vw,32px)}
+.page-head{padding-block:clamp(64px,7vw,104px) clamp(16px,2vw,32px)}
+.page-head h2.title{max-width:16ch;margin-bottom:var(--sp-4)}
 .page-head + section.pad{padding-top:clamp(40px,5vw,72px)}
 .page-head .page-title{max-width:16ch}
 .page-head > p{max-width:60ch;margin:0;font-size:clamp(17px,1.4vw,20px);line-height:1.5;color:var(--muted);text-wrap:pretty}

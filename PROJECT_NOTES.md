@@ -1,15 +1,14 @@
 # Dayam Insights — Landing Page Notes
 
-Five static pages, no build step, GitHub Pages ready. Shared `assets/css/site.css` and `assets/js/site.js` (every feature in the script guards for its own elements, so one file serves every page). Targets Tier-2 India audience — plain language, no jargon.
+Four static pages, no build step, GitHub Pages ready. Shared `assets/css/site.css` and `assets/js/site.js` (every feature in the script guards for its own elements, so one file serves every page). Targets Tier-2 India audience — plain language, no jargon.
 
 ## Pages (split 2026-09-17)
-- `index.html` — hero, positioning statement, `#problem`, the three doors (`.where-next`), `#cta` with the contact form (`#contact`). Carries the ProfessionalService schema.
-- `solutions.html` — page head with an on-page index, `#signal` (the scroll argument, unnumbered), then `#dashboards`, `#automation` (with `#ai`), `#websites`, the mid-page CTA.
+- `index.html` — hero, `#problem`, `#signal` (the scroll argument), `#dashboards`, `#automation` (with `#ai`), `#websites`, `#cta` with the contact form (`#contact`). Carries the ProfessionalService schema. Solutions was folded back in on 2026-09-17; the nav's "Solutions" jumps to `#dashboards`; the hero panel is the index of the four blocks.
 - `work.html` — the three example projects.
 - `how-we-work.html` — the ladder (`#ladder`, the climb) and `#process`.
 - `faq.html` — the 13 questions; carries the FAQPage schema.
-- Inner pages end on a `#next` band linking to `./#contact`. Nav and footer are duplicated per page (edit all five); the current page's nav link carries `aria-current="page"` and `.is-current`. Chapter numbers restart per page.
-- Cross-page links use `./#contact`, `solutions.html#dashboards` etc. The nav scroll-spy only runs for in-page hash links, so it is inert on inner pages.
+- Inner pages end on a `#next` band linking to `./#contact`. Nav and footer are duplicated per page (edit all four); the current page's nav link carries `aria-current="page"` and `.is-current`. Chapter numbers restart per page.
+- Cross-page links use `./#contact`, `./#dashboards` etc. The nav scroll-spy only runs for in-page hash links, so it is inert on inner pages.
 
 ## Design system (CSS vars in `:root`)
 Logo DNA restyle (2026-09-16): every visual decision derives from the mark — the blue square is the signal, the i-bar is input, the D is the system.
