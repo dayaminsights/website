@@ -1073,7 +1073,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .fl-arrow.lit{color:var(--accent-on-panel);transform:translateX(2px)}
 
 /* ===== Responsive ===== */
-@media(max-width:1000px){/* ===== Responsive ===== */
 @media(max-width:1000px){
   .web-grid{grid-template-columns:1fr;gap:48px}
   .web-grid.rev{grid-template-columns:1fr}
