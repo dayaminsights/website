@@ -112,7 +112,7 @@
         One screenshot with the numbers blurred replaces it.
      ============================================================ -->
 </head>
-<body>
+<body class="svc-see">
 <a href="#main" class="skip-link">Skip to content</a>
 <div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
 
@@ -258,16 +258,10 @@
     <p>One for each gap above. We build to these four and stop &mdash; <strong>a dashboard that answers everything gets read by nobody</strong>, and a chart that changes no decision is a chart you are paying to maintain.</p>
   </div>
 
-  <div class="web-grid top web-block reveal-left">
+  <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <h3 class="title sm">One screen that answers &ldquo;are we doing okay?&rdquo;</h3>
       <p>Right now that answer costs two phone calls, three spreadsheets and a week. We connect the systems you already use, agree what each number means, and keep the answer current on its own &mdash; daily, hourly, or the moment something crosses a line you care about.</p>
-      <ol class="jobs">
-        <li class="job"><span class="key" aria-hidden="true">1</span><div><b>Are we doing okay?</b><span>The handful of numbers that actually run the business, current.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">2</span><div><b>Compared with what?</b><span>Last week, last month, last year &mdash; on the same screen, on one definition.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">3</span><div><b>What needs attention?</b><span>The thing crossing a line you set, flagged before you go looking for it.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">4</span><div><b>Why?</b><span>One step from the total to the branch, product or person behind it.</span></div></li>
-      </ol>
     </div>
 
     <!-- The dashboard mock from the homepage: same component, same behaviour. -->
@@ -307,6 +301,16 @@
     </div>
   </div>
 
+  <!-- The four questions are this section’s subject, so they take the full
+       width under the intro and its screen rather than a column beside them. -->
+  <ol class="jobs jobs-row reveal">
+    <li class="job"><span class="key" aria-hidden="true">1</span><div><b>Are we doing okay?</b><span>The handful of numbers that actually run the business, current.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">2</span><div><b>Compared with what?</b><span>Last week, last month, last year &mdash; on the same screen, on one definition.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">3</span><div><b>What needs attention?</b><span>The thing crossing a line you set, flagged before you go looking for it.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">4</span><div><b>Why?</b><span>One step from the total to the branch, product or person behind it.</span></div></li>
+  </ol>
+
+
   <div class="webx-start reveal">
     <p class="lab">Where most projects start</p>
     <div class="ws"><h4>One report eats a day a week?</h4><p>Replace that report first. It pays for itself in the time it gives back.</p></div>
@@ -318,22 +322,12 @@
 
 <!-- WHAT COMES WITH IT -->
 <section class="pad wrap band" id="included" aria-labelledby="h-included">
-  <div class="web-grid top web-block reveal-left">
+  <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <span class="eyebrow" data-ch="02"><span class="dot"></span>What comes with it</span>
       <h3 class="title sm" id="h-included">Built on the systems you already have.</h3>
       <p>Nothing here asks you to replace your billing software or move your business onto a new platform. We read what those systems already produce, agree what each number means with the people who use it, and leave the whole thing running in accounts in your name.</p>
       <p class="pull">You keep the logins. If you stop working with us, the dashboard keeps refreshing.</p>
-      <ul class="points">
-        <li>Connected to billing, stock, CRM</li>
-        <li>Every number defined once</li>
-        <li>Refreshed on a schedule you set</li>
-        <li>Alerts when a line is crossed</li>
-        <li>Readable on a phone</li>
-        <li>Drill-down from total to cause</li>
-        <li>Written handover and a walkthrough</li>
-        <li>A fixed price, agreed before we start</li>
-      </ul>
       <div class="cta-row">
         <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a fixed price <span class="arrow">&rarr;</span></a>
         <p class="example-link"><a href="faq.html#faq">Read the common questions <span class="arrow">&rarr;</span></a></p>
@@ -370,10 +364,24 @@
       </div>
     </div>
   </div>
+
+  <!-- What comes with it, four across under the copy and the handover screen,
+       so the two columns above end level instead of the list running on. -->
+  <ul class="points points-row reveal">
+    <li>Connected to billing, stock, CRM</li>
+    <li>Every number defined once</li>
+    <li>Refreshed on a schedule you set</li>
+    <li>Alerts when a line is crossed</li>
+    <li>Readable on a phone</li>
+    <li>Drill-down from total to cause</li>
+    <li>Written handover and a walkthrough</li>
+    <li>A fixed price, agreed before we start</li>
+  </ul>
+
 </section>
 
 <!-- PROCESS -->
-<section class="pad wrap" id="process" aria-labelledby="h-process">
+<section class="pad wrap band dark" id="process" aria-labelledby="h-process">
   <div class="section-head center reveal">
     <span class="eyebrow" data-ch="03"><span class="dot"></span>How a dashboard project runs</span>
     <h2 class="title" id="h-process">Four steps, and you see the price before step two.</h2>
@@ -540,8 +548,8 @@
       <p>A dashboard tells you the re-typing is costing you a day a week. Stopping it is the other half of what we do.</p>
     </div>
     <div class="more-links">
-      <a href="automation.html" class="link-cta">Automation &amp; AI <span class="arrow">&rarr;</span></a>
-      <a href="websites.html" class="link-cta">Websites <span class="arrow">&rarr;</span></a>
+      <a href="automation.html" class="link-cta svc-auto">Automation &amp; AI <span class="arrow">&rarr;</span></a>
+      <a href="websites.html" class="link-cta svc-grow">Websites <span class="arrow">&rarr;</span></a>
     </div>
   </div>
 </section>

@@ -114,7 +114,7 @@
         say it outright rather than implying it.
      ============================================================ -->
 </head>
-<body>
+<body class="svc-auto">
 <a href="#main" class="skip-link">Skip to content</a>
 <div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
 
@@ -260,16 +260,10 @@
     <p>One for each of the four above. We look for the step that happens most often and costs the most attention, and we take that one first &mdash; <strong>a small automation that runs every day beats a large one that runs every quarter</strong>.</p>
   </div>
 
-  <div class="web-grid top web-block reveal-left">
+  <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <h3 class="title sm">We make the re-typing stop.</h3>
       <p>An order arrives on WhatsApp. It becomes an order record. The invoice goes out. The payment is matched. The dashboard updates. Nobody typed anything, and nothing was forgotten because someone was busy.</p>
-      <ol class="jobs">
-        <li class="job"><span class="key" aria-hidden="true">1</span><div><b>Moving information between systems</b><span>Orders, stock, invoices and payments, carried without a person in the middle.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">2</span><div><b>Chasing and reminding</b><span>Follow-ups, reorders and overdue payments that go out whether anyone remembered or not.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">3</span><div><b>Turning documents into records</b><span>A purchase order or a bill read once and filed as data, not typed three times.</span></div></li>
-        <li class="job"><span class="key" aria-hidden="true">4</span><div><b>Answering the same question again</b><span>Stock, price and delivery answers drawn straight from your own systems.</span></div></li>
-      </ol>
     </div>
 
     <!-- The pipeline from the homepage: same component, same walker in site.js. -->
@@ -308,6 +302,15 @@
       </div>
     </div>
   </div>
+
+  <!-- The four kinds are this section’s subject, so they take the full width
+       under the intro and its diagram rather than a column beside them. -->
+  <ol class="jobs jobs-row reveal">
+    <li class="job"><span class="key" aria-hidden="true">1</span><div><b>Moving information between systems</b><span>Orders, stock, invoices and payments, carried without a person in the middle.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">2</span><div><b>Chasing and reminding</b><span>Follow-ups, reorders and overdue payments that go out whether anyone remembered or not.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">3</span><div><b>Turning documents into records</b><span>A purchase order or a bill read once and filed as data, not typed three times.</span></div></li>
+    <li class="job"><span class="key" aria-hidden="true">4</span><div><b>Answering the same question again</b><span>Stock, price and delivery answers drawn straight from your own systems.</span></div></li>
+  </ol>
 
   <div class="webx-start reveal">
     <p class="lab">Where most projects start</p>
@@ -379,22 +382,12 @@
 
 <!-- WHAT COMES WITH IT -->
 <section class="pad wrap" id="included" aria-labelledby="h-included">
-  <div class="web-grid top web-block reveal-left">
+  <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <span class="eyebrow" data-ch="03"><span class="dot"></span>What comes with it</span>
       <h3 class="title sm" id="h-included">Around the tools you already run.</h3>
       <p>Nothing here asks you to replace your billing software or retrain your team on a new platform. We work with what a system already offers &mdash; an export, an API, a database connection &mdash; and where a tool offers none of those, you hear what the workaround costs before you commit, not after.</p>
       <p class="pull">You keep the logins. If you stop working with us, the automations keep running.</p>
-      <ul class="points">
-        <li>Runs in accounts you own</li>
-        <li>Connects to the tools you have</li>
-        <li>A person in the loop where it matters</li>
-        <li>Tells you when something needs a human</li>
-        <li>Logged, so you can see what it did</li>
-        <li>Fails loudly, not silently</li>
-        <li>Written handover and a walkthrough</li>
-        <li>A fixed price, agreed before we start</li>
-      </ul>
       <div class="cta-row">
         <a href="#contact" class="btn btn-primary" data-intent="Workflow automation">Get a fixed price <span class="arrow">&rarr;</span></a>
         <p class="example-link"><a href="faq.html#faq">Read the common questions <span class="arrow">&rarr;</span></a></p>
@@ -430,10 +423,24 @@
       </div>
     </div>
   </div>
+
+  <!-- What comes with it, four across under the copy and the handover screen,
+       so the two columns above end level instead of the list running on. -->
+  <ul class="points points-row reveal">
+    <li>Runs in accounts you own</li>
+    <li>Connects to the tools you have</li>
+    <li>A person in the loop where it matters</li>
+    <li>Tells you when something needs a human</li>
+    <li>Logged, so you can see what it did</li>
+    <li>Fails loudly, not silently</li>
+    <li>Written handover and a walkthrough</li>
+    <li>A fixed price, agreed before we start</li>
+  </ul>
+
 </section>
 
 <!-- PROCESS -->
-<section class="pad wrap band" id="process" aria-labelledby="h-process">
+<section class="pad wrap band dark" id="process" aria-labelledby="h-process">
   <div class="section-head center reveal">
     <span class="eyebrow" data-ch="04"><span class="dot"></span>How an automation project runs</span>
     <h2 class="title" id="h-process">Four steps, and you see the price before step two.</h2>
@@ -630,8 +637,8 @@
       <p>The same connections that stop the re-typing are what a dashboard reads from afterwards.</p>
     </div>
     <div class="more-links">
-      <a href="dashboards.html" class="link-cta">Dashboards <span class="arrow">&rarr;</span></a>
-      <a href="websites.html" class="link-cta">Websites <span class="arrow">&rarr;</span></a>
+      <a href="dashboards.html" class="link-cta svc-see">Dashboards <span class="arrow">&rarr;</span></a>
+      <a href="websites.html" class="link-cta svc-grow">Websites <span class="arrow">&rarr;</span></a>
     </div>
   </div>
 </section>

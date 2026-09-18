@@ -2,8 +2,9 @@
   color-scheme:light;
 
   /* Logo DNA: navy carries the page, white is the ground, and blue is the
-     signal square from the mark — used sparingly, for the one active thing
-     in any composition. No gradients, no photography. */
+     signal square from the mark. Since 2026-09-19 each service also owns a
+     colour (see the service tokens below) and its page wears it; blue stays
+     the brand, the buttons and the logo. No gradients, no photography. */
 
   /* ground */
   --bg:#F8FAFC;
@@ -22,7 +23,7 @@
   /* ink */
   --ink:#07162D;
   --ink-2:#334155;
-  --muted:#64748B;               /* 15px and up only */
+  --muted:#4F5D70;               /* 6.7:1 on white; was #64748B, which turned every paragraph pale */
   --muted-2:#475569;             /* labels and captions under 15px */
 
   /* on inverted panel */
@@ -36,7 +37,22 @@
   --accent-line:rgba(30,123,255,.32);
   --accent-on-panel:#4C94FF;
 
-  /* semantic — the DNA has no green or amber: a gain reads as the signal, a flag as ink */
+  /* service colours (2026-09-19). Blue stays the brand, every button and the
+     logo’s square; each service also owns a colour, so colour says where you
+     are: See = blue, Automate = saffron, Grow = green. Per service:
+       base  marks, rules, dots and fills without text
+       ink   the same hue as text on white or on its tint (all ≥4.5:1)
+       soft  its section bands and tinted fields
+       line  borders drawn in that colour
+       tag   a fill that carries text, with on as that text’s colour
+     --svc-* is the current service: blue by default, switched by .svc-see,
+     .svc-auto or .svc-grow on a page’s <body> or on one card or row. */
+  --see:#1E7BFF;  --see-ink:#1668E6;  --see-soft:#EDF4FF;  --see-line:#BCD5FF;  --see-tag:#1668E6;  --see-on:#FFFFFF;
+  --auto:#FF9A1F; --auto-ink:#A94F00; --auto-soft:#FFF4E6; --auto-line:#FFCF94; --auto-tag:#FF9A1F; --auto-on:#07162D;
+  --grow:#16B364; --grow-ink:#08733C; --grow-soft:#E8F7EE; --grow-line:#9FDEBD; --grow-tag:#16B364; --grow-on:#07162D;
+  --svc:var(--see); --svc-ink:var(--see-ink); --svc-soft:var(--see-soft); --svc-line:var(--see-line); --svc-tag:var(--see-tag); --svc-on:var(--see-on);
+
+  /* semantic — a gain reads as the signal, a flag as ink */
   --good:#1668E6;
   --warn:#334155;
   --good-invert:#7DB0FF;
@@ -214,7 +230,10 @@ h2.title{font-size:var(--fs-h2);font-weight:700;letter-spacing:-.03em;line-heigh
 /* padding-block, not the four-side shorthand: .pad and .wrap share a
    specificity, so `padding: X 0` zeroed .wrap’s 24px gutter and every
    section touched the viewport edge below 1180px. */
-.pad{padding-block:clamp(64px,7vw,104px)}
+/* Sections meet across two of these. With the bands now carrying colour the
+   boundary no longer needs 208px of air to read, so the step came down:
+   176px between sections on desktop, 96px on a phone (was 208 and 128). */
+.pad{padding-block:clamp(48px,6vw,88px)}
 /* The first section on an inner page opens on its own h1; the nav already sits above it. */
 main > section:first-child.pad{padding-top:clamp(48px,6vw,88px)}
 /* The closing band is one sentence and two buttons: half the air of a content section. */
@@ -568,7 +587,9 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
    applies wherever subgrid is unavailable. */
 @supports (grid-template-rows: subgrid){
   .prob-grid{grid-template-rows:auto auto 1fr}
-  .prob{display:grid;grid-row:span 3;grid-template-rows:subgrid}
+  /* row-gap:0 — a subgrid inherits the parent’s 18px gap between its own rows,
+     which sat on top of the icon and heading margins as dead space. */
+  .prob{display:grid;grid-row:span 3;grid-template-rows:subgrid;row-gap:0}
 }
 .prob .pic{width:44px;height:44px;border-radius:0;display:grid;place-items:center;border:1px solid var(--line);background:var(--surface-sunken);margin-bottom:var(--sp-4)}
 .prob .pic svg{width:21px;height:21px;color:var(--muted)}
@@ -709,7 +730,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 
 /* ===== Footer ===== */
 /* Navy close, as in the DNA: the page ends on the colour it is built from. */
-footer{border-top:0;margin-top:var(--sp-9);padding:var(--sp-9) 0 var(--sp-7);background:var(--panel);color:var(--on-panel)}
+footer{border-top:0;margin-top:0;padding:var(--sp-9) 0 var(--sp-7);background:var(--panel);color:var(--on-panel)}
 footer .brand{color:var(--on-panel)}
 footer :focus-visible{outline-color:var(--focus-invert)}
 .foot-grid{display:grid;grid-template-columns:1.6fr 1fr 1fr 1fr;gap:var(--sp-7)}
@@ -1175,7 +1196,7 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .scrolly{position:relative}
 .sy-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:clamp(32px,5vw,72px);margin-top:var(--sp-8);align-items:start}
 
-.sy-step{min-height:50vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
+.sy-step{min-height:40vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
 .sy-step.is-on{opacity:1}
 .sy-num{font-family:var(--font-mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.14em;color:var(--ink-2)}
 .sy-step h3{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.014em;line-height:1.2;margin:var(--sp-3) 0;text-wrap:balance}
@@ -1540,3 +1561,219 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
   .page-index{grid-template-columns:1fr}
   .page-index a + a{padding-left:0;border-left:0;border-top:1px solid var(--line)}
 }
+
+/* ===== Colour pass (2026-09-19) =====
+   The owner found the site monochrome and boring: section bands a shade
+   apart (#F8FAFC against #FFFFFF), blue only in 5px dots, every paragraph a
+   pale grey. Three moves on the existing structure, no new layout:
+   1. Each service owns a colour (tokens in :root) and its page wears it on
+      its bands, markers, icons, step numbers and hero tag.
+   2. One navy section per page (.band.dark) gives the scroll a heavy beat.
+   3. Text darkened (--muted) and section intros set in ink-2. */
+
+/* The current service. Set on <body> for a service page, or on one card,
+   row or link that points at a service. */
+.svc-see{--svc:var(--see);--svc-ink:var(--see-ink);--svc-soft:var(--see-soft);--svc-line:var(--see-line);--svc-tag:var(--see-tag);--svc-on:var(--see-on)}
+.svc-auto{--svc:var(--auto);--svc-ink:var(--auto-ink);--svc-soft:var(--auto-soft);--svc-line:var(--auto-line);--svc-tag:var(--auto-tag);--svc-on:var(--auto-on)}
+.svc-grow{--svc:var(--grow);--svc-ink:var(--grow-ink);--svc-soft:var(--grow-soft);--svc-line:var(--grow-line);--svc-tag:var(--grow-tag);--svc-on:var(--grow-on)}
+
+/* Bands take the service tint, so a scroll alternates ground and colour
+   instead of two near-whites. The contact section stays on the ground: its
+   navy card is the colour there. */
+.band::before{background:var(--svc-soft)}
+#cta.band::before{background:var(--bg)}
+
+/* The navy section: the same components, with the ink and line tokens
+   turned over. Light type on navy gets a little more leading. */
+.band.dark{
+  --bg:#07162D;--bg-2:#07162D;--surface:#0D2240;--surface-sunken:#0A1C36;--placeholder:rgba(248,250,252,.18);
+  --ink:#F8FAFC;--ink-2:#D5DEEA;--muted:#A9B8CC;--muted-2:#A9B8CC;
+  --line:rgba(248,250,252,.12);--line-strong:rgba(248,250,252,.24);
+  --focus:var(--focus-invert);
+  color:var(--ink);
+}
+.band.dark{background:var(--panel)}   /* the full-bleed navy is ::before; this is the same navy under the text itself */
+.band.dark::before{background:var(--panel);border-color:var(--panel)}
+.band.dark p,.band.dark dd{line-height:1.6}
+
+/* Wayfinding: the page’s own colour on the things that say where you are. */
+.scroll-progress i{background:var(--svc)}
+.nav-links a.is-current::after{background:var(--svc)}
+.mm-links a[aria-current="page"]{color:var(--svc-ink)}
+.eyebrow .dot{background:var(--svc)}
+.cta-band::before{background:var(--svc)}
+::selection{background:var(--svc-tag);color:var(--svc-on)}
+/* A service page’s hero label becomes a tag in its colour. */
+:is(.svc-see,.svc-auto,.svc-grow) .page-hero .eyebrow{background:var(--svc-tag);color:var(--svc-on);padding:7px 12px 7px 10px;gap:10px;font-weight:600}
+:is(.svc-see,.svc-auto,.svc-grow) .page-hero .eyebrow .dot{background:currentColor}
+
+/* Links carry the colour of where they go (a .svc-* class on the link). */
+.link-cta,.vc-go,.res-link a,.res-note a{text-decoration-color:var(--svc)}
+.web-copy p.pull{border-left-color:var(--svc)}
+
+/* Pain-point cards: the icon sits on its service tint, and fills on hover. */
+.prob .pic{background:var(--svc-soft);border-color:var(--svc-line)}
+.prob .pic svg{color:var(--svc-ink)}
+.prob .pnum{color:var(--svc-ink);font-weight:600}
+.prob h3{font-weight:700;letter-spacing:-.012em}
+@media (hover:hover) and (pointer:fine){
+  .prob:hover .pic{background:var(--svc-tag);border-color:var(--svc-tag)}
+  .prob:hover .pic svg{color:var(--svc-on)}
+}
+
+/* Lists and steps mark in the service colour. */
+.points li::before,.vc-signs li::before{background:var(--svc)}
+.proc-line i{background:var(--svc)}
+.proc h3{font-weight:700}
+.proc.done .num{background:var(--svc-tag);border-color:var(--svc-tag);color:var(--svc-on)}
+.proc.active .num{background:var(--svc-tag);border-color:var(--svc-tag);color:var(--svc-on);outline:1px solid var(--svc);outline-offset:5px}
+
+/* Proof: the three labels in the service colour, and room between the
+   groups so each label reads as the start of its own answer. */
+.res-lines dt{color:var(--svc-ink);margin-bottom:6px}
+.res-list .res-lines{gap:var(--sp-5)}
+.res-meta .sector{color:var(--svc-ink);font-weight:600}
+
+/* Homepage: the three rows and cards each wear their service. The card’s
+   still sits on its tint and multiplies into it, so a pale wireframe reads
+   as that service’s colour instead of grey. */
+.hs-row b{color:var(--svc-ink)}
+@media (hover:hover) and (pointer:fine){
+  .hs-row:hover b{color:var(--svc-ink)}
+  .hs-row:hover .arrow{color:var(--svc-ink)}
+  .vcard:hover{border-color:var(--svc)}
+}
+.vcard:focus-visible,.vcard:active{border-color:var(--svc)}
+.vc-media{background:var(--svc-soft)}
+.vc-media img{mix-blend-mode:multiply}
+.vc-key{color:var(--svc-ink)}
+
+/* Type: section intros in ink-2 rather than the paragraph grey, and no
+   interface label below 11px. */
+.section-head > p{color:var(--ink-2)}
+.res-tag,.rp-own,.ai-who,.ai-src{font-size:11px}
+
+/* ===== Spacing pass (2026-09-19) =====
+   Measured empty bands, not eyeballed ones (tmp_space.js): margins stacking on
+   section padding were leaving 300–420px of nothing in three places. */
+/* The mid-page CTA closing a section: the section’s padding is the gap. */
+.mid-cta:last-child{margin-bottom:0}
+/* The cross-sell strip follows the contact section directly; that section’s
+   bottom padding already separates them. */
+#cta + #more{padding-top:0}
+/* Without the scrub (reduced motion) the steps are just a list, so they lose
+   the half-screen height that only exists to drive the chart. */
+@media(prefers-reduced-motion:reduce){.sy-step{min-height:0;padding-block:var(--sp-5)}}
+
+/* The contact card on a wide screen. Centred, a 560px form sat in a 1,150px
+   navy card with bare navy either side and ran ~1,100px tall. Side by side:
+   the ask on the left (the ways to reach us pinned to its foot), the form on
+   the right. The last row is 1fr so the form’s height lands there instead
+   of prising the left column apart. Only cards that carry a form. */
+@media(min-width:1100px){
+  .cta-band:has(.contact-form){display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.12fr);grid-template-rows:auto auto auto 1fr;column-gap:clamp(56px,6vw,104px);text-align:left;align-items:start}
+  .cta-band:has(.contact-form) > :is(.eyebrow,h2,p){grid-column:1}
+  .cta-band:has(.contact-form) > .eyebrow{justify-self:start}
+  .cta-band:has(.contact-form) > h2{margin-top:var(--sp-4)}
+  .cta-band:has(.contact-form) > p{margin-inline:0;max-width:46ch}
+  .cta-band:has(.contact-form) > :is(.contact-form,.cf-success){grid-column:2;grid-row:1 / -1;margin:0;max-width:none;width:100%}
+  .cta-band:has(.contact-form) > .cta-alt{grid-column:1;grid-row:4;align-self:end;margin-top:var(--sp-7)}
+  .cta-band:has(.contact-form) .cta-alt-links{justify-content:flex-start}
+}
+/* About: the facts column opened with a rule 15px above the statement’s
+   label. Without it, BUILT FOR sits level with WHAT DAYAM INSIGHTS IS. */
+.about-facts{border-top:0}
+.about-facts > div:first-child{padding-top:0}
+/* Block-level, so the label has no line box above it and starts on the
+   grid line like the dt beside it. */
+.about-grid .section-head > .eyebrow{display:flex;width:fit-content}
+
+/* ===== Automation: #work-that (2026-09-19) =====
+   The four kinds of work sat in a list beside a 230px diagram, so the
+   diagram’s column ran ~360px of empty grey under it, and its top sat 19px
+   above the heading beside it. Now the intro and the diagram are a pair,
+   centred on each other, and the four kinds take the full width beneath as
+   the section’s subject. */
+#work-that .web-grid{align-items:center}
+#work-that .web-block{margin-bottom:0}
+#work-that .web-copy .title.sm{margin-top:0}
+.jobs-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));margin:clamp(40px,4.5vw,64px) 0 0;border-top:1px solid var(--ink)}
+.jobs-row .job{grid-template-columns:1fr;align-content:start;gap:var(--sp-4);padding:var(--sp-5) var(--sp-5) 0 0;border-bottom:0}
+.jobs-row .job + .job{padding-left:var(--sp-5);border-left:1px solid var(--line)}
+.jobs-row .key{width:28px;height:28px;margin-top:0;font-size:12px;background:var(--svc-tag);border-color:var(--svc-tag);color:var(--svc-on)}
+.jobs-row .job b{font-size:var(--fs-h4);font-weight:700;letter-spacing:-.012em;line-height:1.25}
+.jobs-row .job span:not(.key){margin-top:var(--sp-2);line-height:1.5}
+/* Shared rows (key, title, description), so a one-line title does not start
+   its description a line above its neighbours’. The inner div steps aside
+   so the title and description can sit on the rows themselves. */
+@supports (grid-template-rows: subgrid){
+  .jobs-row{grid-template-rows:auto auto 1fr}
+  .jobs-row .job{grid-row:span 3;grid-template-rows:subgrid;row-gap:0}
+  .jobs-row .job > div{display:contents}
+  .jobs-row .job b{margin-top:var(--sp-4)}
+}
+@media(max-width:1000px){
+  .jobs-row{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .jobs-row .job:nth-child(3){padding-left:0;border-left:0}
+  .jobs-row .job:nth-child(n+3){margin-top:var(--sp-5);border-top:1px solid var(--line)}
+}
+@media(max-width:600px){
+  .jobs-row{grid-template-columns:1fr}
+  .jobs-row{grid-template-rows:none}
+  .jobs-row .job,.jobs-row .job + .job{grid-row:auto;grid-template-rows:none;padding:var(--sp-5) 0;border-left:0;margin-top:0;grid-template-columns:28px minmax(0,1fr);column-gap:var(--sp-4)}
+  .jobs-row .job > div{display:block}
+  .jobs-row .job b{margin-top:0}
+  .jobs-row .job + .job{border-top:1px solid var(--line)}
+}
+/* The start strip’s button sits on the middle of its three columns rather
+   than on the foot of whichever one wraps longest. */
+.webx-start .btn{align-self:center}
+
+/* ===== Automation: #ai (2026-09-19) =====
+   The assistant mock started 23px above the heading beside it (the heading’s
+   own top margin) and stopped ~85px short of the copy column’s foot. Now the
+   two columns share both edges: the heading’s margin goes, and the mock
+   stretches to the column with its footer line pinned to the bottom. */
+#ai .web-grid{align-items:stretch}
+#ai .web-copy .title.sm{margin-top:0}
+#ai .web-visual,#ai .ai-mock,#ai .ai-body{display:flex;flex-direction:column}
+#ai .ai-mock,#ai .ai-body{flex:1 1 auto}
+#ai .ai-foot{margin-top:auto}
+/* Footer lines inside the mocks: the square hangs in the margin and the text
+   runs as one line of prose, so on a phone it wraps under itself instead of
+   splitting into two narrow columns or tucking under the square. */
+.ai-foot,.flow-foot{display:block;position:relative;padding-left:16px;line-height:1.5}
+.ai-foot .flow-pulse,.flow-foot .flow-pulse{position:absolute;left:0;top:calc(var(--sp-4) + .75em - 4px)}
+.example-link a{text-decoration-color:var(--svc)}
+
+/* ===== Service pages: section alignment (2026-09-19) =====
+   Measured with tmp_align.js: in every two-column block the copy column ran
+   past its figure (160-310px in #included, 208px in dashboards' #questions),
+   and the proof figure floated centred beside copy 60-90px taller. */
+
+/* #included on all three: the eight points leave the copy column for a row
+   beneath, so the copy and the handover screen are a pair. The screen then
+   stretches to the copy, with its footer line pinned, as the AI mock does. */
+#included .web-grid{align-items:stretch}
+#included .web-copy .eyebrow{margin-top:0}
+#included .web-visual,#included .ai-mock,#included .ai-body{display:flex;flex-direction:column}
+#included .ai-mock,#included .ai-body{flex:1 1 auto}
+#included .ai-foot{margin-top:auto}
+.points-row{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:var(--sp-3) var(--sp-5);max-width:none;margin:clamp(40px,4.5vw,64px) 0 0;padding-top:var(--sp-5);border-top:1px solid var(--ink)}
+.points-row li{font-size:var(--fs-small);line-height:1.45}
+@media(max-width:1000px){.points-row{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:600px){.points-row{grid-template-columns:1fr}}
+
+/* Dashboards' #questions: the same shape as automation’s #work-that, so the
+   same fix — intro and screen centred on each other, the four questions in a
+   full-width row (.jobs-row) beneath. */
+#questions .web-grid{align-items:center}
+#questions .web-block{margin-bottom:0}
+#questions .web-copy .title.sm{margin-top:0}
+
+/* Proof: the figure was centred beside its copy, so on a tablet it floated
+   60-90px off both edges. It sits on the copy’s top edge instead, and the
+   two share a baseline when their heights are close. */
+.res-list .res{align-items:start}
+.res-list .res-fig{align-self:stretch;display:flex;flex-direction:column}
+.res-list .res-fig .bp{flex:1 1 auto;height:auto;object-fit:contain}
