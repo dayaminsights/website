@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Motion source — websites hero</title>
+<!-- Source for assets/video/websites-hero.{mp4,webm,jpg}. Render with:
+       node motion/render.js websites
+     Open this file in a browser to watch it play live.
+
+     One loop, told as a before and after:
+       0–2.5    the camera pulls back out of a blue square — one visitor in a crowd
+       2.5–7.4  visitors reach a pretty site, pay it compliments and turn back; the
+                camera leans in on the blue one as it searches for a way in, finds
+                none, greys out and leaves
+       7.4–10.3 a navy wipe; the site comes back rebuilt, line by line
+       10.3–21.5 visitors turn blue, cross the page to "Book a visit" and fly to
+                the owner's phone — slowly at first, then quickening
+       21.8–26  the camera pushes in on a phone full of enquiries (the poster)
+       26–30    the camera dives into the newest enquiry's blue square until it
+                fills the frame — which is frame 0, so the loop has no seam
+
+     A 3:2 stage (1080×720): the desktop window on the left, drawn at 530×340
+     and scaled ×1.28 through #winG, the owner's phone standing beside it. Two
+     layers, so camera moves carry a little parallax — the phone (foreground)
+     travels slightly faster, the grid slightly slower. Anything outside #winG
+     that has to meet the window (visitors, the wire) goes through wx()/wy().
+
+     Motion is driven by one paused GSAP timeline. render(t) seeks it to t, so
+     every frame is exact and the renderer can step through it one at a time. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#F8FAFC}
+  svg{display:block;width:1080px;height:720px;font-family:Inter,sans-serif}
+  /* Strokes stay hairline however far the camera zooms — without this a 1px
+     outline becomes a 140px band during the dive. */
+  svg *{vector-effect:non-scaling-stroke}
+  .mono{letter-spacing:1.5px;font-weight:600}
+  .num{font-variant-numeric:tabular-nums}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="lib.js"></script>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 1080 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#07162D" stroke-opacity=".05" stroke-width="1"/>
+    </pattern>
+    <clipPath id="siteClip"><rect x="70" y="160" width="530" height="310"/></clipPath>
+    <clipPath id="phoneClip"><rect x="831" y="269" width="158" height="260"/></clipPath>
+    <filter id="lift" x="-30%" y="-20%" width="160%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#07162D" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="1080" height="720" fill="#F8FAFC"/>
+
+  <g id="world">
+    <rect id="gridbg" x="-4000" y="-4000" width="9080" height="8720" fill="url(#grid)"/>
+
+    <g id="rest">
+    <!-- ===== The site, in a desktop browser (window space: 530×340 at 70,130) ===== -->
+    <g id="winG" transform="translate(15.4 -26.4) scale(1.28)">
+    <rect x="70" y="130" width="530" height="340" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5"/>
+    <line x1="70" y1="160" x2="600" y2="160" stroke="#CBD5E1"/>
+    <rect x="84" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <rect x="96" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <rect x="108" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <rect x="128" y="137" width="200" height="16" fill="none" stroke="#E5EAF2"/>
+    <text x="136" y="149" font-size="10" font-weight="500" fill="#475569">yourbusiness.com</text>
+
+    <g clip-path="url(#siteClip)">
+      <!-- BEFORE: the site that collects compliments -->
+      <g id="before">
+        <rect x="70" y="160" width="530" height="44" fill="#FFFFFF"/>
+        <rect x="88" y="176" width="54" height="12" fill="#07162D"/>
+        <rect x="430" y="180" width="30" height="5" fill="#DCE3EC"/><rect x="472" y="180" width="30" height="5" fill="#DCE3EC"/><rect x="514" y="180" width="30" height="5" fill="#DCE3EC"/><rect x="556" y="180" width="26" height="5" fill="#DCE3EC"/>
+        <rect x="70" y="204" width="530" height="170" fill="#07162D"/>
+        <text x="335" y="288" font-size="44" font-weight="600" fill="#F8FAFC" text-anchor="middle" letter-spacing="-.6">Welcome</text>
+        <text x="335" y="316" font-size="13" fill="#9FB0C8" text-anchor="middle" letter-spacing=".6">Passion · Excellence · Quality</text>
+        <g fill="#DCE3EC">
+          <rect x="88" y="394" width="150" height="6"/><rect x="88" y="408" width="130" height="6"/><rect x="88" y="422" width="142" height="6"/>
+          <rect x="260" y="394" width="150" height="6"/><rect x="260" y="408" width="120" height="6"/><rect x="260" y="422" width="140" height="6"/>
+        </g>
+        <text x="88" y="458" font-size="8.5" fill="#94A3B8">Contact us</text>
+      </g>
+
+      <!-- AFTER: a desktop layout built to turn a visitor into an enquiry. -->
+      <g id="after">
+        <g class="ln">
+          <rect x="88" y="176" width="54" height="12" fill="#07162D"/>
+          <rect x="300" y="180" width="30" height="5" fill="#DCE3EC"/><rect x="342" y="180" width="30" height="5" fill="#DCE3EC"/>
+          <line x1="70" y1="204" x2="600" y2="204" stroke="#E5EAF2"/>
+        </g>
+        <g class="ln"><text x="88" y="244" font-size="26" font-weight="700" fill="#07162D" letter-spacing="-.5">Dental care in Jaipur.</text></g>
+        <g class="ln"><text x="88" y="266" font-size="12.5" fill="#475569">Same-week appointments. Book in a minute.</text></g>
+        <g class="ln">
+          <g id="stars" fill="#07162D"></g>
+          <text x="164" y="298" font-size="12" font-weight="600" fill="#07162D">4.9 · 212 reviews</text>
+        </g>
+        <g class="ln" font-size="11" font-weight="500" fill="#07162D">
+          <rect x="88" y="314" width="94" height="26" fill="none" stroke="#07162D"/><text x="135" y="331" text-anchor="middle">Open Sundays</text>
+          <rect x="190" y="314" width="66" height="26" fill="none" stroke="#07162D"/><text x="223" y="331" text-anchor="middle">Parking</text>
+          <rect x="264" y="314" width="80" height="26" fill="none" stroke="#07162D"/><text x="304" y="331" text-anchor="middle">Insurance</text>
+        </g>
+        <g class="ln">
+          <g stroke="#CBD5E1" fill="none"><rect x="88" y="360" width="104" height="44"/><rect x="200" y="360" width="104" height="44"/><rect x="312" y="360" width="104" height="44"/></g>
+          <g fill="#DCE3EC"><rect x="98" y="372" width="80" height="5"/><rect x="98" y="384" width="56" height="5"/><rect x="210" y="372" width="80" height="5"/><rect x="210" y="384" width="62" height="5"/><rect x="322" y="372" width="80" height="5"/><rect x="322" y="384" width="50" height="5"/></g>
+        </g>
+        <g class="ln">
+          <rect x="440" y="222" width="144" height="160" fill="#F8FAFC" stroke="#07162D"/>
+          <text x="454" y="246" font-size="13" font-weight="700" fill="#07162D">Book a visit</text>
+          <rect x="454" y="258" width="116" height="28" fill="#FFFFFF" stroke="#CBD5E1"/><text x="462" y="276" font-size="10" fill="#94A3B8">Name</text>
+          <rect x="454" y="294" width="116" height="28" fill="#FFFFFF" stroke="#CBD5E1"/><text x="462" y="312" font-size="10" fill="#94A3B8">Phone</text>
+          <rect id="btn" x="454" y="332" width="116" height="34" fill="#07162D"/>
+          <text x="512" y="353.5" font-size="12" font-weight="600" fill="#F8FAFC" text-anchor="middle">Book a visit →</text>
+        </g>
+      </g>
+
+      <rect id="wipe" x="70" y="160" width="0" height="310" fill="#07162D"/>
+    </g>
+    </g>
+    </g>
+
+    <text x="1050" y="40" font-size="9" class="mono" fill="#94A3B8" text-anchor="end">■ EXAMPLE</text>
+
+    <!-- ===== The owner's phone, beside the window (world space) ===== -->
+    <g id="phoneLayer">
+      <g id="phone">
+        <rect x="830" y="220" width="160" height="310" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5" filter="url(#lift)"/>
+        <rect x="899" y="229" width="22" height="4" fill="#CBD5E1"/>
+        <text x="842" y="256" font-size="9" class="mono" fill="#475569">ENQUIRIES</text>
+        <text id="pEnq" x="978" y="259" font-size="18" font-weight="700" fill="#07162D" text-anchor="end" class="num">0</text>
+        <line x1="840" y1="267" x2="980" y2="267" stroke="#E5EAF2"/>
+        <g id="cards" clip-path="url(#phoneClip)"></g>
+      </g>
+      <text x="910" y="550" font-size="9" class="mono" fill="#334155" text-anchor="middle">YOUR PHONE</text>
+    </g>
+
+    <g id="crowdG"><g id="chips"></g><g id="crowd"></g></g>
+    <path id="wire" fill="none" stroke="#07162D" stroke-width="1.2" stroke-dasharray="3 4" opacity="0"/>
+    <rect id="sig" width="8" height="8" fill="#1E7BFF" opacity="0"/>
+  </g>
+
+  <!-- ===== Counter: screen space ===== -->
+  <g id="hud" opacity="0">
+    <text x="30" y="40" font-size="10" class="mono" fill="#475569">VISITORS</text>
+    <text id="hVis" x="30" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">0</text>
+    <line x1="168" y1="30" x2="168" y2="78" stroke="#CBD5E1"/>
+    <text x="186" y="40" font-size="10" class="mono" fill="#475569">ENQUIRIES</text>
+    <text id="hEnq" x="186" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">0</text>
+  </g>
+</svg>
+
+<script>
+(function(){
+  var $ = M.$, set = M.set, clamp = M.clamp, lerp = M.lerp, p = M.p;
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent){ var e = document.createElementNS(NS, tag); set(e, attrs); parent.appendChild(e); return e; }
+  function rng(seed){ return function(){ seed |= 0; seed = seed + 0x6D2B79F5 | 0; var t = Math.imul(seed ^ seed >>> 15, 1 | seed); t = t + Math.imul(t ^ t >>> 7, 61 | t) ^ t; return ((t ^ t >>> 14) >>> 0) / 4294967296; }; }
+  var fmt = new Intl.NumberFormat('en-IN');
+  var E = { p3o: gsap.parseEase('power3.out'), p3io: gsap.parseEase('power3.inOut') };
+  gsap.defaults({ ease: 'power3.out', lazy: false });
+
+  // Stage and the window's transform (must match #winG).
+  var DUR = 30, CX = 540, CY = 360, ZOOM = 140;
+  var W = { k: 1.28, tx: 15.4, ty: -26.4 };
+  var wx = function(x){ return x * W.k + W.tx; }, wy = function(y){ return y * W.k + W.ty; };
+  var WIDE = { s: 1, fx: 540, fy: 362 };
+  var EDGE = wx(70);                              // the browser's left edge: where a visitor meets the site
+  var BTN = { x: wx(512), y: wy(349) };
+  var LAND = [12.3, 13.9, 15.2, 16.25, 17.15, 17.9, 18.55, 19.1, 19.6, 20.05, 20.45, 20.8, 21.1];
+  var CARD = { x: 840, top: 274, step: 56, h: 48 };
+  var DIVE = { x: 848 + 4, y: CARD.top + 13 + 4 };
+  var PHONE_CAM = { s: 2.0, fx: 910, fy: 385 };
+  $('wire').setAttribute('d', 'M' + wx(570).toFixed(1) + ' ' + BTN.y.toFixed(1) + ' C 800 ' + BTN.y.toFixed(1) + ', 795 291, 830 291');
+
+  (function(){ var g = $('stars'); for (var i = 0; i < 5; i++) {
+    var cx = 94 + i * 13.5, cy = 294, pts = [];
+    for (var k = 0; k < 10; k++) { var r = k % 2 ? 2.3 : 5.6, a = -Math.PI / 2 + k * Math.PI / 5; pts.push((cx + r * Math.cos(a)).toFixed(2) + ',' + (cy + r * Math.sin(a)).toFixed(2)); }
+    el('polygon', { points: pts.join(' ') }, g);
+  }})();
+
+  // ----- the crowd (world space), scripted up front from a seeded source -----
+  var R = rng(918), V = [];
+  var V0 = { kind: 'lost', spawn: -0.2, y0: 640, y1: 372, dur: 3.2 };
+  V.push(V0);
+  function bouncer(s){ return { kind: 'bounce', spawn: s, y0: 260 + R() * 430, y1: 210 + R() * 330, dur: 1.7 + R() * .8, pause: .25 + R() * .3, turn: R() < .5 ? -1 : 1, wob: R() * 6.28 }; }
+  for (var s = -1.3; s < 6.3; s += .16 + R() * .12) V.push(bouncer(s));
+  for (var s2 = 10.3; s2 < 21.2; s2 += .34 + R() * .3) V.push(bouncer(s2));
+  LAND.forEach(function(land, k){
+    var arrive = land - 2.05, dur = 1.55 + (k % 3) * .2;
+    V.push({ kind: 'convert', spawn: arrive - dur, y0: 320 + ((k * 71) % 380), y1: 220 + ((k * 43) % 300), dur: dur, land: land, wob: k * 1.7 });
+  });
+  var early = V.filter(function(v){ return v.kind === 'bounce' && v.spawn > .9 && v.spawn + v.dur < 6.6; });
+  [['Nice site', 2], ['Looks great', 7], ['Love the colours', 12], ['So clean', 17], ['Beautiful', 22]].forEach(function(c){
+    var v = early[c[1]]; if (!v) return;
+    var g = el('g', { opacity: 0 }, $('chips'));
+    var w = c[0].length * 7.1 + 20;
+    el('path', { d: 'M' + (-w / 2) + ' -40 h' + w + ' v24 h' + (-(w / 2 - 6)) + ' l-6 7 l-6 -7 h' + (-(w / 2 - 6)) + ' z', fill: '#FFFFFF', stroke: '#07162D', 'stroke-width': 1.3 }, g);
+    var tx = el('text', { x: 0, y: -23.5, 'font-size': 12, 'font-weight': 600, fill: '#07162D', 'text-anchor': 'middle' }, g);
+    tx.textContent = c[0];
+    v.chipEl = g;
+  });
+  V.forEach(function(v){ v.el = el('rect', { width: 8, height: 8, fill: '#07162D', opacity: 0 }, $('crowd')); });
+
+  function mix(a, b, k){
+    var pa = [1, 3, 5].map(function(i){ return parseInt(a.substr(i, 2), 16); });
+    var pb = [1, 3, 5].map(function(i){ return parseInt(b.substr(i, 2), 16); });
+    return '#' + pa.map(function(v, i){ return ('0' + Math.round(v + (pb[i] - v) * k).toString(16)).slice(-2); }).join('');
+  }
+
+  function visitor(v, t){
+    var a = v.spawn, arrive = a + v.dur;
+    if (t < a) return null;
+    var q = p(t, a, arrive), e = E.p3o(q);
+    var st = { x: lerp(-30, EDGE - 8, e), y: lerp(v.y0, v.y1, E.p3o(Math.min(1, q * 1.15))) + Math.sin(t * 1.9 + (v.wob || 0)) * 2.5 * (1 - q), size: 8, o: p(t, a, a + .3), fill: '#07162D' };
+    if (v.kind === 'bounce') {
+      var leave = arrive + v.pause;
+      if (t >= arrive) { st.x = EDGE - 8; st.y = v.y1; }
+      if (t > leave) {
+        var r = p(t, leave, leave + 1.2), re = E.p3io(r);
+        st.x = EDGE - 8 - 24 * Math.sin(re * Math.PI * .5) - 60 * re;
+        st.y = v.y1 + v.turn * 46 * Math.sin(re * Math.PI * .5) + 40 * re;
+        st.o *= 1 - p(r, .35, 1);
+        if (r >= 1) return null;
+      }
+    } else if (v.kind === 'lost') {
+      // Always solid: the loop opens inside this square, so frame 0 must match
+      // the solid blue the dive ends on.
+      st.o = 1;
+      st.fill = '#1E7BFF';
+      if (t >= arrive) {
+        var h = t - arrive;
+        st.x = EDGE - 8 - 3 * Math.abs(Math.sin(h * 3.4)) * (1 - p(h, 0, 2));
+        st.y = v.y1 + Math.sin(h * 1.9) * 130 * p(h, 0, .4) * (1 - p(h, 1.9, 2.3));
+        var g2 = p(t, arrive + 2.1, arrive + 2.6);
+        st.fill = mix('#1E7BFF', '#CBD5E1', g2);
+        var r2 = p(t, arrive + 2.6, arrive + 3.9), re2 = E.p3io(r2);
+        st.x -= 90 * re2; st.y += 70 * re2; st.o *= 1 - p(r2, .3, 1);
+        if (r2 >= 1) return null;
+      }
+    } else {
+      if (t >= arrive) {
+        var c = p(t, arrive, v.land - 1.05), ce = E.p3io(c);
+        st.fill = '#1E7BFF';
+        st.x = lerp(EDGE - 8, BTN.x - 4, ce);
+        st.y = lerp(v.y1, BTN.y - 4, ce) - Math.sin(ce * Math.PI) * 30;
+        st.size = 8 - 7 * p(c, .82, 1);
+        if (c >= 1) return null;
+      }
+    }
+    return st;
+  }
+
+  var wire = $('wire'), wireLen = wire.getTotalLength();
+  var CARDS = LAND.map(function(){
+    var g = el('g', { opacity: 0 }, $('cards'));
+    el('rect', { x: CARD.x, y: 0, width: 140, height: CARD.h, fill: '#FFFFFF', stroke: '#07162D' }, g);
+    var bar = el('rect', { x: CARD.x, y: 0, width: 3, height: CARD.h, fill: '#1E7BFF', opacity: 0 }, g);
+    el('rect', { x: 848, y: 13, width: 8, height: 8, fill: '#1E7BFF' }, g);
+    var a = el('text', { x: 863, y: 21, 'font-size': 12, 'font-weight': 600, fill: '#07162D' }, g); a.textContent = 'New enquiry';
+    var b = el('text', { x: 863, y: 37, 'font-size': 9.5, fill: '#475569' }, g); b.textContent = 'Book a visit · just now';
+    return { g: g, bar: bar };
+  });
+
+  var S = { pull: 0, lost: 0, drift: 0, phone: 0, dive: 0, hud: 0, vis: 0, wipeIn: 0, wipeOut: 0 };
+  var tl = gsap.timeline({ paused: true });
+  tl.to(S, { pull: 1, duration: 2.5, ease: 'expo.out' }, .1)
+    .to(S, { hud: 1, duration: .9 }, 1.7)
+    .to(S, { vis: 486, duration: 6.8, ease: 'power2.out' }, .6)
+    .to(S, { lost: 1, duration: 1.2, ease: 'power3.inOut' }, 3.2)
+    .to(S, { lost: 0, duration: 1.3, ease: 'power3.inOut' }, 6.0)
+    .to(S, { wipeIn: 1, duration: .55, ease: 'power4.inOut' }, 7.4)
+    .set('#before', { opacity: 0 }, 7.96)
+    .to(S, { wipeOut: 1, duration: .6, ease: 'power4.inOut' }, 8.05)
+    .fromTo('#after .ln', { opacity: 0, y: 12, filter: 'blur(6px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .09 }, 8.45)
+    .to('#wire', { opacity: .55, duration: .6 }, 10.2)
+    .to(S, { vis: 1248, duration: 11, ease: 'none' }, 10.4)
+    .to(S, { drift: 1, duration: 11, ease: 'sine.inOut' }, 10.5)
+    .to(S, { hud: 0, duration: .6 }, 21.7)
+    .to(S, { phone: 1, duration: 2, ease: 'power3.inOut' }, 21.8)
+    .to(S, { dive: 1, duration: 3.65, ease: 'power2.in' }, 26.1)
+    .set({}, {}, DUR);
+
+  function cam(s, fx, fy){ $('world').setAttribute('transform', 'translate(' + CX + ' ' + CY + ') scale(' + s.toFixed(4) + ') translate(' + (-fx).toFixed(3) + ' ' + (-fy).toFixed(3) + ')'); }
+  function camAt(s, qx, qy, sx, sy){ cam(s, qx - (sx - CX) / s, qy - (sy - CY) / s); }
+
+  function render(t){
+    t = ((t % DUR) + DUR) % DUR;
+    tl.seek(t, true);
+
+    var s = lerp(WIDE.s, 1.1, S.lost), fx = lerp(WIDE.fx, 512, S.lost), fy = lerp(WIDE.fy, 372, S.lost);
+    s *= 1 + .05 * S.drift; fx += 30 * S.drift;
+    s = lerp(s, PHONE_CAM.s, S.phone); fx = lerp(fx, PHONE_CAM.fx, S.phone); fy = lerp(fy, PHONE_CAM.fy, S.phone);
+    if (S.pull < 1) {
+      var q = visitor(V0, t) || { x: 0, y: 0 }, qx = q.x + 4, qy = q.y + 4;
+      var z = S.pull, sz = Math.exp(lerp(Math.log(ZOOM), Math.log(s), z));
+      camAt(sz, qx, qy, lerp(CX, CX + s * (qx - fx), z), lerp(CY, CY + s * (qy - fy), z));
+    } else if (S.dive > 0) {
+      var z2 = S.dive, sd = Math.exp(lerp(Math.log(s), Math.log(ZOOM), z2));
+      camAt(sd, DIVE.x, DIVE.y, lerp(CX + s * (DIVE.x - fx), CX, z2), lerp(CY + s * (DIVE.y - fy), CY, z2));
+    } else cam(s, fx, fy);
+
+    var par = (S.pull >= 1 && S.dive === 0) ? (1 - S.phone) : 0;
+    var dx = (fx - WIDE.fx) * par, dy = (fy - WIDE.fy) * par;
+    $('phoneLayer').setAttribute('transform', 'translate(' + (-dx * .16).toFixed(2) + ' ' + (-dy * .16).toFixed(2) + ')');
+    $('gridbg').setAttribute('transform', 'translate(' + (dx * .12).toFixed(2) + ' ' + (dy * .12).toFixed(2) + ')');
+
+    var recede = 1 - .78 * S.phone;
+    $('rest').setAttribute('opacity', recede.toFixed(3));
+    $('crowdG').setAttribute('opacity', recede.toFixed(3));
+    set($('wipe'), { x: 70 + 530 * S.wipeOut, width: 530 * Math.max(0, S.wipeIn - S.wipeOut) });
+
+    V.forEach(function(v){
+      var st = visitor(v, t);
+      if (!st) { v.el.setAttribute('opacity', 0); if (v.chipEl) v.chipEl.setAttribute('opacity', 0); return; }
+      var off = (8 - st.size) / 2;
+      set(v.el, { x: (st.x + off).toFixed(2), y: (st.y + off).toFixed(2), width: st.size.toFixed(2), height: st.size.toFixed(2), fill: st.fill, opacity: clamp(st.o, 0, 1).toFixed(3) });
+      if (v.chipEl) {
+        var arr = v.spawn + v.dur, ci = E.p3o(p(t, arr - .12, arr + .35)), co = p(t, arr + 1.25, arr + 1.7);
+        set(v.chipEl, { opacity: (ci * (1 - co)).toFixed(3), transform: 'translate(' + (st.x + 4).toFixed(2) + ' ' + (st.y - 10 * ci - 12 * co).toFixed(2) + ')' });
+      }
+    });
+
+    var flash = 0, sig = null, landed = 0;
+    LAND.forEach(function(land, i){
+      flash = Math.max(flash, p(t, land - 1.12, land - 1.04) * (1 - p(t, land - .85, land - .6)));
+      var f = p(t, land - 1.0, land - .06);
+      if (f > 0 && f < 1) sig = E.p3io(f);
+      if (t >= land) landed = i + 1;
+    });
+    $('btn').setAttribute('fill', flash > .5 ? '#1E7BFF' : '#07162D');
+    if (sig === null) $('sig').setAttribute('opacity', 0);
+    else { var pt = wire.getPointAtLength(wireLen * sig); set($('sig'), { x: (pt.x - 4 - dx * .16 * sig).toFixed(2), y: (pt.y - 4 - dy * .16 * sig).toFixed(2), opacity: 1 }); }
+
+    CARDS.forEach(function(c, i){
+      var a = E.p3o(p(t, LAND[i] - .04, LAND[i] + .45));
+      if (a <= 0) { c.g.setAttribute('opacity', 0); return; }
+      var below = 0;
+      for (var j = i + 1; j < LAND.length; j++) below += E.p3io(p(t, LAND[j] - .3, LAND[j] + .05));
+      set(c.g, { opacity: a.toFixed(3), transform: 'translate(0 ' + (CARD.top + below * CARD.step - 14 * (1 - a)).toFixed(2) + ')' });
+      c.bar.setAttribute('opacity', (1 - p(t, LAND[i] + .4, LAND[i] + 1.2)).toFixed(3));
+    });
+
+    $('hud').setAttribute('opacity', S.hud.toFixed(3));
+    $('hVis').textContent = fmt.format(Math.round(S.vis));
+    $('hEnq').textContent = String(landed);
+    $('hEnq').setAttribute('fill', landed ? '#1E7BFF' : '#07162D');
+    $('pEnq').textContent = String(landed);
+  }
+
+  window.POSTER_T = 24.6;
+  window.SIZE = [1080, 720];
+  M.boot(render, DUR);
+})();
+</script>
+</body>
+</html>

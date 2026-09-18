@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="description" content="Business dashboards and analytics for growing Indian businesses — sales, stock, cash and customers on one live screen, fed straight from the systems you already use and refreshed without anyone assembling it.">
+<title>Business Dashboards &amp; Analytics for Growing Businesses | Dayam Insights</title>
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="apple-touch-icon" href="assets/img/touch-icon.png">
+<link rel="canonical" href="https://dayaminsights.com/dashboards.html">
+<meta name="robots" content="index,follow">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Dayam Insights">
+<meta property="og:title" content="Business Dashboards &amp; Analytics for Growing Businesses | Dayam Insights">
+<meta property="og:description" content="One screen that answers &ldquo;are we doing okay?&rdquo; — built on the systems you already have, with every number defined once and refreshed on its own.">
+<meta property="og:url" content="https://dayaminsights.com/dashboards.html">
+<meta property="og:image" content="https://dayaminsights.com/og-image.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Dayam Insights — business dashboards and analytics for growing Indian businesses.">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Business Dashboards &amp; Analytics | Dayam Insights">
+<meta name="twitter:description" content="Sales, stock, cash and customers on one live screen — fed from the systems you already use, refreshed without anyone assembling it.">
+<meta name="twitter:image" content="https://dayaminsights.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "Service",
+      "@id": "https://dayaminsights.com/dashboards.html#service",
+      "name": "Business dashboards and analytics",
+      "url": "https://dayaminsights.com/dashboards.html",
+      "serviceType": "Business intelligence dashboards and reporting automation",
+      "description": "Live management dashboards and reporting automation for growing businesses. Data is taken from the billing, stock, accounting and CRM systems a business already runs, every number is given one agreed definition, and the view refreshes on a schedule instead of being assembled by hand.",
+      "provider": { "@id": "https://dayaminsights.com/#org" },
+      "areaServed": { "@type": "Country", "name": "India" },
+      "audience": {
+        "@type": "BusinessAudience",
+        "description": "Growing Indian businesses whose reporting is assembled by hand from spreadsheets — retail and multi-store, distribution and wholesale, manufacturing, clinics and professional services."
+      },
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Dashboard projects",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "A single management dashboard for one part of the business" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Automated replacement for a recurring manual report" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "KPI monitoring with exception alerts" } }
+        ]
+      }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://dayaminsights.com/dashboards.html#crumbs",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dayaminsights.com/" },
+        { "@type": "ListItem", "position": 2, "name": "Dashboards & analytics", "item": "https://dayaminsights.com/dashboards.html" }
+      ]
+    }
+  ]
+}
+</script>
+<!-- Google Analytics 4. The generate_lead handlers in assets/js/site.js and at the bottom of the
+     page guard on typeof gtag, so they stay safe no-ops if this is ever
+     removed or blocked by the visitor. -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-24QJPZPKZR');
+</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/site.css">
+<!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
+     no-JS path is handed the finished frame. -->
+<noscript><style>
+  .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.cta-band{opacity:1!important;transform:none!important}
+  .web-visual > *{clip-path:none!important;transform:none!important}
+  .points li,.res-lines > div{opacity:1!important;transform:none!important}
+  .proc-line i{transform:scaleX(1)!important}
+  .bp .draw{stroke-dashoffset:0!important}
+</style></noscript>
+<!-- ============================================================
+     FACTS STILL TO SUPPLY  (dashboards.html)
+
+     Written only from what the business has already committed to
+     elsewhere on the site. Two things would make it convert
+     harder, and neither can be invented here.
+
+     Prices are deliberately not published on this site: every page
+     quotes on request ("Get a fixed price"). Do not add one.
+
+     1. THE TOOLS. The page says "the systems you already use"
+        because the confirmed stack is only what the schema lists
+        (Power BI, SQL, Python, REST APIs). Naming the actual BI
+        tool, and whether hosting is Power BI Service, Fabric or
+        something else, would let #included stop being generic.
+
+     2. A REAL CLIENT DASHBOARD. #proof shows an example project.
+        One screenshot with the numbers blurred replaces it.
+     ============================================================ -->
+</head>
+<body>
+<a href="#main" class="skip-link">Skip to content</a>
+<div class="scroll-progress" aria-hidden="true"><i id="scrollBar"></i></div>
+
+<!-- NAV -->
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a href="index.html" class="brand" aria-label="Dayam Insights — home">
+      <svg class="glyph mark" viewBox="0 0 283 297" width="30" height="32" aria-hidden="true">
+        <defs>
+          <mask id="markRing" maskUnits="userSpaceOnUse" x="0" y="0" width="283" height="297">
+            <path class="mk-draw" d="M263.8,155.3A129.5,129.5 0 0 0 134.5,19.5H75"/>
+            <path class="mk-draw" d="M263.8,141.7A129.5,129.5 0 0 1 134.5,278H75"/>
+          </mask>
+        </defs>
+        <rect class="mk-dot" x="0" y="0" width="48" height="48" fill="#1E7BFF"/>
+        <rect class="mk-stem" x="4" y="69" width="40" height="228" fill="currentColor"/>
+        <path class="mk-ring" mask="url(#markRing)" fill="currentColor" d="M75,0H134.5A148.5,148.5 0 0 1 134.5,297H75V259H134.5A113,110 0 0 0 134.5,39H75Z"/>
+        <rect class="mk-stem" x="75" y="69" width="39" height="228" fill="currentColor"/>
+        <path class="mk-curl" fill="currentColor" d="M95,69H137.5A79.5,79.5 0 0 1 200.4,197.2A246.2,246.2 0 0 0 158.8,107H95Z"/>
+      </svg>
+      <span class="wm">Dayam <span>Insights</span></span>
+    </a>
+    <nav class="nav-links" aria-label="Main">
+      <a href="dashboards.html" class="is-current" aria-current="page">Dashboards</a>
+      <a href="automation.html">Automation &amp; AI</a>
+      <a href="websites.html">Websites</a>
+      <a href="how-we-work.html">How we work</a>
+      <a href="faq.html">FAQ</a>
+    </nav>
+    <div class="nav-cta">
+      <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
+      <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
+        <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="nt-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="nt-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+      </button>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu" id="mobileMenu" hidden>
+  <nav class="mm-links" aria-label="Main">
+    <a href="dashboards.html" class="is-current" aria-current="page">Dashboards</a>
+    <a href="automation.html">Automation &amp; AI</a>
+    <a href="websites.html">Websites</a>
+    <a href="how-we-work.html">How we work</a>
+    <a href="faq.html">FAQ</a>
+  </nav>
+  <div class="mm-cta">
+    <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
+    <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20a%20dashboard%20for%20my%20business." target="_blank" rel="noopener" class="btn btn-ghost">Chat on WhatsApp</a>
+  </div>
+</div>
+
+<main id="main">
+
+<!-- HERO -->
+<section class="pad wrap page-hero has-video" id="top" aria-labelledby="h-dash">
+  <div class="section-head reveal">
+    <span class="eyebrow"><span class="dot"></span>Dashboards &amp; analytics</span>
+    <!-- Three masked lines for the column beside the video, on the homepage
+         hero's timing. -->
+    <h1 class="title page-title" id="h-dash">
+      <span class="ln"><span>Stop assembling</span></span>
+      <span class="ln"><span>the answer.</span></span>
+      <span class="ln"><span>Start reading it<span class="accent">.</span></span></span>
+    </h1>
+    <p>Sales, stock, cash and customers on one live screen: fed straight from the systems you already use, defined once so everyone means the same thing, and current without anybody spending Monday morning on it.</p>
+    <div class="hero-cta">
+      <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a fixed price <span class="arrow">&rarr;</span></a>
+      <a href="#questions" class="link-cta">See what we build <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+  <!-- Silent 30s 3:2 loop beside the headline, rendered from motion/dashboards.html.
+       site.js starts it (no autoplay attribute), so reduced motion and no-JS
+       keep the poster. data-start is the poster's moment in the loop, so
+       playback picks up exactly where the still is. -->
+  <figure class="hero-video">
+    <video muted loop playsinline preload="metadata" width="1620" height="1080" poster="assets/video/dashboards-hero.jpg" data-start="24.6" aria-describedby="hv-dashboards">
+      <!-- Exact codecs, so a browser that cannot decode one skips straight to the
+           next instead of trying and stalling. H.264 first: hardware-decoded
+           almost everywhere. -->
+      <source src="assets/video/dashboards-hero.mp4" type='video/mp4; codecs="avc1.640028"'>
+      <source src="assets/video/dashboards-hero.webm" type='video/webm; codecs="vp9"'>
+    </video>
+    <figcaption id="hv-dashboards" class="sr-only">A weekly report is assembled by hand, one copied number at a time, and by Wednesday two totals disagree. The same window is rebuilt as one live screen fed straight from billing, stock and the spreadsheet. Days tick past on their own, the numbers update, and when stock runs low an alert lands on the owner’s phone. Opening one bar shows the branch behind it.</figcaption>
+    <button class="hv-toggle" type="button" aria-label="Pause animation" aria-pressed="false">
+      <svg class="hv-pause" viewBox="0 0 14 14" aria-hidden="true"><rect x="2.5" y="2" width="3" height="10" fill="currentColor"/><rect x="8.5" y="2" width="3" height="10" fill="currentColor"/></svg>
+      <svg class="hv-play" viewBox="0 0 14 14" aria-hidden="true"><path d="M3.5 2l8 5-8 5z" fill="currentColor"/></svg>
+    </button>
+  </figure>
+  <!-- No .reveal here: .hero-trust carries its own entrance animation. -->
+  <div class="hero-trust">
+    <p class="ht-cap">For growing businesses whose reporting is still assembled by hand:</p>
+    <div class="hero-logos">
+      <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 9h18M5 9v11h14V9M3 9l2-5h14l2 5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Retail</span>
+      <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 20V9l6 4V9l6 4V4h6v16z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Manufacturing</span>
+      <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M2 8h11v9H2zM13 11h5l3 3v3h-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="6" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/></svg>Distribution</span>
+      <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Clinics</span>
+      <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Services</span>
+    </div>
+  </div>
+</section>
+
+<!-- PROBLEM -->
+<section class="pad wrap band" id="problem" aria-labelledby="h-problem">
+  <div class="section-head reveal">
+    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
+    <h2 class="title" id="h-problem">You are not short of numbers. You are short of the answer.</h2>
+    <p>The data already exists &mdash; it is in the billing software, the stock sheet and somebody&rsquo;s inbox. <strong>What costs you is the distance between the data and the decision</strong>. These are the four ways that distance shows up, and the four questions in the next section are, one for one, how a screen closes them.</p>
+  </div>
+  <div class="prob-grid">
+    <div class="prob reveal" data-d="1">
+      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+      <span class="pnum mono">01</span>
+      <h3>The number takes a week to assemble.</h3>
+      <p>Somebody exports, somebody pastes, somebody checks. By the time the report is circulated it describes a week you can no longer do anything about.</p>
+    </div>
+    <div class="prob reveal" data-d="2">
+      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 7h7v10H4zM13 7h7v10h-7z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M11 12h2" stroke="currentColor" stroke-width="1.9" stroke-dasharray="1 3"/></svg></span>
+      <span class="pnum mono">02</span>
+      <h3>Two people, two answers.</h3>
+      <p>Sales says one figure, accounts says another, and both are right by their own definition. Half the meeting goes on whose spreadsheet to believe.</p>
+    </div>
+    <div class="prob reveal" data-d="3">
+      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 1 0 6 8c0 6-2 7-2 7h16s-2-1-2-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10.5 19a2 2 0 0 0 3 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
+      <span class="pnum mono">03</span>
+      <h3>Nobody notices until it is expensive.</h3>
+      <p>Stock runs out, a customer goes quiet, a margin slips. It was in the data for weeks &mdash; nothing was watching, so nobody was told.</p>
+    </div>
+    <div class="prob reveal" data-d="4">
+      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.9"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M8.5 11h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
+      <span class="pnum mono">04</span>
+      <h3>You see the total, not the reason.</h3>
+      <p>Sales are down nine per cent. Which branch, which product, which week? Finding out is another day of exports, so mostly it does not get found out.</p>
+    </div>
+  </div>
+</section>
+
+<!-- THE FOUR QUESTIONS -->
+<section class="pad wrap web-show" id="questions" aria-labelledby="h-questions">
+  <div class="section-head reveal">
+    <span class="eyebrow" data-ch="01"><span class="dot"></span>What we build</span>
+    <h2 class="title" id="h-questions">Four questions one screen has to answer.</h2>
+    <p>One for each gap above. We build to these four and stop &mdash; <strong>a dashboard that answers everything gets read by nobody</strong>, and a chart that changes no decision is a chart you are paying to maintain.</p>
+  </div>
+
+  <div class="web-grid top web-block reveal-left">
+    <div class="web-copy">
+      <h3 class="title sm">One screen that answers &ldquo;are we doing okay?&rdquo;</h3>
+      <p>Right now that answer costs two phone calls, three spreadsheets and a week. We connect the systems you already use, agree what each number means, and keep the answer current on its own &mdash; daily, hourly, or the moment something crosses a line you care about.</p>
+      <ol class="jobs">
+        <li class="job"><span class="key" aria-hidden="true">1</span><div><b>Are we doing okay?</b><span>The handful of numbers that actually run the business, current.</span></div></li>
+        <li class="job"><span class="key" aria-hidden="true">2</span><div><b>Compared with what?</b><span>Last week, last month, last year &mdash; on the same screen, on one definition.</span></div></li>
+        <li class="job"><span class="key" aria-hidden="true">3</span><div><b>What needs attention?</b><span>The thing crossing a line you set, flagged before you go looking for it.</span></div></li>
+        <li class="job"><span class="key" aria-hidden="true">4</span><div><b>Why?</b><span>One step from the total to the branch, product or person behind it.</span></div></li>
+      </ol>
+    </div>
+
+    <!-- The dashboard mock from the homepage: same component, same behaviour. -->
+    <div class="web-visual" id="dashVisual">
+      <div class="dash-mock">
+        <div class="bm-bar">
+          <span class="bm-dot r"></span><span class="bm-dot y"></span><span class="bm-dot g"></span>
+          <div class="bm-url"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="11" height="11"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Business overview</span></div>
+          <span class="bm-live">&#9632; EXAMPLE</span>
+        </div>
+        <div class="dash-body">
+          <div class="dash-kpis">
+            <div class="dk">
+              <span class="dk-label">Today's sales</span>
+              <b data-count="48200" data-prefix="&#8377;" data-suffix="">&#8377;0</b>
+              <span class="dk-delta good">&#9650; 12% vs last week</span>
+            </div>
+            <div class="dk">
+              <span class="dk-label">Orders</span>
+              <b data-count="186" data-suffix="">0</b>
+              <span class="dk-delta good">&#9650; 8%</span>
+            </div>
+            <div class="dk">
+              <span class="dk-label">Low stock items</span>
+              <b data-count="5" data-suffix="">0</b>
+              <span class="dk-delta warn">Needs reorder</span>
+            </div>
+          </div>
+          <div class="dash-chart">
+            <div class="dc-bars">
+              <i style="--h:38%"></i><i style="--h:54%"></i><i style="--h:46%"></i><i style="--h:70%"></i><i style="--h:62%"></i><i style="--h:85%"></i><i style="--h:95%"></i>
+            </div>
+            <div class="dc-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="webx-start reveal">
+    <p class="lab">Where most projects start</p>
+    <div class="ws"><h4>One report eats a day a week?</h4><p>Replace that report first. It pays for itself in the time it gives back.</p></div>
+    <div class="ws"><h4>Numbers argued about in meetings?</h4><p>Agree the definitions once, then stop having the argument.</p></div>
+    <div class="ws"><h4>Found out too late, again?</h4><p>Put a line under the number and let it tell you when it is crossed.</p></div>
+    <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Build my dashboard <span class="arrow">&rarr;</span></a>
+  </div>
+</section>
+
+<!-- WHAT COMES WITH IT -->
+<section class="pad wrap band" id="included" aria-labelledby="h-included">
+  <div class="web-grid top web-block reveal-left">
+    <div class="web-copy">
+      <span class="eyebrow" data-ch="02"><span class="dot"></span>What comes with it</span>
+      <h3 class="title sm" id="h-included">Built on the systems you already have.</h3>
+      <p>Nothing here asks you to replace your billing software or move your business onto a new platform. We read what those systems already produce, agree what each number means with the people who use it, and leave the whole thing running in accounts in your name.</p>
+      <p class="pull">You keep the logins. If you stop working with us, the dashboard keeps refreshing.</p>
+      <ul class="points">
+        <li>Connected to billing, stock, CRM</li>
+        <li>Every number defined once</li>
+        <li>Refreshed on a schedule you set</li>
+        <li>Alerts when a line is crossed</li>
+        <li>Readable on a phone</li>
+        <li>Drill-down from total to cause</li>
+        <li>Written handover and a walkthrough</li>
+        <li>A fixed price, agreed before we start</li>
+      </ul>
+      <div class="cta-row">
+        <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a fixed price <span class="arrow">&rarr;</span></a>
+        <p class="example-link"><a href="faq.html#faq">Read the common questions <span class="arrow">&rarr;</span></a></p>
+      </div>
+    </div>
+
+    <div class="web-visual">
+      <div class="ai-mock">
+        <div class="bm-bar">
+          <span class="bm-dot r"></span><span class="bm-dot y"></span><span class="bm-dot g"></span>
+          <div class="bm-url"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="11" height="11"><path d="M4 7c0-1.7 3.6-3 8-3s8 1.3 8 3-3.6 3-8 3-8-1.3-8-3z" stroke="currentColor" stroke-width="1.8"/><path d="M4 7v10c0 1.7 3.6 3 8 3s8-1.3 8-3V7" stroke="currentColor" stroke-width="1.8"/><path d="M4 12c0 1.7 3.6 3 8 3s8-1.3 8-3" stroke="currentColor" stroke-width="1.8"/></svg><span>Where the numbers come from</span></div>
+          <span class="bm-live">&#9679; YOURS</span>
+        </div>
+        <div class="ai-body">
+          <div class="ai-q">
+            <span class="ai-who mono">You asked</span>
+            <p>Do we have to move off our billing software for this to work?</p>
+          </div>
+          <div class="ai-sources">
+            <span class="ai-src">Billing</span>
+            <span class="ai-src">Stock</span>
+            <span class="ai-src">Accounts</span>
+            <span class="ai-src">CRM</span>
+          </div>
+          <div class="ai-a">
+            <span class="ai-who mono">Answer</span>
+            <p>No. Wherever a system offers an export, an API or a database connection, we read from it where it is. <b>Your team carries on working exactly as they do now.</b></p>
+          </div>
+          <div class="ai-foot">
+            <span class="flow-pulse"></span>
+            Nothing to migrate &middot; <span class="mono">confirmed before quoting</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PROCESS -->
+<section class="pad wrap" id="process" aria-labelledby="h-process">
+  <div class="section-head center reveal">
+    <span class="eyebrow" data-ch="03"><span class="dot"></span>How a dashboard project runs</span>
+    <h2 class="title" id="h-process">Four steps, and you see the price before step two.</h2>
+    <p>The first conversation is short and free, and it often ends with us telling you which half of the report is not worth automating.</p>
+  </div>
+  <div class="proc-grid">
+    <div class="proc-line" aria-hidden="true"><i></i></div>
+    <div class="proc reveal" data-d="1">
+      <div class="num mono">01</div>
+      <h3>Agree</h3>
+      <p>Which decisions the screen has to serve, and what each number means. Written down, with a fixed price and a date.</p>
+      <span class="ptag mono">Week 1</span>
+    </div>
+    <div class="proc reveal" data-d="2">
+      <div class="num mono">02</div>
+      <h3>Connect</h3>
+      <p>We read your billing, stock and accounting systems where they are. If one will not talk, you hear the workaround and its cost now, not later.</p>
+      <span class="ptag mono">Week 1&ndash;2</span>
+    </div>
+    <div class="proc reveal" data-d="3">
+      <div class="num mono">03</div>
+      <h3>Build</h3>
+      <p>The view, the definitions, the refresh and the alerts. Checked against the numbers you already trust before anyone relies on it.</p>
+      <span class="ptag mono">Week 2&ndash;4</span>
+    </div>
+    <div class="proc reveal" data-d="4">
+      <div class="num mono">04</div>
+      <h3>Live</h3>
+      <p>Handed over with written instructions, in your accounts, and watched for the first weeks so the first Monday is not the test.</p>
+      <span class="ptag mono">Then yours</span>
+    </div>
+  </div>
+  <div class="mid-cta reveal">
+    <p>Most first dashboards are live inside four to six weeks.</p>
+    <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a date and a price <span class="arrow">&rarr;</span></a>
+  </div>
+</section>
+
+<!-- PROOF -->
+<section class="pad wrap band" id="proof" aria-labelledby="h-proof">
+  <div class="section-head reveal">
+    <span class="eyebrow" data-ch="04"><span class="dot"></span>Proof</span>
+    <h2 class="title" id="h-proof">The first one is usually the smallest one.</h2>
+    <p>We would rather replace one report that costs you a day a week than build a wall of charts nobody opens. <strong>The smallest useful screen, in your hands, is worth more than the complete one on a slide.</strong> Below is the shape one of these projects usually takes.</p>
+  </div>
+  <div class="res-list">
+    <article class="res wide reveal" id="retail">
+      <div class="res-copy">
+        <div class="res-meta"><span class="sector">Retail</span><span class="res-tag mono">Example project</span></div>
+        <h2 class="res-title">One view of sales and stock, refreshed daily.</h2>
+        <dl class="res-lines">
+          <div><dt>Problem</dt><dd>Weekly reporting depended on several spreadsheets, each maintained by a different person, and each with its own quiet idea of what counted as a sale.</dd></div>
+          <div><dt>Solution</dt><dd>A central sales and inventory dashboard, fed straight from billing and stock data, with the definitions agreed once and written down.</dd></div>
+          <div><dt>Outcome</dt><dd>Management gained one view of performance, refreshed daily instead of assembled weekly &mdash; and stopped arguing about whose number was right.</dd></div>
+        </dl>
+      </div>
+      <div class="res-fig" aria-hidden="true">
+      <svg class="bp" viewBox="0 0 480 320" role="img" aria-labelledby="bp-d1-t">
+        <title id="bp-d1-t">Blueprint of a sales and stock dashboard fed by billing and stock data</title>
+        <defs><pattern id="bpg-d1" width="32" height="32" patternUnits="userSpaceOnUse"><path class="bp-grid" d="M32 0H0V32"/></pattern></defs>
+        <rect width="480" height="320" fill="url(#bpg-d1)"/>
+        <rect class="g-line draw" pathLength="1" x="64" y="64" width="192" height="128" style="--i:0"/>
+        <rect class="g-line draw" pathLength="1" x="288" y="64" width="128" height="56" style="--i:1"/>
+        <rect class="g-line draw" pathLength="1" x="288" y="136" width="128" height="56" style="--i:2"/>
+        <path class="g-line draw" pathLength="1" d="M256 92H288M256 164H288" style="--i:3"/>
+        <path class="g-line draw dim" pathLength="1" d="M64 224V240M256 224V240M64 232H256" style="--i:4"/>
+        <path class="g-line draw dim" pathLength="1" d="M416 120a96 96 0 0 1-32 72" style="--i:5"/>
+        <g class="g-lbl sm"><text x="66" y="58">Module A &mdash; Sales &amp; stock dashboard</text><text x="290" y="58">Billing</text><text x="290" y="130">Stock</text><text x="160" y="254" text-anchor="middle">refresh: daily</text><text x="404" y="212" text-anchor="end">r = 96</text></g>
+        <rect class="g-sig" x="252" y="122" width="8" height="8"/>
+      </svg>
+        <span class="fig">Fig. &mdash; Dashboard</span>
+      </div>
+    </article>
+  </div>
+  <div class="cta-row reveal" data-d="4">
+    <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Build something like this <span class="arrow">&rarr;</span></a>
+  </div>
+  <p class="res-note left reveal" data-d="5">Working with us and happy to say so? A named case study here &mdash; your company, your numbers, your words &mdash; replaces the example. <a href="#contact">Tell us</a>.</p>
+</section>
+
+<!-- CONTACT -->
+<section class="pad wrap band" id="cta" aria-labelledby="h-cta">
+  <div class="cta-band reveal" id="contact">
+    <span class="eyebrow"><span class="dot"></span>Start here</span>
+    <h2 id="h-cta"><span class="ln"><span>What do you need to be able to see?</span></span></h2>
+    <p>Tell us the question you keep having to chase the answer to, and where that answer lives today. We&rsquo;ll come back with the screen we would build first, a fixed price and a date. No sales pitch, no obligation.</p>
+
+    <form class="contact-form" action="https://formsubmit.co/dayaminsights@gmail.com" method="POST">
+      <!-- FormSubmit config. Without JS the browser posts straight to FormSubmit
+           and comes back to _next; with JS site.js posts to the /ajax/ endpoint
+           and shows .cf-success in place. _honey is a bot trap: hidden from
+           people, and any submission that fills it is dropped server-side. -->
+      <input type="hidden" name="_subject" value="New dashboard enquiry from dayaminsights.com">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_next" value="https://dayaminsights.com/dashboards.html?sent=1#contact">
+      <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="cf-honey">
+      <!-- Same intent router as every other page, defaulted to what this one is
+           about. The other options stay so somebody who arrived here and needs
+           something else is not funnelled into the wrong conversation. -->
+      <label class="cf-field">
+        <span>What do you need?</span>
+        <select name="intent" id="cfIntent" data-default-label="What do you want to see, and where does it live now?" data-default-hint="e.g. sales and stock, currently spread across three spreadsheets">
+          <option value="Dashboards &amp; reporting" data-label="What do you want to see, and where does it live now?" data-hint="e.g. sales and stock, currently spread across three spreadsheets" selected>Dashboards &amp; reporting</option>
+          <option value="Workflow automation" data-label="Which repetitive job should stop?" data-hint="e.g. we re-type every order into three different sheets">Workflow automation</option>
+          <option value="An AI assistant" data-label="What should it handle for you?" data-hint="e.g. answering stock and price questions from customers">An AI assistant</option>
+          <option value="A website" data-label="What do you need the site to do?" data-hint="e.g. we get work by referral and the site has not brought an enquiry in a year">A website</option>
+          <option value="Not sure yet" data-label="What&rsquo;s the problem you&rsquo;d like solved?" data-hint="e.g. we re-type every order into three different sheets">Not sure yet &mdash; help me work it out</option>
+        </select>
+      </label>
+      <div class="cf-row">
+        <label class="cf-field">
+          <span>Your name</span>
+          <input type="text" name="name" required autocomplete="name">
+        </label>
+        <label class="cf-field">
+          <span>Business name</span>
+          <input type="text" name="business" required autocomplete="organization">
+        </label>
+      </div>
+      <div class="cf-row">
+        <label class="cf-field">
+          <span>Phone or WhatsApp</span>
+          <input type="tel" name="phone" required autocomplete="tel" inputmode="tel">
+        </label>
+        <label class="cf-field">
+          <span>Systems you run <em>(if you know)</em></span>
+          <input type="text" name="systems" autocomplete="off" placeholder="e.g. Tally, Excel, a CRM">
+        </label>
+      </div>
+      <label class="cf-field cf-message">
+        <span>What do you want to see, and where does it live now?</span>
+        <textarea name="message" rows="3" required placeholder="e.g. sales and stock, currently spread across three spreadsheets"></textarea>
+      </label>
+      <div class="cf-actions">
+        <button type="submit" class="btn btn-primary cf-submit">Tell us what you need <span class="arrow">&rarr;</span></button>
+        <a class="cf-alt" href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20a%20dashboard%20for%20my%20business." target="_blank" rel="noopener">Prefer WhatsApp? Let&rsquo;s talk <span class="arrow">&rarr;</span></a>
+      </div>
+      <p class="cf-note" aria-live="polite">We reply within one working day. No sales pitch, no obligation, and we don&rsquo;t add you to a mailing list.</p>
+    </form>
+
+    <div class="cf-success" role="status" aria-live="polite" hidden tabindex="-1">
+      <span class="eyebrow"><span class="dot"></span>Got it</span>
+      <h3>Thanks &mdash; we&rsquo;ll read this today.</h3>
+      <p>Expect a reply within one working day with the screen we would build first and what it would cost. In a hurry? <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%20just%20sent%20the%20form%20on%20your%20site." target="_blank" rel="noopener">Message us on WhatsApp <span class="arrow">&rarr;</span></a></p>
+    </div>
+
+    <div class="cta-alt">
+      <span class="cta-alt-label">Or reach us directly</span>
+      <div class="cta-alt-links">
+        <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20a%20dashboard%20for%20my%20business." target="_blank" rel="noopener">WhatsApp +91 78776 40693</a>
+        <a href="mailto:dayaminsights@gmail.com">dayaminsights@gmail.com</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- WHAT ELSE — after the close on purpose: the cross-sell has no business
+     interrupting the form. -->
+<section class="pad tight wrap" id="more" aria-labelledby="h-more">
+  <div class="mid-cta more-strip reveal">
+    <div>
+      <h2 id="h-more">Seeing the problem is the cheap half.</h2>
+      <p>A dashboard tells you the re-typing is costing you a day a week. Stopping it is the other half of what we do.</p>
+    </div>
+    <div class="more-links">
+      <a href="automation.html" class="link-cta">Automation &amp; AI <span class="arrow">&rarr;</span></a>
+      <a href="websites.html" class="link-cta">Websites <span class="arrow">&rarr;</span></a>
+    </div>
+  </div>
+</section>
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <a href="index.html" class="brand" aria-label="Dayam Insights — home">
+          <img class="glyph" src="assets/img/logo-white.png" alt="" width="30" height="32">
+          <span class="wm">Dayam <span>Insights</span></span>
+        </a>
+        <p>We help growing businesses turn messy, manual operations into connected systems — so the business gets easier to understand, operate and scale.</p>
+      </div>
+      <div class="foot-col">
+        <h2>Solutions</h2>
+        <a href="dashboards.html">Dashboards &amp; analytics</a>
+        <a href="automation.html">Workflow automation</a>
+        <a href="automation.html#ai">AI assistants</a>
+        <a href="websites.html">Websites &amp; digital</a>
+      </div>
+      <div class="foot-col">
+        <h2>Built for</h2>
+        <span>Retail &amp; multi-store</span>
+        <span>Manufacturing</span>
+        <span>Distribution &amp; wholesale</span>
+        <span>Clinics</span>
+        <span>Professional services</span>
+      </div>
+      <div class="foot-col">
+        <h2>Company</h2>
+        <a href="how-we-work.html">How we work</a>
+        <a href="faq.html">FAQ</a>
+        <a href="#contact">Talk to us</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; <span id="yr"></span> Dayam Insights. All rights reserved.</span>
+      <span class="mono">Data &middot; Automation &middot; AI &middot; Websites</span>
+    </div>
+  </div>
+</footer>
+
+<script src="assets/js/site.js"></script>
+</body>
+</html>

@@ -248,6 +248,52 @@
     }
   }, true);
 
+  // ===== Hero videos (service pages) =====
+  // No autoplay attribute: the script starts each loop, so reduced motion and
+  // no-JS both keep the poster — which is the finished frame, so nothing is
+  // lost. A loop pauses while it is off screen, and the button is the pause
+  // control WCAG 2.2.2 asks for on motion longer than five seconds. Reduced
+  // motion starts paused but can still choose to play.
+  Array.prototype.forEach.call(document.querySelectorAll('.hero-video'), function(fig){
+    var v = fig.querySelector('video'), btn = fig.querySelector('.hv-toggle');
+    if (!v) return;
+    v.muted = true;                 // a property, not just the attribute, or some browsers refuse to start it
+    // The poster is a moment from the middle of the loop, so playback starts
+    // there instead of at 0 — otherwise the still would jump to a different
+    // frame the instant the video took over. A seek only sticks once the
+    // browser has the metadata (Edge silently drops one set earlier), so it
+    // happens on the way into the first play.
+    var from = parseFloat(v.getAttribute('data-start')) || 0, seeked = !(from > 0);
+    var held = reduce, visible = false;
+    function sync(){
+      fig.classList.toggle('is-paused', held);
+      if (btn){
+        btn.setAttribute('aria-pressed', String(held));
+        btn.setAttribute('aria-label', held ? 'Play animation' : 'Pause animation');
+      }
+    }
+    function start(){
+      if (!seeked){
+        if (v.readyState >= 1){ v.currentTime = from; seeked = true; }
+        else {
+          v.addEventListener('loadedmetadata', function(){ v.currentTime = from; seeked = true; if (!held && visible) start(); }, { once: true });
+          return;
+        }
+      }
+      var pr = v.play();
+      // Autoplay refused (data saver, power mode): show the play control rather than a frozen frame with a pause button.
+      if (pr && pr.catch) pr.catch(function(){ held = true; sync(); });
+    }
+    function apply(){ if (!held && visible) start(); else v.pause(); }
+    if ('IntersectionObserver' in window){
+      new IntersectionObserver(function(entries){
+        entries.forEach(function(e){ visible = e.isIntersecting; apply(); });
+      }, { threshold: .2 }).observe(fig);
+    } else { visible = true; apply(); }
+    if (btn) btn.addEventListener('click', function(){ held = !held; sync(); apply(); });
+    sync();
+  });
+
   // ===== Mobile menu =====
   var navToggle = document.getElementById('navToggle');
   var mobileMenu = document.getElementById('mobileMenu');
@@ -275,7 +321,7 @@
     // Crossing back to desktop width with the menu open would otherwise
     // strand body{overflow:hidden} on a desktop layout.
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 900 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
+      if (window.innerWidth > 1023 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
     }, {passive:true});
   }
 
@@ -288,6 +334,39 @@
   // the _next field — so the form is never a dead end.
   var contactForm = document.querySelector('.contact-form');
   var contactDone = document.querySelector('.cf-success');
+
+  // ===== Contact form: the intent router =====
+  // The last field used to ask one question ("what takes the most time right
+  // now?") that only an operations visitor could answer. The select rewrites
+  // that question — label and placeholder — to match what the visitor came
+  // for, so the form never asks somebody to describe a problem they do not
+  // have. Any CTA carrying data-intent presets the select before the jump,
+  // which keeps the promise of "Build my website" intact on arrival.
+  var cfIntent = document.getElementById('cfIntent');
+  var cfMessage = contactForm && contactForm.querySelector('.cf-message');
+  function applyIntent(){
+    if (!cfIntent || !cfMessage) return;
+    var opt = cfIntent.options[cfIntent.selectedIndex];
+    if (!opt) return;
+    var span = cfMessage.querySelector('span');
+    var area = cfMessage.querySelector('textarea');
+    if (span) span.textContent = opt.getAttribute('data-label') || cfIntent.getAttribute('data-default-label') || span.textContent;
+    if (area) area.placeholder = opt.getAttribute('data-hint') || cfIntent.getAttribute('data-default-hint') || area.placeholder;
+  }
+  if (cfIntent){
+    cfIntent.addEventListener('change', applyIntent);
+    // A select can survive a reload with the visitor's last choice.
+    applyIntent();
+    document.addEventListener('click', function(e){
+      var link = e.target.closest('a[data-intent]');
+      if (!link) return;
+      var want = link.getAttribute('data-intent');
+      for (var i = 0; i < cfIntent.options.length; i++){
+        if (cfIntent.options[i].value === want){ cfIntent.selectedIndex = i; applyIntent(); break; }
+      }
+    }, true);
+  }
+
   function showContactDone(){
     if (!contactForm || !contactDone) return;
     contactForm.hidden = true;
@@ -318,7 +397,7 @@
         return r.ok ? r.json() : Promise.reject(new Error('HTTP ' + r.status));
       }).then(function(){
         if (typeof window.gtag === 'function'){
-          window.gtag('event', 'generate_lead', { method: 'form' });
+          window.gtag('event', 'generate_lead', { method: 'form', intent: cfIntent ? cfIntent.value : '' });
         }
         showContactDone();
       }).catch(function(){

@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Motion source — dashboards hero</title>
+<!-- Source for assets/video/dashboards-hero.{mp4,webm,jpg}. Render with:
+       node motion/render.js dashboards
+     Open this file in a browser to watch it play live.
+
+     One loop, told as a before and after:
+       0–2.5    the camera pulls back out of a blue square — the answer, buried
+                in a spreadsheet cell
+       2.5–7.4  Monday: a cursor copies numbers by hand from four sources
+                (billing, stock, Excel, WhatsApp) into a weekly report, cell by
+                cell; the day ticks over to Tuesday, then Wednesday; two totals
+                disagree ("Two answers.")
+       7.4–10.3 a navy wipe; the same window comes back as one live screen, and
+                the four sources are wired straight into it
+       10.3–21.5 days tick past on their own: pulses run up the source wires,
+                the numbers update, bars rise; the moment a number crosses a
+                line, an alert drops onto the owner's phone — then a bar is
+                opened and the reason behind it is right there
+       21.8–26  the camera pushes in on the phone (the poster)
+       26–30    the camera dives into the newest alert's blue square until it
+                fills the frame — which is frame 0, so the loop has no seam
+
+     Same rig as motion/websites.html: a 3:2 stage (1080×720), the desktop
+     window drawn at 530×340 and scaled ×1.28 through #winG, the owner's phone
+     standing beside it, a little two-layer parallax, one paused GSAP timeline
+     that render(t) seeks, so every frame is exact. Anything outside #winG that
+     has to meet the window (the cursor, the blue cell, the wire) goes through
+     wx()/wy(). -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#F8FAFC}
+  svg{display:block;width:1080px;height:720px;font-family:Inter,sans-serif}
+  svg *{vector-effect:non-scaling-stroke}
+  .mono{letter-spacing:1.5px;font-weight:600}
+  .num{font-variant-numeric:tabular-nums}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="lib.js"></script>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 1080 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#07162D" stroke-opacity=".05" stroke-width="1"/>
+    </pattern>
+    <clipPath id="winClip"><rect x="70" y="160" width="530" height="310"/></clipPath>
+    <clipPath id="phoneClip"><rect x="831" y="269" width="158" height="260"/></clipPath>
+    <filter id="lift" x="-30%" y="-20%" width="160%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#07162D" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="1080" height="720" fill="#F8FAFC"/>
+
+  <g id="world">
+    <rect id="gridbg" x="-4000" y="-4000" width="9080" height="8720" fill="url(#grid)"/>
+
+    <g id="rest">
+    <g id="winG" transform="translate(15.4 -26.4) scale(1.28)">
+    <!-- ===== The window (window space: 530×340 at 70,130) ===== -->
+    <rect x="70" y="130" width="530" height="340" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5"/>
+    <line x1="70" y1="160" x2="600" y2="160" stroke="#CBD5E1"/>
+    <rect x="84" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <rect x="96" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <rect x="108" y="141" width="8" height="8" fill="#CBD5E1"/>
+    <text id="winTitle" x="130" y="149" font-size="10" font-weight="500" fill="#475569">Weekly report.xlsx</text>
+
+    <g clip-path="url(#winClip)">
+      <!-- BEFORE: the report, assembled by hand -->
+      <g id="before">
+        <g id="gridLines" stroke="#E5EAF2"></g>
+        <g id="gridHead" font-size="9" class="mono" fill="#475569"></g>
+        <g id="gridRows" font-size="10" font-weight="500" fill="#334155"></g>
+        <g id="cells" font-size="11" font-weight="600" fill="#07162D" class="num"></g>
+        <text x="88" y="446" font-size="10" font-weight="700" fill="#07162D">Total</text>
+        <text id="tot1" x="318" y="446" font-size="12" font-weight="700" fill="#07162D" class="num" opacity="0">4,21,300</text>
+        <text id="tot2" x="418" y="446" font-size="12" font-weight="700" fill="#07162D" class="num" opacity="0">3,90,000</text>
+        <g id="disagree" opacity="0">
+          <path d="M308 430 h190 v24 h-190 z" fill="none" stroke="#07162D" stroke-width="1.3" stroke-dasharray="3 3"/>
+          <text x="403" y="470" font-size="10.5" font-weight="600" fill="#07162D" text-anchor="middle">Two answers.</text>
+        </g>
+      </g>
+
+      <!-- AFTER: one live screen -->
+      <g id="after">
+        <g class="ln">
+          <text x="88" y="188" font-size="14" font-weight="700" fill="#07162D" letter-spacing="-.2">Business overview</text>
+          <rect x="228" y="176" width="42" height="16" fill="none" stroke="#1E7BFF"/>
+          <text x="249" y="187.5" font-size="8" class="mono" fill="#1E7BFF" text-anchor="middle">LIVE</text>
+          <text id="dayLbl" x="582" y="188" font-size="10" class="mono" fill="#475569" text-anchor="end">MON</text>
+        </g>
+        <g class="ln" id="kpis">
+          <g><rect x="88" y="204" width="152" height="66" fill="#F8FAFC" stroke="#E5EAF2"/><text x="100" y="222" font-size="8.5" class="mono" fill="#475569">TODAY'S SALES</text><text id="k1" x="100" y="250" font-size="20" font-weight="700" fill="#07162D" class="num">₹0</text></g>
+          <g><rect x="252" y="204" width="152" height="66" fill="#F8FAFC" stroke="#E5EAF2"/><text x="264" y="222" font-size="8.5" class="mono" fill="#475569">ORDERS</text><text id="k2" x="264" y="250" font-size="20" font-weight="700" fill="#07162D" class="num">0</text></g>
+          <g><rect id="k3box" x="416" y="204" width="166" height="66" fill="#F8FAFC" stroke="#E5EAF2"/><text x="428" y="222" font-size="8.5" class="mono" fill="#475569">LOW STOCK ITEMS</text><text id="k3" x="428" y="250" font-size="20" font-weight="700" fill="#07162D" class="num">0</text><text id="k3tag" x="570" y="250" font-size="9" font-weight="600" fill="#1E7BFF" text-anchor="end" opacity="0">Needs reorder</text></g>
+        </g>
+        <g class="ln" id="chart">
+          <text x="88" y="298" font-size="8.5" class="mono" fill="#475569">SALES BY DAY</text>
+          <line x1="88" y1="440" x2="582" y2="440" stroke="#CBD5E1"/>
+          <g id="bars"></g>
+          <g id="barLbl" font-size="8.5" class="mono" fill="#475569" text-anchor="middle"></g>
+        </g>
+        <!-- drill-down: the Tuesday bar opened into its branches -->
+        <g id="drill" opacity="0">
+          <rect x="236" y="296" width="282" height="128" fill="#FFFFFF" stroke="#07162D" filter="url(#lift)"/>
+          <text x="250" y="316" font-size="9" class="mono" fill="#475569">TUESDAY · BY BRANCH</text>
+          <g id="dbars"></g>
+          <g id="dlbl" font-size="9.5" font-weight="500" fill="#334155"></g>
+        </g>
+      </g>
+
+      <rect id="wipe" x="70" y="160" width="0" height="310" fill="#07162D"/>
+    </g>
+
+    <!-- ===== The four sources: the same four, before and after ===== -->
+    <g id="sources"></g>
+    <g id="srcWires" fill="none" stroke="#07162D" stroke-width="1.2" opacity="0"></g>
+    </g>
+    </g>
+
+    <text x="1050" y="40" font-size="9" class="mono" fill="#94A3B8" text-anchor="end">■ EXAMPLE</text>
+
+    <!-- ===== The owner's phone ===== -->
+    <g id="phoneLayer">
+      <g id="phone">
+        <rect x="830" y="220" width="160" height="310" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5" filter="url(#lift)"/>
+        <rect x="899" y="229" width="22" height="4" fill="#CBD5E1"/>
+        <text x="842" y="256" font-size="9" class="mono" fill="#475569">ALERTS</text>
+        <text id="pCnt" x="978" y="259" font-size="18" font-weight="700" fill="#07162D" text-anchor="end" class="num">0</text>
+        <line x1="840" y1="267" x2="980" y2="267" stroke="#E5EAF2"/>
+        <g id="cards" clip-path="url(#phoneClip)"></g>
+      </g>
+      <text x="910" y="550" font-size="9" class="mono" fill="#334155" text-anchor="middle">YOUR PHONE</text>
+    </g>
+
+    <g id="crowdG"></g>
+    <path id="wire" fill="none" stroke="#07162D" stroke-width="1.2" stroke-dasharray="3 4" opacity="0"/>
+    <rect id="sig" width="8" height="8" fill="#1E7BFF" opacity="0"/>
+    <g id="pulses"></g>
+
+    <!-- the cursor, and the cell it carries -->
+    <g id="carry" opacity="0"><rect x="-26" y="-9" width="52" height="18" fill="#FFFFFF" stroke="#1E7BFF" stroke-width="1.3"/><text id="carryTx" x="0" y="4" font-size="10" font-weight="600" fill="#07162D" text-anchor="middle" class="num"></text></g>
+    <g id="cur" opacity="0"><path d="M0 0 L0 21 L5.6 15.6 L9.8 24.4 L13.4 22.8 L9.3 14.3 L16.4 14.3 Z" fill="#07162D" stroke="#FFFFFF" stroke-width="1.5" stroke-linejoin="round"/></g>
+  </g>
+
+  <!-- ===== HUD ===== -->
+  <g id="hud" opacity="0">
+    <text x="30" y="40" font-size="10" class="mono" fill="#475569">DAY</text>
+    <text id="hDay" x="30" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">MON</text>
+    <line x1="168" y1="30" x2="168" y2="78" stroke="#CBD5E1"/>
+    <text x="186" y="40" font-size="10" class="mono" fill="#475569">ALERTS</text>
+    <text id="hAl" x="186" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">0</text>
+  </g>
+</svg>
+
+<script>
+(function(){
+  var $ = M.$, set = M.set, clamp = M.clamp, lerp = M.lerp, p = M.p;
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent, text){ var e = document.createElementNS(NS, tag); set(e, attrs); if (text != null) e.textContent = text; parent.appendChild(e); return e; }
+  var fmt = new Intl.NumberFormat('en-IN');
+  var E = { p3o: gsap.parseEase('power3.out'), p3io: gsap.parseEase('power3.inOut'), p2o: gsap.parseEase('power2.out') };
+  gsap.defaults({ ease: 'power3.out', lazy: false });
+
+  var DUR = 30, CX = 540, CY = 360, ZOOM = 140;
+  var W = { k: 1.28, tx: 15.4, ty: -26.4 };
+  var wx = function(x){ return x * W.k + W.tx; }, wy = function(y){ return y * W.k + W.ty; };
+  var WIDE = { s: 1, fx: 540, fy: 362 };
+  var PHONE_CAM = { s: 2.0, fx: 910, fy: 385 };
+  var CARD = { x: 840, top: 274, step: 56, h: 48 };
+  var DIVE = { x: 848 + 4, y: CARD.top + 13 + 4 };
+  $('wire').setAttribute('d', 'M' + wx(598).toFixed(1) + ' ' + wy(258).toFixed(1) + ' C 800 ' + wy(258).toFixed(1) + ', 795 291, 830 291');
+  var DAYS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'];
+
+  // ----- the report grid (before) -----
+  var COLS = ['MON', 'TUE', 'WED', 'THU', 'FRI', 'SAT', 'SUN'], ROWS = ['Sales', 'Orders', 'Stock', 'Cash'];
+  var GX = 150, GY = 196, CW = 62, RH = 46;
+  (function(){
+    for (var r = 0; r <= ROWS.length; r++) el('line', { x1: 88, y1: GY + r * RH, x2: 582, y2: GY + r * RH }, $('gridLines'));
+    for (var c = 0; c <= COLS.length; c++) el('line', { x1: GX + c * CW, y1: GY - 18, x2: GX + c * CW, y2: GY + ROWS.length * RH }, $('gridLines'));
+    COLS.forEach(function(d, i){ el('text', { x: GX + i * CW + CW / 2, y: GY - 5, 'text-anchor': 'middle' }, $('gridHead'), d); });
+    ROWS.forEach(function(r, i){ el('text', { x: 88, y: GY + i * RH + RH / 2 + 4 }, $('gridRows'), r); });
+  })();
+  // The copies the cursor makes: [source, row, col, value]. Slow, one at a time.
+  var COPIES = [
+    { src: 0, r: 0, c: 0, v: '48,200', t: 2.7 },
+    { src: 1, r: 2, c: 0, v: '1,208',  t: 3.45 },
+    { src: 2, r: 1, c: 0, v: '186',    t: 4.2 },
+    { src: 0, r: 0, c: 1, v: '51,900', t: 4.95 },
+    { src: 3, r: 3, c: 1, v: '2.1L',   t: 5.7 },
+    { src: 1, r: 2, c: 2, v: '1,190',  t: 6.4 }
+  ];
+  var cellEls = COPIES.map(function(k){ return el('text', { x: GX + k.c * CW + CW / 2, y: GY + k.r * RH + RH / 2 + 4, 'text-anchor': 'middle', opacity: 0 }, $('cells'), k.v); });
+
+  // ----- the four sources -----
+  var SRC = [
+    { name: 'Billing',  val: '₹48,200', x: 70 },
+    { name: 'Stock',    val: '1,208',   x: 182 },
+    { name: 'Sales.xlsx', val: '186',   x: 294 },
+    { name: 'WhatsApp', val: '"3.9L?"', x: 406 }
+  ];
+  SRC.forEach(function(s){
+    var g = el('g', {}, $('sources'));
+    el('rect', { x: s.x, y: 494, width: 100, height: 56, fill: '#FFFFFF', stroke: '#07162D', 'stroke-width': 1.3 }, g);
+    el('text', { x: s.x + 10, y: 511, 'font-size': 8.5, class: 'mono', fill: '#475569' }, g, s.name.toUpperCase());
+    el('text', { x: s.x + 10, y: 536, 'font-size': 13, 'font-weight': 700, fill: '#07162D', class: 'num' }, g, s.val);
+    s.cx = s.x + 50; s.cy = 522;
+    // After the turn each source is wired straight into the screen.
+    s.wire = el('path', { d: 'M' + s.cx + ' 494 V 470', 'stroke-dasharray': '3 4' }, $('srcWires'));
+    s.pulse = el('rect', { width: 7, height: 7, fill: '#1E7BFF', opacity: 0 }, $('pulses'));
+  });
+
+  // ----- the dashboard (after) -----
+  var BARX = 118, BARW = 44, BARGAP = 66, BAR_BASE = 440, BAR_MAX = 118;
+  var BARH = [.38, .30, .46, .70, .62, .85, .95];            // Tuesday is the dip that gets opened
+  var barEls = BARH.map(function(h, i){
+    el('text', { x: BARX + i * BARGAP + BARW / 2, y: 454 }, $('barLbl'), DAYS[i].slice(0, 1));
+    return el('rect', { x: BARX + i * BARGAP, y: BAR_BASE, width: BARW, height: 0, fill: i === 1 ? '#07162D' : '#07162D' }, $('bars'));
+  });
+  var BRANCH = [['Jaipur', .74], ['Ajmer', .32], ['Online', .58]];
+  var dbarEls = BRANCH.map(function(b, i){
+    el('text', { x: 250, y: 340 + i * 28 }, $('dlbl'), b[0]);
+    return el('rect', { x: 308, y: 330 + i * 28, width: 0, height: 14, fill: i === 1 ? '#1E7BFF' : '#07162D' }, $('dbars'));
+  });
+  var dtag = el('text', { x: 504, y: 369, 'font-size': 9, 'font-weight': 600, fill: '#1E7BFF', 'text-anchor': 'end', opacity: 0 }, $('drill'), '▼ 14% vs last Tue');
+
+  // ----- alerts to the phone -----
+  var ALERTS = [
+    { t: 13.0, a: 'Low stock · 5 items',     b: 'Needs reorder · just now' },
+    { t: 15.6, a: 'Tuesday down 14%',        b: 'Ajmer branch · just now' },
+    { t: 17.7, a: 'Cash in · ₹1,42,400',     b: 'Matched to invoice · just now' },
+    { t: 19.2, a: 'Reorder placed',          b: '12mm sheet · 40 units' },
+    { t: 20.3, a: 'Best Saturday yet',  b: '₹61,400 · just now' },
+    { t: 21.15, a: 'Low stock · 2 items',    b: 'Needs reorder · just now' }
+  ];
+  var wire = $('wire'), wireLen = wire.getTotalLength();
+  var CARDS = ALERTS.map(function(al){
+    var g = el('g', { opacity: 0 }, $('cards'));
+    el('rect', { x: CARD.x, y: 0, width: 140, height: CARD.h, fill: '#FFFFFF', stroke: '#07162D' }, g);
+    var bar = el('rect', { x: CARD.x, y: 0, width: 3, height: CARD.h, fill: '#1E7BFF', opacity: 0 }, g);
+    el('rect', { x: 848, y: 13, width: 8, height: 8, fill: '#1E7BFF' }, g);
+    el('text', { x: 863, y: 21, 'font-size': 11, 'font-weight': 600, fill: '#07162D' }, g, al.a);
+    el('text', { x: 863, y: 36, 'font-size': 8.5, fill: '#475569' }, g, al.b);
+    return { g: g, bar: bar };
+  });
+
+  // The blue square the loop opens inside: the first number the cursor pastes.
+  var V0 = { x: wx(GX + CW / 2) - 4, y: wy(GY + RH / 2) - 4 };
+  var v0 = el('rect', { x: V0.x, y: V0.y, width: 8, height: 8, fill: '#1E7BFF' }, $('crowdG'));
+
+  // ----- timeline -----
+  var S = { pull: 0, hud: 0, lean: 0, drift: 0, phone: 0, dive: 0, wipeIn: 0, wipeOut: 0, day: 0, live: 0, drill: 0, k1: 0, k2: 0, k3: 0 };
+  var tl = gsap.timeline({ paused: true });
+  tl.to(S, { pull: 1, duration: 2.5, ease: 'expo.out' }, .1)
+    .to(S, { hud: 1, duration: .9 }, 1.7)
+    .to(S, { day: 2, duration: 4.4, ease: 'none' }, 2.6)            // MON → WED by hand
+    .to(S, { lean: 1, duration: 1.2, ease: 'power3.inOut' }, 3.0)
+    .to(S, { lean: 0, duration: 1.2, ease: 'power3.inOut' }, 6.1)
+    .to('#tot1', { opacity: 1, duration: .3 }, 6.5)
+    .to('#tot2', { opacity: 1, duration: .3 }, 6.8)
+    .to('#disagree', { opacity: 1, duration: .4 }, 7.0)
+    .to(S, { wipeIn: 1, duration: .55, ease: 'power4.inOut' }, 7.4)
+    .set('#before', { opacity: 0 }, 7.96)
+    .to(S, { wipeOut: 1, duration: .6, ease: 'power4.inOut' }, 8.05)
+    .fromTo('#after .ln', { opacity: 0, y: 12, filter: 'blur(6px)' },
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .12 }, 8.45)
+    .to('#srcWires', { opacity: .55, duration: .6 }, 9.3)
+    .to('#wire', { opacity: .55, duration: .6 }, 10.2)
+    .set(S, { day: 0 }, 10.3)
+    .to(S, { day: 13, duration: 11.2, ease: 'power2.in' }, 10.3)     // two weeks tick past on their own, quickening
+    .to(S, { live: 1, duration: 11.2, ease: 'none' }, 10.3)
+    .to(S, { drift: 1, duration: 11, ease: 'sine.inOut' }, 10.5)
+    .to(S, { k1: 48200, duration: 1.4, ease: 'power2.out' }, 10.6)
+    .to(S, { k2: 186, duration: 1.4, ease: 'power2.out' }, 10.7)
+    .to(S, { k3: 5, duration: 1.2, ease: 'power2.out' }, 11.6)
+    .to(S, { drill: 1, duration: .7, ease: 'power4.out' }, 14.5)
+    .to(S, { drill: 0, duration: .5, ease: 'power3.in' }, 17.2)
+    .to(S, { k1: 61400, duration: .8, ease: 'power2.out' }, 19.6)
+    .to(S, { k2: 231, duration: .8, ease: 'power2.out' }, 19.7)
+    .to(S, { k3: 2, duration: .5, ease: 'power2.out' }, 20.8)
+    .to(S, { hud: 0, duration: .6 }, 21.7)
+    .to(S, { phone: 1, duration: 2, ease: 'power3.inOut' }, 21.8)
+    .to(S, { dive: 1, duration: 3.65, ease: 'power2.in' }, 26.1)
+    .set({}, {}, DUR);
+
+  function cam(s, fx, fy){ $('world').setAttribute('transform', 'translate(' + CX + ' ' + CY + ') scale(' + s.toFixed(4) + ') translate(' + (-fx).toFixed(3) + ' ' + (-fy).toFixed(3) + ')'); }
+  function camAt(s, qx, qy, sx, sy){ cam(s, qx - (sx - CX) / s, qy - (sy - CY) / s); }
+
+  // The cursor's copy routine: to the source, pick up, carry to the cell, drop.
+  function cursorAt(t){
+    for (var i = 0; i < COPIES.length; i++) {
+      var k = COPIES[i], t0 = k.t - .55, s = SRC[k.src];
+      var cx = wx(GX + k.c * CW + CW / 2), cy = wy(GY + k.r * RH + RH / 2);
+      if (t >= t0 && t < k.t + .2) {
+        var q = p(t, t0, k.t), e = E.p3io(q);
+        var carrying = q > .12 && q < .96;
+        return { x: lerp(wx(s.cx), cx, e), y: lerp(wy(s.cy), cy, e) - Math.sin(e * Math.PI) * 26, carry: carrying, txt: k.v, o: 1 };
+      }
+    }
+    // Between copies the cursor waits at the last source it used.
+    return null;
+  }
+
+  function render(t){
+    t = ((t % DUR) + DUR) % DUR;
+    tl.seek(t, true);
+
+    // ----- camera -----
+    var s = lerp(WIDE.s, 1.1, S.lean), fx = lerp(WIDE.fx, 512, S.lean), fy = lerp(WIDE.fy, 372, S.lean);
+    s *= 1 + .05 * S.drift; fx += 30 * S.drift;
+    s = lerp(s, PHONE_CAM.s, S.phone); fx = lerp(fx, PHONE_CAM.fx, S.phone); fy = lerp(fy, PHONE_CAM.fy, S.phone);
+    if (S.pull < 1) {
+      var qx = V0.x + 4, qy = V0.y + 4, z = S.pull, sz = Math.exp(lerp(Math.log(ZOOM), Math.log(s), z));
+      camAt(sz, qx, qy, lerp(CX, CX + s * (qx - fx), z), lerp(CY, CY + s * (qy - fy), z));
+    } else if (S.dive > 0) {
+      var z2 = S.dive, sd = Math.exp(lerp(Math.log(s), Math.log(ZOOM), z2));
+      camAt(sd, DIVE.x, DIVE.y, lerp(CX + s * (DIVE.x - fx), CX, z2), lerp(CY + s * (DIVE.y - fy), CY, z2));
+    } else cam(s, fx, fy);
+
+    var par = (S.pull >= 1 && S.dive === 0) ? (1 - S.phone) : 0;
+    var dx = (fx - WIDE.fx) * par, dy = (fy - WIDE.fy) * par;
+    $('phoneLayer').setAttribute('transform', 'translate(' + (-dx * .16).toFixed(2) + ' ' + (-dy * .16).toFixed(2) + ')');
+    $('gridbg').setAttribute('transform', 'translate(' + (dx * .12).toFixed(2) + ' ' + (dy * .12).toFixed(2) + ')');
+    var recede = 1 - .78 * S.phone;
+    $('rest').setAttribute('opacity', recede.toFixed(3));
+    $('crowdG').setAttribute('opacity', recede.toFixed(3));
+    set($('wipe'), { x: 70 + 530 * S.wipeOut, width: 530 * Math.max(0, S.wipeIn - S.wipeOut) });
+
+    // ----- the blue square: the first pasted number, then it becomes that cell -----
+    var rebuilt = t >= 7.96;
+    $('winTitle').textContent = rebuilt ? 'Business overview' : 'Weekly report.xlsx';
+    v0.setAttribute('opacity', rebuilt ? 0 : (t < COPIES[0].t ? 1 : 0));
+    cellEls.forEach(function(c, i){ c.setAttribute('opacity', t >= COPIES[i].t ? 1 : 0); });
+    cellEls[0].setAttribute('fill', '#1E7BFF');
+
+    // ----- cursor and the cell it carries -----
+    var cu = (!rebuilt && t > 2.1) ? cursorAt(t) : null;
+    if (cu) {
+      set($('cur'), { opacity: 1, transform: 'translate(' + cu.x.toFixed(2) + ' ' + cu.y.toFixed(2) + ')' });
+      $('carryTx').textContent = cu.txt;
+      set($('carry'), { opacity: cu.carry ? 1 : 0, transform: 'translate(' + (cu.x + 30).toFixed(2) + ' ' + (cu.y - 14).toFixed(2) + ')' });
+    } else { $('cur').setAttribute('opacity', 0); $('carry').setAttribute('opacity', 0); }
+
+    // ----- days -----
+    var dayIdx = Math.min(6, Math.floor(S.day) % 7), weeks = Math.floor(S.day / 7);
+    $('hDay').textContent = DAYS[dayIdx];
+    $('dayLbl').textContent = DAYS[dayIdx];
+
+    // ----- after: pulses up the source wires on each day tick, bars rising with the days -----
+    var frac = S.day - Math.floor(S.day);
+    SRC.forEach(function(sr, i){
+      var q = rebuilt && S.live > 0 ? p(frac, 0, .55) : 0;
+      var on = q > 0 && q < 1;
+      set(sr.pulse, { x: wx(sr.cx) - 3.5, y: wy(494 - 24 * E.p2o(q)) - 3.5, opacity: on ? 1 : 0 });
+    });
+    barEls.forEach(function(b, i){
+      var target = BARH[i] * BAR_MAX;
+      var grown = (rebuilt && S.live > 0) ? clamp(S.day - i, 0, 1) : 0;   // week one: bars rise one per day
+      if (weeks >= 1) grown = 1;
+      var h = target * E.p3o(grown);
+      set(b, { y: (BAR_BASE - h).toFixed(2), height: h.toFixed(2), fill: (S.drill > 0 && i === 1) ? '#1E7BFF' : '#07162D' });
+    });
+    $('k1').textContent = '₹' + fmt.format(Math.round(S.k1));
+    $('k2').textContent = fmt.format(Math.round(S.k2));
+    $('k3').textContent = String(Math.round(S.k3));
+    // The low-stock KPI crosses its line and signals — the one live thing in the frame.
+    var k3hot = t >= 12.0 && t < 13.0;
+    $('k3box').setAttribute('stroke', k3hot || (t >= 20.9 && t < 21.15) ? '#1E7BFF' : '#E5EAF2');
+    $('k3tag').setAttribute('opacity', p(t, 11.9, 12.2).toFixed(3));
+
+    // Drill-down: opening the dip shows the branch behind it.
+    var d = S.drill;
+    set($('drill'), { opacity: d.toFixed(3), transform: 'translate(0 ' + (10 * (1 - d)).toFixed(2) + ')' });
+    dbarEls.forEach(function(b, i){ b.setAttribute('width', (196 * BRANCH[i][1] * E.p3o(p(d, .3 + i * .15, .7 + i * .15))).toFixed(2)); });
+    dtag.setAttribute('opacity', p(d, .8, 1).toFixed(3));
+
+    // ----- alerts: signal along the wire, card lands, phone buzzes -----
+    var sig = null, landed = 0;
+    ALERTS.forEach(function(al, i){
+      var f = p(t, al.t - .9, al.t - .06);
+      if (f > 0 && f < 1) sig = E.p3io(f);
+      if (t >= al.t) landed = i + 1;
+    });
+    if (sig === null) $('sig').setAttribute('opacity', 0);
+    else { var pt = wire.getPointAtLength(wireLen * sig); set($('sig'), { x: (pt.x - 4 - dx * .16 * sig).toFixed(2), y: (pt.y - 4 - dy * .16 * sig).toFixed(2), opacity: 1 }); }
+    CARDS.forEach(function(c, i){
+      var a = E.p3o(p(t, ALERTS[i].t - .04, ALERTS[i].t + .45));
+      if (a <= 0) { c.g.setAttribute('opacity', 0); return; }
+      var below = 0;
+      for (var j = i + 1; j < ALERTS.length; j++) below += E.p3io(p(t, ALERTS[j].t - .3, ALERTS[j].t + .05));
+      set(c.g, { opacity: a.toFixed(3), transform: 'translate(0 ' + (CARD.top + below * CARD.step - 14 * (1 - a)).toFixed(2) + ')' });
+      c.bar.setAttribute('opacity', (1 - p(t, ALERTS[i].t + .4, ALERTS[i].t + 1.2)).toFixed(3));
+    });
+
+    // ----- HUD -----
+    $('hud').setAttribute('opacity', S.hud.toFixed(3));
+    $('hAl').textContent = String(landed);
+    $('hAl').setAttribute('fill', landed ? '#1E7BFF' : '#07162D');
+    $('pCnt').textContent = String(landed);
+  }
+
+  window.POSTER_T = 24.6;
+  window.SIZE = [1080, 720];
+  M.boot(render, DUR);
+})();
+</script>
+</body>
+</html>

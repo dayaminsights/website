@@ -94,6 +94,7 @@
      scrubbed section. -->
 <noscript><style>
   .reveal,.reveal-scale,.reveal-left,.reveal-right,.web-visual,.cta-band{opacity:1!important;transform:none!important}
+  .web-visual > *{clip-path:none!important;transform:none!important}
   .points li,.res-lines > div{opacity:1!important;transform:none!important}
   .climb .stair::before,.climb .stair::after,.climb .step::before,.climb .step::after,.climb .dim::before,.climb .stair-handoff{transform:none!important}
   .climb .step-num,.climb .step-name,.climb .dim span,.climb-panels{opacity:1!important}
@@ -175,13 +176,14 @@
       <span class="wm">Dayam <span>Insights</span></span>
     </a>
     <nav class="nav-links" aria-label="Main">
-      <a href="#dashboards">Solutions</a>
-      <a href="work.html">Work</a>
+      <a href="dashboards.html">Dashboards</a>
+      <a href="automation.html">Automation &amp; AI</a>
+      <a href="websites.html">Websites</a>
       <a href="how-we-work.html">How we work</a>
       <a href="faq.html">FAQ</a>
     </nav>
     <div class="nav-cta">
-      <a href="#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
+      <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
       <button class="nav-toggle" id="navToggle" type="button" aria-expanded="false" aria-controls="mobileMenu" aria-label="Open menu">
         <svg aria-hidden="true" width="20" height="20" viewBox="0 0 24 24" fill="none"><path class="nt-open" d="M4 7h16M4 12h16M4 17h16" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><path class="nt-close" d="M6 6l12 12M18 6L6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
       </button>
@@ -191,13 +193,14 @@
 
 <div class="mobile-menu" id="mobileMenu" hidden>
   <nav class="mm-links" aria-label="Main">
-    <a href="#dashboards">Solutions</a>
-    <a href="work.html">Work</a>
+    <a href="dashboards.html">Dashboards</a>
+    <a href="automation.html">Automation &amp; AI</a>
+    <a href="websites.html">Websites</a>
     <a href="how-we-work.html">How we work</a>
     <a href="faq.html">FAQ</a>
   </nav>
   <div class="mm-cta">
-    <a href="#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
+    <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
     <a href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener" class="btn btn-ghost">Chat on WhatsApp</a>
   </div>
 </div>
@@ -217,20 +220,20 @@
       </h1>
       <p class="sub">We help growing businesses turn messy, manual operations into connected systems that run themselves.</p>
       <div class="hero-cta">
-        <a href="#contact" class="btn btn-primary">Find your bottleneck <span class="arrow">&rarr;</span></a>
-        <a href="#dashboards" class="link-cta">See what we build <span class="arrow">&rarr;</span></a>
+        <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
+        <a href="#value" class="link-cta">See where we add value <span class="arrow">&rarr;</span></a>
       </div>
     </div>
 
-    <!-- The four things we build, drawn as one system. The blue square is the
-         signal: it walks the four rows once, then rests on the one being read. -->
+    <!-- The three things we build, drawn as one system in the order of the
+         slogan: See, Automate, Grow. The blue square is the signal: it walks the
+         rows once, then rests on the one being read. -->
     <div class="hero-stage">
       <nav class="hero-system" aria-label="What we build">
         <span class="hs-signal" aria-hidden="true"></span>
-        <a class="hs-row" href="#dashboards"><b>Data</b><span class="hs-body"><span class="hs-name">Dashboards &amp; analytics</span><span class="hs-line">One live view of sales, stock and cash.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row" href="#automation"><b>Automation</b><span class="hs-body"><span class="hs-name">Workflow automation</span><span class="hs-line">The repetitive steps, done without a person.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row" href="#ai"><b>AI</b><span class="hs-body"><span class="hs-name">AI for your business</span><span class="hs-line">An assistant that answers from your own data.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row" href="#websites"><b>Websites</b><span class="hs-body"><span class="hs-name">Websites &amp; digital</span><span class="hs-line">A site that turns visitors into enquiries.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
+        <a class="hs-row" href="dashboards.html"><b>See</b><span class="hs-body"><span class="hs-name">Dashboards &amp; analytics</span><span class="hs-line">One live view of sales, stock and cash.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
+        <a class="hs-row" href="automation.html"><b>Automate</b><span class="hs-body"><span class="hs-name">Automation &amp; AI</span><span class="hs-line">The repetitive steps done without a person, and an assistant that answers from your own data.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
+        <a class="hs-row" href="websites.html"><b>Grow</b><span class="hs-body"><span class="hs-name">Websites &amp; digital</span><span class="hs-line">A site that turns visitors into enquiries.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
       </nav>
     </div>
 
@@ -247,38 +250,86 @@
   </div>
 </section>
 
-<!-- PROBLEM -->
-<section class="pad wrap band" id="problem" aria-labelledby="h-problem">
-  <div class="section-head reveal">
-    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
-    <h2 class="title" id="h-problem">Four things quietly cost you money every week.</h2>
-    <p>None of these show up as a line on your P&amp;L. They show up as <strong>late answers, repeated work and mistakes nobody catches until a customer does</strong>.</p>
+<!-- ABOUT: what Dayam Insights is. Every line here is already said elsewhere
+     on the site (schema, FAQ, how-we-work, footer); this is the one place it is
+     said together. No founder facts exist yet — see FACTS STILL TO SUPPLY. -->
+<section class="pad wrap band" id="about" aria-labelledby="h-about">
+  <div class="about-grid">
+    <div class="section-head reveal">
+      <span class="eyebrow"><span class="dot"></span>What Dayam Insights is</span>
+      <h2 class="title" id="h-about">A systems partner for businesses that have outgrown spreadsheets.</h2>
+      <p>We help growing Indian businesses replace fragmented, manual processes with connected systems &mdash; <strong>dashboards, automation, AI assistants and websites</strong> &mdash; built around the tools you already use rather than a platform you would have to move to. You keep running the business. It gets easier to understand, operate and scale.</p>
+    </div>
+    <dl class="about-facts reveal" data-d="1">
+      <div>
+        <dt>Built for</dt>
+        <dd>Growing businesses past the point where one person can hold every process in their head, but not yet running an in-house technology team. Retail and multi-store, distribution and wholesale, manufacturing, clinics, professional services.</dd>
+      </div>
+      <div>
+        <dt>How we work</dt>
+        <dd>The first conversation is short and free, and often ends with us telling you what not to automate. Then a fixed price before any work starts, a first piece live in four to six weeks, and everything running in accounts you own.</dd>
+      </div>
+      <div>
+        <dt>What you keep</dt>
+        <dd>The logins, the data, the systems. If you stop working with us, nothing switches off. We hand over written instructions and train whoever will be using it, so most clients need us less than they expect to.</dd>
+      </div>
+    </dl>
   </div>
-  <div class="prob-grid">
-    <div class="prob reveal" data-d="1">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 9a8 8 0 0 1 13.5-4.5L20 7M20 4v3h-3M20 15a8 8 0 0 1-13.5 4.5L4 17M4 20v-3h3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="pnum mono">01</span>
-      <h3>Your team is doing work software should be doing.</h3>
-      <p>Copying data. Updating spreadsheets. Sending reminders. Rebuilding the same report every Monday. That is time a customer could have had.</p>
-    </div>
-    <div class="prob reveal" data-d="2">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="6" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="6" cy="18" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="18" r="2.4" stroke="currentColor" stroke-width="1.9"/><path d="M8.4 6h7.2M6 8.4v7.2M18 8.4v7.2M8.4 18h7.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-dasharray="2 3"/></svg></span>
-      <span class="pnum mono">02</span>
-      <h3>The same information lives in five different places.</h3>
-      <p>Excel. WhatsApp. Email. Billing software. A CRM someone set up two years ago. When systems don&rsquo;t talk, people become the integration layer.</p>
-    </div>
-    <div class="prob reveal" data-d="3">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">03</span>
-      <h3>By the time you see the number, the moment has passed.</h3>
-      <p>If reporting takes days to prepare, you are managing yesterday&rsquo;s business. Decisions that were cheap on Monday get made late, or on a hunch.</p>
-    </div>
-    <div class="prob reveal" data-d="4">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 20V13m5 7V10m5 10V7m5 13V4M3 20h18" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span class="pnum mono">04</span>
-      <h3>More customers shouldn&rsquo;t mean proportionally more admin.</h3>
-      <p>Growth exposes broken processes. Doubling orders should not mean doubling the people who retype them.</p>
-    </div>
+</section>
+
+<!-- VALUE: where we add it, in the order of the slogan. This is the router:
+     each card carries the symptoms that page is for, and the whole card is the
+     link. The images are frames from each page's hero video — the rebuilt
+     screen at work — so a card shows the story its page tells. -->
+<section class="pad wrap" id="value" aria-labelledby="h-value">
+  <div class="section-head reveal">
+    <span class="eyebrow"><span class="dot"></span>Where we add value</span>
+    <h2 class="title" id="h-value">See. Automate. Grow.</h2>
+    <p>Three kinds of work, three pages. <strong>Find the week that looks like yours</strong> and go straight to what we would build for it.</p>
+  </div>
+  <div class="value-grid">
+    <a class="vcard reveal" data-d="1" href="dashboards.html">
+      <img src="assets/video/dashboards-card.jpg" alt="" width="1080" height="720" loading="lazy">
+      <div class="vc-body">
+        <span class="vc-key">01 &middot; See</span>
+        <h3>Dashboards &amp; analytics</h3>
+        <p class="vc-line">One live view of sales, stock, cash and customers, fed from the systems you already run.</p>
+        <ul class="vc-signs">
+          <li>The weekly report takes a day to assemble</li>
+          <li>Two people, two different numbers</li>
+          <li>You see the total, never the reason</li>
+        </ul>
+        <span class="vc-go">How we build dashboards <span class="arrow">&rarr;</span></span>
+      </div>
+    </a>
+    <a class="vcard reveal" data-d="2" href="automation.html">
+      <img src="assets/video/automation-card.jpg" alt="" width="1080" height="720" loading="lazy">
+      <div class="vc-body">
+        <span class="vc-key">02 &middot; Automate</span>
+        <h3>Automation &amp; AI</h3>
+        <p class="vc-line">The repetitive steps between your tools done without a person, and an assistant that answers from your own data.</p>
+        <ul class="vc-signs">
+          <li>The same order typed into three systems</li>
+          <li>Follow-ups that depend on someone remembering</li>
+          <li>Your best people answering the same question all day</li>
+        </ul>
+        <span class="vc-go">How we build automations <span class="arrow">&rarr;</span></span>
+      </div>
+    </a>
+    <a class="vcard reveal" data-d="3" href="websites.html">
+      <img src="assets/video/websites-card.jpg" alt="" width="1080" height="720" loading="lazy">
+      <div class="vc-body">
+        <span class="vc-key">03 &middot; Grow</span>
+        <h3>Websites &amp; digital</h3>
+        <p class="vc-line">A fast site built around the questions a buyer asks, with every enquiry wired straight to your phone.</p>
+        <ul class="vc-signs">
+          <li>The site gets compliments, not enquiries</li>
+          <li>Buyers look you up, then never call</li>
+          <li>Price and timelines are a mystery</li>
+        </ul>
+        <span class="vc-go">How we build websites <span class="arrow">&rarr;</span></span>
+      </div>
+    </a>
   </div>
 </section>
 
@@ -383,268 +434,12 @@
   </div>
 </section>
 
-<!-- SEE: DASHBOARDS &amp; ANALYTICS -->
-<section class="pad wrap web-show band" id="dashboards" aria-labelledby="h-dashboards">
-  <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="01"><span class="dot"></span>Dashboards &amp; analytics</span>
-    <h2 class="title" id="h-dashboards">Know what&rsquo;s happening in your business before someone has to tell you.</h2>
-    <p>Sales. Stock. Cash. Customers. Performance. One live view instead of five spreadsheets and three phone calls.</p>
-  </div>
-
-  <div class="web-grid web-block reveal-left">
-    <div class="web-copy">
-      <span class="eyebrow"><span class="dot"></span>What we build</span>
-      <h3 class="title sm">One screen that answers &ldquo;are we doing okay?&rdquo;</h3>
-      <p>Right now that answer costs two phone calls, three spreadsheets and a week. We connect the systems you already use, agree what each number means, and keep the answer current on its own — daily, hourly, or the moment something crosses a line you care about.</p>
-
-      <ul class="points">
-        <li>Live business visibility</li>
-        <li>Automated reporting</li>
-        <li>KPI monitoring</li>
-        <li>Exception alerts</li>
-        <li>Management dashboards</li>
-        <li>Drill-down analysis</li>
-      </ul>
-
-      <div class="hero-cta">
-        <a href="#contact" class="link-cta">Build my dashboard <span class="arrow">→</span></a>
-      </div>
-      <p class="example-link"><a href="work.html#retail">Example: a retail dashboard, refreshed daily <span class="arrow">&rarr;</span></a></p>
-
-    </div>
-
-    <!-- Animated dashboard visual -->
-    <div class="web-visual" id="dashVisual">
-
-      <div class="dash-mock">
-        <div class="bm-bar">
-          <span class="bm-dot r"></span><span class="bm-dot y"></span><span class="bm-dot g"></span>
-          <div class="bm-url"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="11" height="11"><rect x="3" y="4" width="18" height="14" rx="2" stroke="currentColor" stroke-width="2"/><path d="M8 21h8M12 18v3" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg><span>Business overview</span></div>
-          <span class="bm-live">■ EXAMPLE</span>
-        </div>
-        <div class="dash-body">
-          <div class="dash-kpis">
-            <div class="dk">
-              <span class="dk-label">Today's sales</span>
-              <b data-count="48200" data-prefix="₹" data-suffix="">₹0</b>
-              <span class="dk-delta good">▲ 12% vs last week</span>
-            </div>
-            <div class="dk">
-              <span class="dk-label">Orders</span>
-              <b data-count="186" data-suffix="">0</b>
-              <span class="dk-delta good">▲ 8%</span>
-            </div>
-            <div class="dk">
-              <span class="dk-label">Low stock items</span>
-              <b data-count="5" data-suffix="">0</b>
-              <span class="dk-delta warn">Needs reorder</span>
-            </div>
-          </div>
-          <div class="dash-chart">
-            <div class="dc-bars">
-              <i style="--h:38%"></i><i style="--h:54%"></i><i style="--h:46%"></i><i style="--h:70%"></i><i style="--h:62%"></i><i style="--h:85%"></i><i style="--h:95%"></i>
-            </div>
-            <div class="dc-labels"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-
-</section>
-
-<!-- AUTOMATE: WORKFLOW AUTOMATION &amp; AI -->
-<section class="pad wrap web-show" id="automation" aria-labelledby="h-automation">
-  <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="02"><span class="dot"></span>Workflow automation &amp; AI</span>
-    <h2 class="title" id="h-automation">Stop paying people to move information from one place to another.</h2>
-    <p>If your team is repeatedly copying information between Excel, WhatsApp, email, CRM or ERP, there is probably a better way. We connect your existing tools and automate the repetitive steps between them.</p>
-  </div>
-
-  <div class="web-grid web-block rev reveal-right">
-    <div class="web-copy">
-      <span class="eyebrow"><span class="dot"></span>What we build</span>
-      <h3 class="title sm">We make the re-typing stop.</h3>
-      <p>An order arrives on WhatsApp. It becomes an order record. The invoice goes out. The payment is matched. The dashboard updates. Nobody typed anything, and nothing was forgotten because someone was busy.</p>
-
-      <ul class="points">
-        <li>Order-to-invoice workflows</li>
-        <li>Lead capture and follow-up</li>
-        <li>Scheduled reports and reminders</li>
-        <li>Data movement between systems</li>
-        <li>Document and invoice processing</li>
-        <li>Alerts when something needs a human</li>
-      </ul>
-
-      <div class="hero-cta">
-        <a href="#contact" class="link-cta">Find something to automate <span class="arrow">→</span></a>
-      </div>
-      <p class="example-link"><a href="work.html#distribution">Example: order to invoice with no re-typing <span class="arrow">&rarr;</span></a></p>
-
-    </div>
-
-    <!-- Animated automation pipeline visual -->
-    <div class="web-visual" id="autoVisual">
-
-      <div class="flow-mock">
-        <div class="flow-row">
-          <div class="flow-node">
-            <span class="fl-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M21 11.5a8.4 8.4 0 0 1-1.8 5.2L21 21l-4.3-1.2A8.5 8.5 0 1 1 21 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg></span>
-            <span>WhatsApp</span>
-          </div>
-          <span class="fl-arrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M4 12h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div class="flow-node">
-            <span class="fl-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M4 7h16M4 7l1 12a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1l1-12M9 7V5a3 3 0 0 1 6 0v2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-            <span>Order</span>
-          </div>
-          <span class="fl-arrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M4 12h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div class="flow-node">
-            <span class="fl-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M7 3h7l3 3v15H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 11h5M10 15h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-            <span>Invoice</span>
-          </div>
-          <span class="fl-arrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M4 12h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div class="flow-node">
-            <span class="fl-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="18" height="18"><rect x="2.5" y="6" width="19" height="12" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M2.5 10h19" stroke="currentColor" stroke-width="1.8"/></svg></span>
-            <span>Payment</span>
-          </div>
-          <span class="fl-arrow"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="16" height="16"><path d="M4 12h16m0 0l-5-5m5 5l-5 5" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-          <div class="flow-node fl-done">
-            <span class="fl-icon"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="18" height="18"><path d="M5 19V10m5 9V5m5 14v-7m5 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg></span>
-            <span>Dashboard</span>
-          </div>
-        </div>
-        <div class="flow-foot">
-          <span class="flow-pulse"></span>
-          Example workflow · <span class="mono">0 manual steps</span>
-        </div>
-      </div>
-    </div>
-  </div>
-  <div class="web-grid web-block reveal-left" id="ai">
-    <div class="web-copy">
-      <span class="eyebrow" data-ch="03"><span class="dot"></span>AI for your business</span>
-      <h3 class="title sm">Give your team an extra pair of hands.</h3>
-      <p>It can answer customer questions, search your own business information, summarise a report, follow up a lead or prepare a quote.</p>
-      <p class="pull">Not another chatbot. An assistant connected to your business.</p>
-      <p>The difference is what it is plugged into: your products, your prices, your policies, your history &mdash; with a person in the loop wherever a wrong answer would cost you something.</p>
-
-      <ul class="points">
-        <li>Customer support</li>
-        <li>Lead qualification</li>
-        <li>Sales follow-ups</li>
-        <li>Internal knowledge assistant</li>
-        <li>Report summaries</li>
-        <li>Quote generation</li>
-      </ul>
-
-      <div class="hero-cta">
-        <a href="#contact" class="link-cta">See where AI fits <span class="arrow">&rarr;</span></a>
-      </div>
-      <p class="example-link"><a href="work.html#services">Example: every enquiry followed up on time <span class="arrow">&rarr;</span></a></p>
-
-    </div>
-
-    <!-- Assistant: question, sources it reads, answer it returns -->
-    <div class="web-visual" id="aiVisual">
-      <div class="ai-mock">
-        <div class="bm-bar">
-          <span class="bm-dot r"></span><span class="bm-dot y"></span><span class="bm-dot g"></span>
-          <div class="bm-url"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="11" height="11"><path d="M12 3l1.8 4.9L18.7 9.7l-4.9 1.8L12 16.4l-1.8-4.9L5.3 9.7l4.9-1.8L12 3z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg><span>Business assistant</span></div>
-          <span class="bm-live">&#9679; EXAMPLE</span>
-        </div>
-        <div class="ai-body">
-          <div class="ai-q">
-            <span class="ai-who mono">Customer</span>
-            <p>Do you have the 12mm sheet in stock, and what would 40 of them cost delivered to Jaipur?</p>
-          </div>
-          <div class="ai-sources">
-            <span class="ai-src"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="12" height="12"><path d="M5 19V10m5 9V5m5 14v-7m5 7V8" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>Stock</span>
-            <span class="ai-src"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="12" height="12"><path d="M7 3h7l3 3v15H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Price list</span>
-            <span class="ai-src"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none" width="12" height="12"><path d="M2 8h11v9H2zM13 11h5l3 3v3h-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Freight</span>
-          </div>
-          <div class="ai-a">
-            <span class="ai-who mono">Assistant</span>
-            <p>Yes &mdash; 68 in stock. 40 sheets at your trade rate is <b>&#8377;1,42,400</b> plus <b>&#8377;3,200</b> delivery to Jaipur. Quote drafted and waiting for approval.</p>
-          </div>
-          <div class="ai-foot">
-            <span class="flow-pulse"></span>
-            Drafted from your own data &middot; <span class="mono">reviewed by a person</span>
-          </div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- GROW: WEBSITES & DIGITAL -->
-<section class="pad wrap web-show band" id="websites" aria-labelledby="h-websites">
-  <div class="webx-head">
-    <div class="reveal">
-      <span class="eyebrow" data-ch="04"><span class="dot"></span>Websites &amp; digital</span>
-      <h2 class="title" id="h-websites">Your website should do more than look good.</h2>
-    </div>
-    <p class="reveal" data-d="1">It should explain what you do, build trust, answer the obvious questions and turn visitors into enquiries.</p>
-  </div>
-
-  <div class="webx">
-    <div class="webx-copy">
-      <h3>Look as credible online as you are in person.</h3>
-      <p>Fast, conversion-focused sites for businesses ready to be taken seriously online: structured around the questions a real buyer asks, quick on a phone, and wired so an enquiry reaches you the moment it is sent.</p>
-      <ol class="jobs">
-        <li class="job" data-job="1"><span class="key" aria-hidden="true">1</span><div><b>Explains what you do</b><span>In the first few seconds, in the words your buyers use.</span></div></li>
-        <li class="job" data-job="2"><span class="key" aria-hidden="true">2</span><div><b>Builds trust</b><span>With proof a buyer can check: your work, reviews, the people behind it.</span></div></li>
-        <li class="job" data-job="3"><span class="key" aria-hidden="true">3</span><div><b>Answers the obvious questions</b><span>Price, timelines, where you work &mdash; before anyone has to ask.</span></div></li>
-        <li class="job" data-job="4"><span class="key" aria-hidden="true">4</span><div><b>Turns visitors into enquiries</b><span>And sends each one straight to your phone.</span></div></li>
-      </ol>
-    </div>
-
-    <div class="webx-sheet" aria-hidden="true">
-      <p class="fig">Fig. &mdash; A page built around four jobs</p>
-      <div class="wf">
-        <div class="wf-bar"><i></i><i></i><i></i><span class="wf-url">yourbusiness.com</span></div>
-        <div class="wf-page">
-          <div class="wf-nav"><span class="logo"></span><span class="lk"></span><span class="lk"></span><span class="lk"></span><span class="cta"></span></div>
-          <div class="wf-part wf-hero" data-part="1"><span class="key">1</span><span class="outline"></span>
-            <span class="bar ink" style="width:78%"></span><span class="bar ink" style="width:56%;--d:70ms"></span><span class="bar" style="width:66%;--d:140ms"></span><span class="btn-bar" style="--d:220ms"></span>
-          </div>
-          <div class="wf-part wf-proof" data-part="2"><span class="key">2</span><span class="outline"></span>
-            <div class="logos"><i></i><i style="--d:60ms"></i><i style="--d:120ms"></i><i style="--d:180ms"></i></div>
-            <span class="bar" style="width:84%;--d:200ms"></span><span class="bar" style="width:34%;--d:260ms"></span>
-          </div>
-          <div class="wf-part wf-faq" data-part="3"><span class="key">3</span><span class="outline"></span>
-            <div class="row"><span class="bar" style="width:62%"></span><span class="plus"></span></div>
-            <div class="row"><span class="bar" style="width:48%;--d:90ms"></span><span class="plus"></span></div>
-            <div class="row"><span class="bar" style="width:56%;--d:180ms"></span><span class="plus"></span></div>
-          </div>
-          <div class="wf-part wf-form-row" data-part="4"><span class="key">4</span><span class="outline"></span>
-            <div class="wf-form"><span class="in"></span><span class="in"></span><span class="send"></span></div>
-            <span class="wire"><span class="signal-run"></span></span>
-          </div>
-        </div>
-      </div>
-      <div class="phone">
-        <span class="ph-bar"></span><span class="ph-bar short"></span><span class="ph-bar"></span><span class="ph-bar short"></span>
-        <div class="note"><i></i><div><b>New enquiry</b><small>From your website &middot; just now</small></div></div>
-        <span class="phone-cap">Your phone</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="webx-start reveal">
-    <p class="lab">Where most projects start</p>
-    <div class="ws"><h4>Need more enquiries?</h4><p>Build a site designed around conversion, not decoration.</p></div>
-    <div class="ws"><h4>Site feels outdated?</h4><p>Redesign it around the business you run today.</p></div>
-    <div class="ws"><h4>Launching something new?</h4><p>Create a presence that gets people to take action.</p></div>
-    <a href="#contact" class="link-cta">Build my website <span class="arrow">&rarr;</span></a>
-  </div>
-</section>
-
 <!-- CONTACT -->
 <section class="pad wrap band" id="cta" aria-labelledby="h-cta">
   <div class="cta-band reveal" id="contact">
-    <span class="eyebrow"><span class="dot"></span>Let&rsquo;s find the bottleneck</span>
-    <h2 id="h-cta"><span class="ln"><span>What&rsquo;s slowing your business down?</span></span></h2>
-    <p>Tell us what is taking too much time, causing too many mistakes, or hiding what is really happening. We&rsquo;ll come back with the first process we would improve and what we would build. No sales pitch, no obligation.</p>
+    <span class="eyebrow"><span class="dot"></span>Start here</span>
+    <h2 id="h-cta"><span class="ln"><span>What&rsquo;s not working right now?</span></span></h2>
+    <p>Tell us what is taking too much time, costing you enquiries, or hiding what is really happening. We&rsquo;ll come back with the first thing we would fix and what we would build. No sales pitch, no obligation.</p>
 
     <form class="contact-form" action="https://formsubmit.co/dayaminsights@gmail.com" method="POST">
       <!-- FormSubmit config. Without JS the browser posts straight to FormSubmit
@@ -656,6 +451,21 @@
       <input type="hidden" name="_captcha" value="false">
       <input type="hidden" name="_next" value="https://dayaminsights.com/?sent=1#contact">
       <input type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true" class="cf-honey">
+      <!-- The intent router. A visitor who came here to talk about a website
+           could not answer "what takes the most time right now?" honestly, so
+           this select rewrites the label and placeholder of the last field to
+           the question their answer actually fits. site.js does the swap, and
+           any CTA carrying data-intent presets it on the way in. -->
+      <label class="cf-field">
+        <span>What do you need?</span>
+        <select name="intent" id="cfIntent" data-default-label="What&rsquo;s the problem you&rsquo;d like solved?" data-default-hint="e.g. we re-type every order into three different sheets">
+          <option value="Not sure yet" data-label="What&rsquo;s the problem you&rsquo;d like solved?" data-hint="e.g. we re-type every order into three different sheets" selected>Not sure yet &mdash; help me work it out</option>
+          <option value="A website" data-label="What do you need the site to do?" data-hint="e.g. we get work by referral and the site has not brought an enquiry in a year">A website</option>
+          <option value="Dashboards &amp; reporting" data-label="What do you want to see, and where does it live now?" data-hint="e.g. sales and stock, currently spread across three spreadsheets">Dashboards &amp; reporting</option>
+          <option value="Workflow automation" data-label="Which repetitive job should stop?" data-hint="e.g. we re-type every order into three different sheets">Workflow automation</option>
+          <option value="An AI assistant" data-label="What should it handle for you?" data-hint="e.g. answering stock and price questions from customers">An AI assistant</option>
+        </select>
+      </label>
       <div class="cf-row">
         <label class="cf-field">
           <span>Your name</span>
@@ -676,12 +486,12 @@
           <input type="email" name="email" autocomplete="email">
         </label>
       </div>
-      <label class="cf-field">
-        <span>What takes the most time right now?</span>
+      <label class="cf-field cf-message">
+        <span>What&rsquo;s the problem you&rsquo;d like solved?</span>
         <textarea name="message" rows="3" required placeholder="e.g. we re-type every order into three different sheets"></textarea>
       </label>
       <div class="cf-actions">
-        <button type="submit" class="btn btn-primary cf-submit">Find your bottleneck <span class="arrow">&rarr;</span></button>
+        <button type="submit" class="btn btn-primary cf-submit">Tell us what you need <span class="arrow">&rarr;</span></button>
         <a class="cf-alt" href="https://wa.me/917877640693?text=Hi%20Dayam%20Insights%2C%20I%27d%20like%20to%20talk%20about%20automating%20my%20business." target="_blank" rel="noopener">Prefer WhatsApp? Let&rsquo;s talk <span class="arrow">&rarr;</span></a>
       </div>
       <p class="cf-note" aria-live="polite">We reply within one working day. No sales pitch, no obligation, and we don&rsquo;t add you to a mailing list.</p>
@@ -718,10 +528,10 @@
       </div>
       <div class="foot-col">
         <h2>Solutions</h2>
-        <a href="#dashboards">Dashboards &amp; analytics</a>
-        <a href="#automation">Workflow automation</a>
-        <a href="#ai">AI assistants</a>
-        <a href="#websites">Websites &amp; digital</a>
+        <a href="dashboards.html">Dashboards &amp; analytics</a>
+        <a href="automation.html">Workflow automation</a>
+        <a href="automation.html#ai">AI assistants</a>
+        <a href="websites.html">Websites &amp; digital</a>
       </div>
       <div class="foot-col">
         <h2>Built for</h2>
@@ -733,7 +543,6 @@
       </div>
       <div class="foot-col">
         <h2>Company</h2>
-        <a href="work.html">The work</a>
         <a href="how-we-work.html">How we work</a>
         <a href="faq.html">FAQ</a>
         <a href="#contact">Talk to us</a>
