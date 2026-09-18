@@ -16,8 +16,8 @@
     var y = window.scrollY;
     nav.classList.toggle('scrolled', y > 8);
 
-    var pct = docScrollMax > 0 ? (y / docScrollMax) * 100 : 0;
-    scrollBar.style.width = pct + '%';
+    var frac = docScrollMax > 0 ? Math.min(1, y / docScrollMax) : 0;
+    scrollBar.style.transform = 'scaleX(' + frac.toFixed(4) + ')';
     if (typeof updateSpy === 'function') updateSpy();
     if (typeof updateProcess === 'function') updateProcess();
     if (typeof updateSignal === 'function') updateSignal();
@@ -40,6 +40,11 @@
   window.addEventListener('resize', function(){
     measureDocument();
   }, {passive:true});
+
+  // iOS Safari only applies :active while some touchstart listener exists.
+  // The CSS turns the grey tap flash off and gives presses their own :active
+  // states instead, so without this an iPhone tap would show nothing at all.
+  document.body.addEventListener('touchstart', function(){}, {passive:true});
 
   // Footer year
   document.getElementById('yr').textContent = new Date().getFullYear();
@@ -372,6 +377,17 @@
     contactForm.hidden = true;
     contactDone.hidden = false;
     contactDone.focus({ preventScroll: true });
+    // The form was taller than the message, so on a phone the message's top
+    // (the "Thanks") ends up above the screen or under the sticky header.
+    // Bring it clear, leaving the same room under the header as html's
+    // scroll-padding-top. Measured from layout (offsetTop), not from the box on
+    // screen: that is still 8px low from the entrance and would settle short.
+    if (contactDone.getBoundingClientRect().top < nav.offsetHeight){
+      var y = 0;
+      for (var el = contactDone; el; el = el.offsetParent) y += el.offsetTop;
+      var pad = parseFloat(getComputedStyle(document.documentElement).scrollPaddingTop) || 0;
+      window.scrollTo({ top: y - pad, behavior: reduce ? 'auto' : 'smooth' });
+    }
   }
   if (contactForm){
     var cfSubmit = contactForm.querySelector('.cf-submit');
