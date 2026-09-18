@@ -13,7 +13,8 @@
        2.5–7.4  visitors reach a pretty site, pay it compliments and turn back; the
                 camera leans in on the blue one as it searches for a way in, finds
                 none, greys out and leaves
-       7.4–10.3 a navy wipe; the site comes back rebuilt, line by line
+       7.4–10.3 a navy title card with the Dayam Insights lockup; behind it the
+                site comes back rebuilt, line by line
        10.3–21.5 visitors turn blue, cross the page to "Book a visit" and fly to
                 the owner's phone — slowly at first, then quickening
        21.8–26  the camera pushes in on a phone full of enquiries (the poster)
@@ -119,7 +120,6 @@
         </g>
       </g>
 
-      <rect id="wipe" x="70" y="160" width="0" height="310" fill="#07162D"/>
     </g>
     </g>
     </g>
@@ -152,6 +152,26 @@
     <text x="186" y="40" font-size="10" class="mono" fill="#475569">ENQUIRIES</text>
     <text id="hEnq" x="186" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">0</text>
   </g>
+
+  <!-- ===== The turn: a title card in screen space, above everything =====
+       The brand lockup exactly as the site's header draws it (mark, hairline,
+       name), in the footer's white-on-navy version. The card sweeps in from
+       the left, holds while the lockup rises into place, then sweeps out to
+       the right and the rebuilt window is already there behind it. -->
+  <g id="turn">
+    <rect id="card" x="0" y="0" width="0" height="720" fill="#07162D"/>
+    <g id="lockup" opacity="0">
+      <g transform="translate(361 318) scale(.283)">
+        <rect x="0" y="0" width="48" height="48" fill="#1E7BFF"/>
+        <rect x="4" y="69" width="40" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M75,0H134.5A148.5,148.5 0 0 1 134.5,297H75V259H134.5A113,110 0 0 0 134.5,39H75Z"/>
+        <rect x="75" y="69" width="39" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M95,69H137.5A79.5,79.5 0 0 1 200.4,197.2A246.2,246.2 0 0 0 158.8,107H95Z"/>
+      </g>
+      <line x1="462" y1="326" x2="462" y2="396" stroke="#F8FAFC" stroke-opacity=".4" stroke-width="1.5"/>
+      <text x="479" y="372" font-size="34" font-weight="700" fill="#F8FAFC" letter-spacing="-.7">Dayam<tspan font-weight="400"> Insights</tspan></text>
+    </g>
+  </g>
 </svg>
 
 <script>
@@ -171,7 +191,7 @@
   var WIDE = { s: 1, fx: 540, fy: 362 };
   var EDGE = wx(70);                              // the browser's left edge: where a visitor meets the site
   var BTN = { x: wx(512), y: wy(349) };
-  var LAND = [12.3, 13.9, 15.2, 16.25, 17.15, 17.9, 18.55, 19.1, 19.6, 20.05, 20.45, 20.8, 21.1];
+  var LAND = [12.9, 14.25, 15.4, 16.35, 17.15, 17.9, 18.55, 19.1, 19.6, 20.05, 20.45, 20.8, 21.1];
   var CARD = { x: 840, top: 274, step: 56, h: 48 };
   var DIVE = { x: 848 + 4, y: CARD.top + 13 + 4 };
   var PHONE_CAM = { s: 2.0, fx: 910, fy: 385 };
@@ -266,19 +286,21 @@
     return { g: g, bar: bar };
   });
 
-  var S = { pull: 0, lost: 0, drift: 0, phone: 0, dive: 0, hud: 0, vis: 0, wipeIn: 0, wipeOut: 0 };
+  var S = { pull: 0, lost: 0, drift: 0, phone: 0, dive: 0, hud: 0, vis: 0, wipeIn: 0, wipeOut: 0, logo: 0 };
   var tl = gsap.timeline({ paused: true });
   tl.to(S, { pull: 1, duration: 2.5, ease: 'expo.out' }, .1)
     .to(S, { hud: 1, duration: .9 }, 1.7)
     .to(S, { vis: 486, duration: 6.8, ease: 'power2.out' }, .6)
     .to(S, { lost: 1, duration: 1.2, ease: 'power3.inOut' }, 3.2)
     .to(S, { lost: 0, duration: 1.3, ease: 'power3.inOut' }, 6.0)
-    .to(S, { wipeIn: 1, duration: .55, ease: 'power4.inOut' }, 7.4)
-    .set('#before', { opacity: 0 }, 7.96)
-    .to(S, { wipeOut: 1, duration: .6, ease: 'power4.inOut' }, 8.05)
+    .to(S, { wipeIn: 1, duration: .6, ease: 'power4.inOut' }, 7.4)
+    .to(S, { logo: 1, duration: .55, ease: 'power3.out' }, 7.9)
+    .set('#before', { opacity: 0 }, 8.3)
+    .to(S, { logo: 0, duration: .3, ease: 'power2.in' }, 9.0)
+    .to(S, { wipeOut: 1, duration: .65, ease: 'power4.inOut' }, 9.15)
     .fromTo('#after .ln', { opacity: 0, y: 12, filter: 'blur(6px)' },
-            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .09 }, 8.45)
-    .to('#wire', { opacity: .55, duration: .6 }, 10.2)
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .09 }, 9.55)
+    .to('#wire', { opacity: .55, duration: .6 }, 10.9)
     .to(S, { vis: 1248, duration: 11, ease: 'none' }, 10.4)
     .to(S, { drift: 1, duration: 11, ease: 'sine.inOut' }, 10.5)
     .to(S, { hud: 0, duration: .6 }, 21.7)
@@ -313,7 +335,9 @@
     var recede = 1 - .78 * S.phone;
     $('rest').setAttribute('opacity', recede.toFixed(3));
     $('crowdG').setAttribute('opacity', recede.toFixed(3));
-    set($('wipe'), { x: 70 + 530 * S.wipeOut, width: 530 * Math.max(0, S.wipeIn - S.wipeOut) });
+    // The turn: the card sweeps the full frame; the lockup rises into it and fades before it leaves.
+    set($('card'), { x: (1080 * S.wipeOut).toFixed(1), width: (1080 * Math.max(0, S.wipeIn - S.wipeOut)).toFixed(1) });
+    set($('lockup'), { opacity: S.logo.toFixed(3), transform: 'translate(0 ' + (10 * (1 - S.logo)).toFixed(2) + ')' });
 
     V.forEach(function(v){
       var st = visitor(v, t);

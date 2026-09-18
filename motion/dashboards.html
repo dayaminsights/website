@@ -15,8 +15,9 @@
                 (billing, stock, Excel, WhatsApp) into a weekly report, cell by
                 cell; the day ticks over to Tuesday, then Wednesday; two totals
                 disagree ("Two answers.")
-       7.4–10.3 a navy wipe; the same window comes back as one live screen, and
-                the four sources are wired straight into it
+       7.4–10.3 a navy title card with the Dayam Insights lockup; behind it the
+                same window comes back as one live screen, and the four sources
+                are wired straight into it
        10.3–21.5 days tick past on their own: pulses run up the source wires,
                 the numbers update, bars rise; the moment a number crosses a
                 line, an alert drops onto the owner's phone — then a bar is
@@ -115,7 +116,6 @@
         </g>
       </g>
 
-      <rect id="wipe" x="70" y="160" width="0" height="310" fill="#07162D"/>
     </g>
 
     <!-- ===== The four sources: the same four, before and after ===== -->
@@ -156,6 +156,26 @@
     <line x1="168" y1="30" x2="168" y2="78" stroke="#CBD5E1"/>
     <text x="186" y="40" font-size="10" class="mono" fill="#475569">ALERTS</text>
     <text id="hAl" x="186" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">0</text>
+  </g>
+
+  <!-- ===== The turn: a title card in screen space, above everything =====
+       The brand lockup exactly as the site's header draws it (mark, hairline,
+       name), in the footer's white-on-navy version. The card sweeps in from
+       the left, holds while the lockup rises into place, then sweeps out to
+       the right and the rebuilt window is already there behind it. -->
+  <g id="turn">
+    <rect id="card" x="0" y="0" width="0" height="720" fill="#07162D"/>
+    <g id="lockup" opacity="0">
+      <g transform="translate(361 318) scale(.283)">
+        <rect x="0" y="0" width="48" height="48" fill="#1E7BFF"/>
+        <rect x="4" y="69" width="40" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M75,0H134.5A148.5,148.5 0 0 1 134.5,297H75V259H134.5A113,110 0 0 0 134.5,39H75Z"/>
+        <rect x="75" y="69" width="39" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M95,69H137.5A79.5,79.5 0 0 1 200.4,197.2A246.2,246.2 0 0 0 158.8,107H95Z"/>
+      </g>
+      <line x1="462" y1="326" x2="462" y2="396" stroke="#F8FAFC" stroke-opacity=".4" stroke-width="1.5"/>
+      <text x="479" y="372" font-size="34" font-weight="700" fill="#F8FAFC" letter-spacing="-.7">Dayam<tspan font-weight="400"> Insights</tspan></text>
+    </g>
   </g>
 </svg>
 
@@ -232,7 +252,7 @@
 
   // ----- alerts to the phone -----
   var ALERTS = [
-    { t: 13.0, a: 'Low stock · 5 items',     b: 'Needs reorder · just now' },
+    { t: 13.4, a: 'Low stock · 5 items',     b: 'Needs reorder · just now' },
     { t: 15.6, a: 'Tuesday down 14%',        b: 'Ajmer branch · just now' },
     { t: 17.7, a: 'Cash in · ₹1,42,400',     b: 'Matched to invoice · just now' },
     { t: 19.2, a: 'Reorder placed',          b: '12mm sheet · 40 units' },
@@ -255,7 +275,7 @@
   var v0 = el('rect', { x: V0.x, y: V0.y, width: 8, height: 8, fill: '#1E7BFF' }, $('crowdG'));
 
   // ----- timeline -----
-  var S = { pull: 0, hud: 0, lean: 0, drift: 0, phone: 0, dive: 0, wipeIn: 0, wipeOut: 0, day: 0, live: 0, drill: 0, k1: 0, k2: 0, k3: 0 };
+  var S = { pull: 0, hud: 0, lean: 0, drift: 0, phone: 0, dive: 0, wipeIn: 0, wipeOut: 0, logo: 0, day: 0, live: 0, drill: 0, k1: 0, k2: 0, k3: 0 };
   var tl = gsap.timeline({ paused: true });
   tl.to(S, { pull: 1, duration: 2.5, ease: 'expo.out' }, .1)
     .to(S, { hud: 1, duration: .9 }, 1.7)
@@ -265,20 +285,22 @@
     .to('#tot1', { opacity: 1, duration: .3 }, 6.5)
     .to('#tot2', { opacity: 1, duration: .3 }, 6.8)
     .to('#disagree', { opacity: 1, duration: .4 }, 7.0)
-    .to(S, { wipeIn: 1, duration: .55, ease: 'power4.inOut' }, 7.4)
-    .set('#before', { opacity: 0 }, 7.96)
-    .to(S, { wipeOut: 1, duration: .6, ease: 'power4.inOut' }, 8.05)
+    .to(S, { wipeIn: 1, duration: .6, ease: 'power4.inOut' }, 7.4)
+    .to(S, { logo: 1, duration: .55, ease: 'power3.out' }, 7.9)
+    .set('#before', { opacity: 0 }, 8.3)
+    .set(S, { day: 0 }, 8.3)                                         // the rebuilt screen opens on a fresh Monday
+    .to(S, { logo: 0, duration: .3, ease: 'power2.in' }, 9.0)
+    .to(S, { wipeOut: 1, duration: .65, ease: 'power4.inOut' }, 9.15)
     .fromTo('#after .ln', { opacity: 0, y: 12, filter: 'blur(6px)' },
-            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .12 }, 8.45)
-    .to('#srcWires', { opacity: .55, duration: .6 }, 9.3)
-    .to('#wire', { opacity: .55, duration: .6 }, 10.2)
-    .set(S, { day: 0 }, 10.3)
-    .to(S, { day: 13, duration: 11.2, ease: 'power2.in' }, 10.3)     // two weeks tick past on their own, quickening
-    .to(S, { live: 1, duration: 11.2, ease: 'none' }, 10.3)
+            { opacity: 1, y: 0, filter: 'blur(0px)', duration: .85, ease: 'power4.out', stagger: .12 }, 9.55)
+    .to('#srcWires', { opacity: .55, duration: .6 }, 10.2)
+    .to('#wire', { opacity: .55, duration: .6 }, 10.6)
+    .to(S, { day: 13, duration: 10.6, ease: 'power2.in' }, 10.9)     // two weeks tick past on their own, quickening
+    .to(S, { live: 1, duration: 10.6, ease: 'none' }, 10.9)
     .to(S, { drift: 1, duration: 11, ease: 'sine.inOut' }, 10.5)
-    .to(S, { k1: 48200, duration: 1.4, ease: 'power2.out' }, 10.6)
-    .to(S, { k2: 186, duration: 1.4, ease: 'power2.out' }, 10.7)
-    .to(S, { k3: 5, duration: 1.2, ease: 'power2.out' }, 11.6)
+    .to(S, { k1: 48200, duration: 1.4, ease: 'power2.out' }, 11.2)
+    .to(S, { k2: 186, duration: 1.4, ease: 'power2.out' }, 11.3)
+    .to(S, { k3: 5, duration: 1.2, ease: 'power2.out' }, 12.1)
     .to(S, { drill: 1, duration: .7, ease: 'power4.out' }, 14.5)
     .to(S, { drill: 0, duration: .5, ease: 'power3.in' }, 17.2)
     .to(S, { k1: 61400, duration: .8, ease: 'power2.out' }, 19.6)
@@ -330,10 +352,12 @@
     var recede = 1 - .78 * S.phone;
     $('rest').setAttribute('opacity', recede.toFixed(3));
     $('crowdG').setAttribute('opacity', recede.toFixed(3));
-    set($('wipe'), { x: 70 + 530 * S.wipeOut, width: 530 * Math.max(0, S.wipeIn - S.wipeOut) });
+    // The turn: the card sweeps the full frame; the lockup rises into it and fades before it leaves.
+    set($('card'), { x: (1080 * S.wipeOut).toFixed(1), width: (1080 * Math.max(0, S.wipeIn - S.wipeOut)).toFixed(1) });
+    set($('lockup'), { opacity: S.logo.toFixed(3), transform: 'translate(0 ' + (10 * (1 - S.logo)).toFixed(2) + ')' });
 
     // ----- the blue square: the first pasted number, then it becomes that cell -----
-    var rebuilt = t >= 7.96;
+    var rebuilt = t >= 8.3;
     $('winTitle').textContent = rebuilt ? 'Business overview' : 'Weekly report.xlsx';
     v0.setAttribute('opacity', rebuilt ? 0 : (t < COPIES[0].t ? 1 : 0));
     cellEls.forEach(function(c, i){ c.setAttribute('opacity', t >= COPIES[i].t ? 1 : 0); });
@@ -370,9 +394,9 @@
     $('k2').textContent = fmt.format(Math.round(S.k2));
     $('k3').textContent = String(Math.round(S.k3));
     // The low-stock KPI crosses its line and signals — the one live thing in the frame.
-    var k3hot = t >= 12.0 && t < 13.0;
+    var k3hot = t >= 12.5 && t < 13.4;
     $('k3box').setAttribute('stroke', k3hot || (t >= 20.9 && t < 21.15) ? '#1E7BFF' : '#E5EAF2');
-    $('k3tag').setAttribute('opacity', p(t, 11.9, 12.2).toFixed(3));
+    $('k3tag').setAttribute('opacity', p(t, 12.4, 12.7).toFixed(3));
 
     // Drill-down: opening the dip shows the branch behind it.
     var d = S.drill;
