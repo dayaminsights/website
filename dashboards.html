@@ -93,6 +93,9 @@
      five. The @font-face lives at the top of site.css. -->
 <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/video/dashboards-hero.webp" fetchpriority="high">
+<!-- The mark signs the first page of a visit only; later pages open on the
+     finished mark (see .mark-seen in site.css). -->
+<script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
      no-JS path is handed the finished frame. -->
@@ -237,32 +240,23 @@
 <!-- PROBLEM -->
 <section class="pad wrap band" id="problem" aria-labelledby="h-problem">
   <div class="section-head reveal">
-    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
     <h2 class="title" id="h-problem">You are not short of numbers. You are short of the answer.</h2>
     <p>The data already exists &mdash; it is in the billing software, the stock sheet and somebody&rsquo;s inbox. <strong>What costs you is the distance between the data and the decision</strong>. These are the four ways that distance shows up, and the four questions in the next section are, one for one, how a screen closes them.</p>
   </div>
   <div class="prob-grid">
     <div class="prob reveal" data-d="1">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">01</span>
       <h3>The number takes a week to assemble.</h3>
       <p>Somebody exports, somebody pastes, somebody checks. By the time the report is circulated it describes a week you can no longer do anything about.</p>
     </div>
     <div class="prob reveal" data-d="2">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 7h7v10H4zM13 7h7v10h-7z" stroke="currentColor" stroke-width="1.9" stroke-linejoin="round"/><path d="M11 12h2" stroke="currentColor" stroke-width="1.9" stroke-dasharray="1 3"/></svg></span>
-      <span class="pnum mono">02</span>
       <h3>Two people, two answers.</h3>
       <p>Sales says one figure, accounts says another, and both are right by their own definition. Half the meeting goes on whose spreadsheet to believe.</p>
     </div>
     <div class="prob reveal" data-d="3">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M18 8A6 6 0 1 0 6 8c0 6-2 7-2 7h16s-2-1-2-7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10.5 19a2 2 0 0 0 3 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">03</span>
       <h3>Nobody notices until it is expensive.</h3>
       <p>Stock runs out, a customer goes quiet, a margin slips. It was in the data for weeks &mdash; nothing was watching, so nobody was told.</p>
     </div>
     <div class="prob reveal" data-d="4">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="11" cy="11" r="6.5" stroke="currentColor" stroke-width="1.9"/><path d="M16 16l4.5 4.5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/><path d="M8.5 11h5" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">04</span>
       <h3>You see the total, not the reason.</h3>
       <p>Sales are down nine per cent. Which branch, which product, which week? Finding out is another day of exports, so mostly it does not get found out.</p>
     </div>
@@ -272,7 +266,6 @@
 <!-- THE FOUR QUESTIONS -->
 <section class="pad wrap web-show" id="questions" aria-labelledby="h-questions">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="01"><span class="dot"></span>What we build</span>
     <h2 class="title" id="h-questions">Four questions one screen has to answer.</h2>
     <p>One for each gap above. We build to these four and stop &mdash; <strong>a dashboard that answers everything gets read by nobody</strong>, and a chart that changes no decision is a chart you are paying to maintain.</p>
   </div>
@@ -343,7 +336,6 @@
 <section class="pad wrap band" id="included" aria-labelledby="h-included">
   <div class="web-grid web-block reveal-left">
     <div class="web-copy">
-      <span class="eyebrow" data-ch="02"><span class="dot"></span>What comes with it</span>
       <h2 class="title sm" id="h-included">Built on the systems you already have.</h2>
       <p>Nothing here asks you to replace your billing software or move your business onto a new platform. We read what those systems already produce, agree what each number means with the people who use it, and leave the whole thing running in accounts in your name.</p>
       <p class="pull">You keep the logins. If you stop working with us, the dashboard keeps refreshing.</p>
@@ -402,7 +394,6 @@
 <!-- PROCESS -->
 <section class="pad wrap band dark" id="process" aria-labelledby="h-process">
   <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="03"><span class="dot"></span>How a dashboard project runs</span>
     <h2 class="title" id="h-process">Four steps, and you see the price before step two.</h2>
     <p>The first conversation is short and free, and it often ends with us telling you which half of the report is not worth automating.</p>
   </div>
@@ -442,7 +433,6 @@
 <!-- PROOF -->
 <section class="pad wrap band" id="proof" aria-labelledby="h-proof">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="04"><span class="dot"></span>Proof</span>
     <h2 class="title" id="h-proof">The first one is usually the smallest one.</h2>
     <p>We would rather replace one report that costs you a day a week than build a wall of charts nobody opens. <strong>The smallest useful screen, in your hands, is worth more than the complete one on a slide.</strong> Below is the shape one of these projects usually takes.</p>
   </div>

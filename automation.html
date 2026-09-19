@@ -94,6 +94,9 @@
      five. The @font-face lives at the top of site.css. -->
 <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/video/automation-hero.webp" fetchpriority="high">
+<!-- The mark signs the first page of a visit only; later pages open on the
+     finished mark (see .mark-seen in site.css). -->
+<script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
      no-JS path is handed the finished frame. -->
@@ -239,32 +242,23 @@
 <!-- PROBLEM -->
 <section class="pad wrap band" id="problem" aria-labelledby="h-problem">
   <div class="section-head reveal">
-    <span class="eyebrow"><span class="dot"></span>Sound familiar?</span>
     <h2 class="title" id="h-problem">Nobody was hired to re-type things. Everybody does.</h2>
     <p>It never appears as a line on your P&amp;L. It appears as <strong>evenings, mistakes and orders that slipped</strong> &mdash; and it gets worse exactly when business gets better. These are the four, and the four kinds of work in the next section are, one for one, what replaces them.</p>
   </div>
   <div class="prob-grid">
     <div class="prob reveal" data-d="1">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="6" cy="6" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="6" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="6" cy="18" r="2.4" stroke="currentColor" stroke-width="1.9"/><circle cx="18" cy="18" r="2.4" stroke="currentColor" stroke-width="1.9"/><path d="M8.4 6h7.2M6 8.4v7.2M18 8.4v7.2M8.4 18h7.2" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-dasharray="2 3"/></svg></span>
-      <span class="pnum mono">01</span>
       <h3>Your team is the integration layer.</h3>
       <p>Excel, WhatsApp, email, billing, a CRM someone set up two years ago. When systems don&rsquo;t talk, a person carries the message &mdash; every time, all day.</p>
     </div>
     <div class="prob reveal" data-d="2">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.9"/><path d="M12 7v5l3 3" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">02</span>
       <h3>Things get forgotten because somebody was busy.</h3>
       <p>The follow-up that never went, the reorder nobody raised, the quote that sat for a week. Not carelessness &mdash; just a process that depends on a person remembering.</p>
     </div>
     <div class="prob reveal" data-d="3">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M7 3h7l3 3v15H7z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M14 3v4h3" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M10 12h5M10 16h3" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">03</span>
       <h3>The same document gets typed three times.</h3>
       <p>Once into the order sheet, once into the invoice, once into the ledger. Three chances to make a typo, and one customer who eventually finds it.</p>
     </div>
     <div class="prob reveal" data-d="4">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.4 8.4 0 0 1-1.8 5.2L21 21l-4.3-1.2A8.5 8.5 0 1 1 21 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 11.5h7M8.5 14.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">04</span>
       <h3>The same question, answered all day.</h3>
       <p>Is it in stock, what does it cost, when can you deliver. Your best people spend their afternoons on answers your own data already holds.</p>
     </div>
@@ -274,7 +268,6 @@
 <!-- THE FOUR KINDS OF WORK -->
 <section class="pad wrap web-show" id="work-that" aria-labelledby="h-work-that">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="01"><span class="dot"></span>What we build</span>
     <h2 class="title" id="h-work-that">Four kinds of work that should not need a person.</h2>
     <p>One for each of the four above. We look for the step that happens most often and costs the most attention, and we take that one first &mdash; <strong>a small automation that runs every day beats a large one that runs every quarter</strong>.</p>
   </div>
@@ -343,7 +336,6 @@
 <!-- AI -->
 <section class="pad wrap band web-show" id="ai" aria-labelledby="h-ai">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="02"><span class="dot"></span>AI for your business</span>
     <h2 class="title" id="h-ai">AI assistants for your team, connected to your business.</h2>
     <p>Most AI demos fail on contact with a real business for one reason: they are not plugged into anything. <strong>The value is not the model, it is what the model can see</strong> &mdash; your products, your prices, your policies, your history.</p>
   </div>
@@ -403,7 +395,6 @@
 <section class="pad wrap" id="included" aria-labelledby="h-included">
   <div class="web-grid web-block reveal-left">
     <div class="web-copy">
-      <span class="eyebrow" data-ch="03"><span class="dot"></span>What comes with it</span>
       <h2 class="title sm" id="h-included">Around the tools you already run.</h2>
       <p>Nothing here asks you to replace your billing software or retrain your team on a new platform. We work with what a system already offers &mdash; an export, an API, a database connection &mdash; and where a tool offers none of those, you hear what the workaround costs before you commit, not after.</p>
       <p class="pull">You keep the logins. If you stop working with us, the automations keep running.</p>
@@ -461,7 +452,6 @@
 <!-- PROCESS -->
 <section class="pad wrap band dark" id="process" aria-labelledby="h-process">
   <div class="section-head center reveal">
-    <span class="eyebrow" data-ch="04"><span class="dot"></span>How an automation project runs</span>
     <h2 class="title" id="h-process">Four steps, and you see the price before step two.</h2>
     <p>The first conversation is short and free, and it often ends with us telling you what not to automate.</p>
   </div>
@@ -501,7 +491,6 @@
 <!-- PROOF -->
 <section class="pad wrap" id="proof" aria-labelledby="h-proof">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="05"><span class="dot"></span>Proof</span>
     <h2 class="title" id="h-proof">The first one is usually the one nobody enjoys doing.</h2>
     <p>We would rather remove one step that happens forty times a week than build a clever system that runs once a quarter. <strong>The boring job, gone, is what buys the trust for the next one.</strong> Below are the two shapes these projects most often take.</p>
   </div>

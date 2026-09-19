@@ -106,6 +106,9 @@
      five. The @font-face lives at the top of site.css. -->
 <link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" as="image" href="assets/video/ai-chatbot-hero.webp" fetchpriority="high">
+<!-- The mark signs the first page of a visit only; later pages open on the
+     finished mark (see .mark-seen in site.css). -->
+<script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
      no-JS path is handed the finished frame. The four-jobs figure needs
@@ -229,32 +232,23 @@
 <!-- WHAT IT HANDLES -->
 <section class="pad wrap band" id="what" aria-labelledby="h-what">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="01"><span class="dot"></span>What it handles</span>
     <h2 class="title" id="h-what">Four jobs a chatbot does well. One it should not.</h2>
     <p>Anything whose answer already lives in your systems. <strong>Anything binding waits for a person.</strong></p>
   </div>
   <div class="prob-grid">
     <div class="prob reveal" data-d="1">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="16" rx="1.5" stroke="currentColor" stroke-width="1.8"/><path d="M3 8.5h18M8 13h8M8 16h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">01</span>
       <h3>Website chatbot.</h3>
       <p>Is it in stock, what does it cost, do you deliver here, when are you open &mdash; answered from your own data, at 11pm, without anyone on shift.</p>
     </div>
     <div class="prob reveal" data-d="2">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.4 8.4 0 0 1-1.8 5.2L21 21l-4.3-1.2A8.5 8.5 0 1 1 21 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8.5 10h7M8.5 13.5h4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">02</span>
       <h3>WhatsApp chatbot.</h3>
       <p>The same chatbot on the number customers already message, so the enquiry that used to wait for a reply gets one in seconds.</p>
     </div>
     <div class="prob reveal" data-d="3">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="8" r="3.5" stroke="currentColor" stroke-width="1.8"/><path d="M5 20a7 7 0 0 1 14 0" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/><path d="M17 3l1 2 2 1-2 1-1 2-1-2-2-1 2-1z" fill="currentColor"/></svg></span>
-      <span class="pnum mono">03</span>
       <h3>Leads and quotes.</h3>
       <p>Takes the name, the need and the number, drafts the quote from your price list, and puts it in front of you to approve with one tap.</p>
     </div>
     <div class="prob reveal" data-d="4">
-      <span class="pic"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 5h16v11H9l-5 4z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><path d="M8 9h8M8 12.5h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg></span>
-      <span class="pnum mono">04</span>
       <h3>Your team&rsquo;s questions.</h3>
       <p>The policy, the SOP, last month&rsquo;s number &mdash; asked in plain words and answered from your own documents, not a search box.</p>
     </div>
@@ -269,7 +263,6 @@
 <section class="pad wrap" id="different" aria-labelledby="h-different">
   <div class="about-grid">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="02"><span class="dot"></span>Not a script with buttons</span>
     <h2 class="title" id="h-different">Most chatbots fail on contact with a real business. Three reasons ours don&rsquo;t.</h2>
   </div>
   <dl class="about-facts reveal" data-d="1">
@@ -292,7 +285,6 @@
 <!-- FAQ -->
 <section class="pad wrap band" id="faq" aria-labelledby="h-faq">
   <div class="section-head reveal">
-    <span class="eyebrow" data-ch="03"><span class="dot"></span>Before you ask</span>
     <h2 class="title" id="h-faq">The questions we get about chatbots.</h2>
   </div>
   <div class="faq-groups">
