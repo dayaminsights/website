@@ -106,7 +106,9 @@
   function build(){
     var css = document.createElement('link');
     css.rel = 'stylesheet';
-    css.href = SCRIPT.src.replace(/js\/chat\.js(\?.*)?$/, 'css/chat.css');
+    // The page loads this script with a version query; the stylesheet gets the same one,
+    // so a change to either reaches returning visitors instead of waiting out the cache.
+    css.href = SCRIPT.src.replace(/js\/chat\.js(\?.*)?$/, 'css/chat.css$1');
     document.head.appendChild(css);
 
     launch = el('button', 'dc-launch');
@@ -114,7 +116,7 @@
     launch.setAttribute('aria-label', 'Talk to our AI agent');
     launch.setAttribute('aria-expanded', 'false');
     launch.setAttribute('aria-controls', 'dcPanel');
-    launch.appendChild(el('span', 'dc-sq'));
+    launch.insertAdjacentHTML('beforeend', '<svg class="dc-ico" viewBox="0 0 24 24" width="16" height="16" aria-hidden="true"><path d="M12 1L14.4 9.6 23 12 14.4 14.4 12 23 9.6 14.4 1 12 9.6 9.6Z"/></svg>');
     launch.appendChild(el('span', 'dc-launch-label', 'Talk to our AI agent'));
     dot = el('span', 'dc-dot');
     dot.hidden = true;
