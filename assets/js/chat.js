@@ -6,8 +6,8 @@
 (function(){
   'use strict';
 
-  // Set once the Worker is deployed. While empty, the widget stays off on the live site.
-  var PROD_ENDPOINT = '';
+  // The deployed Worker (chat-worker/). Empty this to switch the widget off on the live site.
+  var PROD_ENDPOINT = 'https://dayam-chat.dayam-chat-worker.workers.dev/chat';
   var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var ENDPOINT = LOCAL ? 'http://localhost:8787/chat' : PROD_ENDPOINT;
   if (!ENDPOINT || !window.fetch || !window.JSON || !document.currentScript) return;

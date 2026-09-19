@@ -279,6 +279,11 @@ A short chat is expected to stay well under the limit; a long one may get close.
 
 That choice goes to the owner with the measurements.
 
+**Measured on the deployed Worker (2026-09-19, launch eval).** 29 requests: CPU median 21 ms, 90th percentile 47 ms, max 57 ms. Wall time was about 3 s median, almost all of it waiting on the model.
+- All 29 completed, since Cloudflare tolerates occasional overruns on the free plan. But every request is over the 10 ms limit, so the free plan cannot be relied on once traffic arrives.
+- If Cloudflare starts cutting requests off, the widget shows its "can't answer right now" fallback with WhatsApp.
+- Recommendation: Workers Paid (US$5/month) before the bot is promoted. The owner decides.
+
 ### Owner's one-time setup
 1. Cloudflare account (free); deploy the Worker (the plan gives the commands).
 2. Anthropic API key, stored with `wrangler secret put ANTHROPIC_API_KEY`, and a **monthly spend limit** set in the Anthropic Console.
