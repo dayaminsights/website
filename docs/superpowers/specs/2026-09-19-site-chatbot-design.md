@@ -161,28 +161,37 @@ visitor ── chat.js (widget) ──POST /chat──▶ Cloudflare Worker ─�
 |---|---|---|
 | `assets/js/chat.js` | Launcher, nudge, panel, SSE reader, card rendering, session state, lead email post, GA4 events | Worker URL, FormSubmit |
 | `assets/css/chat.css` | Widget styles on the site's tokens | `site.css` custom properties |
-| `chat-worker/src/index.ts` | HTTP: origin allowlist, rate limits, input validation, tag stripping, SSE out | `agent.ts`, Rate Limiting binding |
+| `chat-worker/src/index.ts` | HTTP: CORS + origin allowlist, rate limits, input validation, tag escaping, SSE out | `agent.ts`, `history.ts`, Rate Limiting binding |
+| `chat-worker/src/history.ts` | Sign and verify the history (HMAC-SHA256); count visitor messages | Web Crypto, `HISTORY_SECRET` |
 | `chat-worker/src/agent.ts` | The Claude call and tool loop; maps tool calls to events | `@anthropic-ai/sdk`, `tools.ts`, `prompt.ts` |
 | `chat-worker/src/tools.ts` | The three tool schemas | — |
 | `chat-worker/src/prompt.ts` + `knowledge.md` | Rules + knowledge, assembled into a stable, cached system prompt | — |
 | `chat-worker/eval/` | Scenario runner (section 5) | real API key |
 
-- **Loading.** `chat.js` loads with `defer` from one `<script>` line on each of the nine pages. It waits for `load` and an idle callback before injecting `chat.css` and the launcher, so it adds nothing to first paint or LCP. It is kept separate from `site.js` because it is large and self-contained.
+- **Loading.** `chat.js` loads with `defer` from one `<script>` line on each of the nine pages. `404.html` uses the root-absolute `/assets/js/chat.js`, like its other assets, because it serves at any depth. The script waits for `load` and an idle callback before injecting `chat.css` and the launcher, so it adds nothing to first paint or LCP. It is kept separate from `site.js` because it is large and self-contained.
+- **Worker URL.** A constant in `chat.js`: the production Worker URL, or `http://localhost:8787` (`wrangler dev`) when the page is served from localhost.
+- **Storage.** Every `sessionStorage` read and write is wrapped in try/catch. When storage is unavailable (private mode, blocked site data), the chat still works for the current page; it just does not survive navigation.
 - **Hosting `chat-worker/`.** It lives in this repo, is added to `_config.yml`'s exclude list and is deployed with `wrangler`.
 - **The repo is public.** Nothing secret goes in `chat-worker/`; the API key is set only with `wrangler secret put`.
 
 ### Request and stream contract
-`POST /chat`, JSON:
+`POST /chat`, JSON. The widget reads the reply with `fetch` and a streamed body; `EventSource` cannot POST. The Worker answers the CORS preflight (`OPTIONS`) for allowlisted origins only.
 
 ```json
 {
   "history": [ /* MessageParam[] exactly as previously returned in `done.append` */ ],
+  "sig":     "HMAC of history, from the previous `done`",   // absent on the first message
   "input":   "visitor text, ≤ 1000 chars",
   "page":    { "path": "/websites.html", "title": "…", "greeting": "…" }  // greeting: first message only
 }
 ```
 
-The Worker builds the new user turn itself: a `<page path="…"/>` note followed by the visitor text. Any `<page` in the visitor text is escaped, so a visitor cannot forge the note.
+**Signed history.** The history lives in the visitor's browser, so without a check anyone could edit it. They could plant fake assistant turns or fake `<page>` notes, or reset the 40-message count, and that would make the tag-escaping and the limits meaningless.
+- The Worker signs each new history with HMAC-SHA256 (Web Crypto, secret `HISTORY_SECRET`) and returns the signature in `done`.
+- The widget sends it back with the next message.
+- On a mismatch the Worker refuses with `error: reset`. The widget says the chat had to restart and starts a fresh one; the visitor's typed message is kept.
+
+The Worker builds the new user turn itself: a `<page path="…"/>` note followed by the visitor text. Any `<page` in the visitor text is escaped, so a visitor cannot forge the note. `page.path` must be one of the nine known paths (anything else becomes `/`). `title` and `greeting` are cut to 200 characters and escaped.
 
 The greeting (nudge line or default) is drawn by the widget, not the model, because a conversation must start with a user turn. So on the first message the widget sends `page.greeting` as well, and the note carries it (`<page path="…" greeting="…"/>`). That way the model knows what it has already "said".
 
@@ -193,8 +202,8 @@ The Worker streams Server-Sent Events:
 | `text` | `{delta}` | appends to the current bot bubble |
 | `card` | `{kind: "page", page, reason}` or `{kind: "whatsapp", summary}` | renders the card |
 | `lead` | the `capture_lead` input | posts the lead email (deduped) |
-| `done` | `{append: MessageParam[]}` | appends the user turn + assistant/tool turns to stored history |
-| `error` | `{code}`: `rate_limited`, `limit_reached`, `too_long`, `unavailable`, `refused` | shows the fallback (section 4) |
+| `done` | `{append: MessageParam[], sig}` | appends the user turn + assistant/tool turns to stored history and keeps the new signature |
+| `error` | `{code}`: `rate_limited`, `limit_reached`, `too_long`, `unavailable`, `refused`, `reset` | shows the fallback (section 4) |
 
 History is **append-only**: the widget stores blocks exactly as the Worker returned them (including any thinking blocks) and never edits earlier turns. The Worker is stateless.
 
@@ -238,10 +247,26 @@ The widget posts to the same FormSubmit endpoint the contact form uses, through 
 
 `generate_lead` is the event the site's other lead routes already send.
 
+### The free plan's CPU limit (measured, not assumed)
+The Workers free plan allows 10 ms of CPU per request. Time spent waiting on the Claude API does not count, but these do:
+- parsing the incoming history;
+- checking and making the signature;
+- reading the model's stream;
+- writing events back to the widget.
+
+A short chat is expected to stay well under the limit; a long one may get close. The eval run (section 5) records CPU time per request from the Workers logs.
+- If the longest conversations stay under about 7 ms, the free plan stays.
+- If they don't, the options are:
+  - lower the history cap, which ends long chats sooner with a handoff;
+  - or move to Workers Paid (US$5/month, 30 s CPU).
+
+That choice goes to the owner with the measurements.
+
 ### Owner's one-time setup
 1. Cloudflare account (free); deploy the Worker (the plan gives the commands).
 2. Anthropic API key, stored with `wrangler secret put ANTHROPIC_API_KEY`, and a **monthly spend limit** set in the Anthropic Console.
-3. Optional: `chat.dayaminsights.com` pointed at the Worker. Until then the `workers.dev` URL is used.
+3. `wrangler secret put HISTORY_SECRET`: any long random string (the plan gives a one-line generator).
+4. Optional: `chat.dayaminsights.com` pointed at the Worker. Until then the `workers.dev` URL is used.
 
 ## 4. Failure, abuse and privacy
 
@@ -252,14 +277,15 @@ The visitor always keeps a way to reach a person, and never sees raw error text.
 |---|---|
 | Worker unreachable, network error, or no first token within 20 s | "I can't answer right now", a WhatsApp card and a link to the contact form. Their typed message stays in the input. |
 | `rate_limited` / `limit_reached` | The same fallback, worded as too many messages. |
+| `reset` (history failed its signature check) | "Sorry, I had to restart our chat", then a fresh chat with their typed message still in the input. |
 | API error, `refused`, cut-off | A short apology and a person handoff. |
 | Lead email fails twice | A WhatsApp card carrying the summary. |
 | JavaScript off | No launcher. The contact form and WhatsApp links are unchanged. |
 
 ### Abuse and cost limits
-- Origin allowlist: `https://dayaminsights.com` and `http://localhost:8090`.
-- Per IP: 20 messages per 10 minutes (Workers Rate Limiting binding).
-- Per conversation: 40 visitor messages, counted from the history sent; after that, `limit_reached` and a polite handoff.
+- Origin allowlist: `https://dayaminsights.com`, `https://www.dayaminsights.com`, `http://localhost:8090`, `http://127.0.0.1:8090`.
+- Per IP: 10 messages per 60 seconds, a burst limit (Workers Rate Limiting binding, keyed on `CF-Connecting-IP`). The binding only counts over 10 s or 60 s windows, and only approximately, so it stops floods, not slow abuse. The per-conversation cap and the spend limit cover the rest.
+- Per conversation: 40 visitor messages, counted from the signed history, so it cannot be reset by editing it; after that, `limit_reached` and a polite handoff.
 - Input ≤ 1,000 characters; history ≤ 200 messages and ≤ 200 KB (a sanity bound; the 40-message limit is what normally ends a conversation).
 - The off-topic rule stops the bot working as a free general assistant.
 - The Anthropic Console monthly spend limit is the hard ceiling.
@@ -276,10 +302,11 @@ The bot says what happens to contact details before asking for them.
 ## 5. Testing
 
 - **Worker unit tests** (vitest, Claude mocked):
-  - origin rejection
+  - origin rejection and the CORS preflight
   - rate and conversation limits
   - input length
-  - `<page` escaping in visitor text
+  - `<page` escaping in visitor text; unknown page paths become `/`
+  - signature: valid history passes; any edited byte, a missing signature on a non-empty history, or a signature from another secret gives `reset`
   - tool call → SSE event mapping
   - `suggest_page` rejects pages outside the list
   - each error code
@@ -296,6 +323,8 @@ The bot says what happens to contact details before asking for them.
   - no console errors; no horizontal overflow from 360 to 1440px
   - existing suites still green
 - **Conversation eval** (`chat-worker/eval/`, real model, run before launch and after any prompt change). Each scenario has a pass rule; price, tool, classification and language checks are automated, the rest read by hand.
+  - A full run spends roughly US$1–2 of API credit.
+  - Run through `wrangler dev` against the real Worker code, so it also records CPU time per request (section 3).
 
 | # | Visitor | Passes when |
 |---|---|---|
@@ -328,6 +357,7 @@ The bot says what happens to contact details before asking for them.
 - A test lead reaches dayaminsights@gmail.com with the classification and transcript.
 - The widget suite and all existing `tools/checks` suites pass.
 - Home and service-page LCP are no worse than before (same throttled local measure as the SEO pass).
+- Worker CPU time per request has been measured on the eval run, and the free-or-paid decision (section 3) has been put to the owner.
 - `privacy.html` is updated.
 
 ## Out of scope for v1
