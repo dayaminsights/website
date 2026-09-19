@@ -32,7 +32,7 @@ Scope: one AI chatbot on every page of dayaminsights.com, plus the small backend
 ## 1. What the visitor sees
 
 ### Launcher
-Bottom-right on all nine pages (`index`, `dashboards`, `automation`, `ai-chatbot`, `websites`, `how-we-work`, `faq`, `privacy`, `404`). It is the logo's blue square with the label **Ask us**. Below 600px it is the square alone, 52px, clear of the safe-area inset. It hides while the mobile menu is open.
+Bottom-right on all nine pages (`index`, `dashboards`, `automation`, `ai-chatbot`, `websites`, `how-we-work`, `faq`, `privacy`, `404`). It is the logo's blue square with the label **Ask us**, on phones too: a bare square does not read as "chat", and being seen is the point. It sits clear of the safe-area inset and has a light hairline ring, so it keeps its edge over the navy sections. It fades in after the page has loaded, and hides while the mobile menu is open.
 
 ### Nudge
 One small bubble above the launcher, shown after 20 seconds on the page or at half-page scroll, whichever comes first. It shows at most once per visit (per tab session). It never shows again after it is dismissed, and it never shows once the visitor has used the chat. Clicking it opens the panel with that line as the bot's greeting.
