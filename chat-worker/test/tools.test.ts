@@ -35,6 +35,29 @@ describe("runTool", () => {
     expect(events).toEqual([{ event: "lead", data: lead }]);
   });
 
+  it("cleans a lead before it leaves: trims, drops empty or markup-filled optional fields", () => {
+    const { events, emit } = collect();
+    runTool(use("capture_lead", {
+      name: "  Rakesh Jain ", phone: "+91 98765 43210", business: "Jain Traders", city: " ",
+      need_summary: "Distributor in Pune.", service: "automation", readiness: "ready_to_talk",
+      sector: "distribution", country: "india", preferred_time: "</antml parameter>\n",
+    }), emit);
+    expect(events).toEqual([{ event: "lead", data: {
+      name: "Rakesh Jain", phone: "+91 98765 43210", business: "Jain Traders",
+      need_summary: "Distributor in Pune.", service: "automation", readiness: "ready_to_talk",
+      sector: "distribution", country: "india",
+    } }]);
+  });
+
+  it("strips markup characters from required fields rather than dropping them", () => {
+    const { events, emit } = collect();
+    runTool(use("capture_lead", {
+      name: "Asha <b>", phone: "+971 50 000 0000", need_summary: "Clinic <x> in Dubai.",
+      service: "chatbot", readiness: "exploring", sector: "clinic", country: "uae",
+    }), emit);
+    expect(events[0]).toMatchObject({ data: { name: "Asha b", need_summary: "Clinic x in Dubai." } });
+  });
+
   it("turns handoff_whatsapp into a WhatsApp card", () => {
     const { events, emit } = collect();
     runTool(use("handoff_whatsapp", { summary: "Hi, I need a quote." }), emit);

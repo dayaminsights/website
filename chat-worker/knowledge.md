@@ -45,7 +45,7 @@ How a dashboard project runs:
 4. Live: handed over with written instructions, in the client's accounts, and watched for the first weeks.
 Most first dashboards are live inside four to six weeks.
 
-Example project (retail; an example of the usual shape, not a named client): weekly reporting depended on several spreadsheets, each kept by a different person with its own idea of what counted as a sale. We built a central sales and inventory dashboard fed from billing and stock data, with the definitions agreed once and written down. Management got one view of performance, refreshed daily instead of assembled weekly, and stopped arguing about whose number was right.
+Example project (retail; an illustration of the usual shape of this work, not a past client): the usual starting point is weekly reporting that depends on several spreadsheets, each kept by a different person with its own idea of what counts as a sale. The work is a central sales and inventory dashboard fed from billing and stock data, with the definitions agreed once and written down. The result is one view of performance, refreshed daily instead of assembled weekly, and no more arguing about whose number is right.
 
 ## Workflow automation (page card: automation)
 For growing businesses where more customers still means more admin. When systems do not talk to each other, people do the talking: copying, re-typing, chasing, reminding.
@@ -74,9 +74,9 @@ How an automation project runs:
 4. Live: handed over with written instructions and logs the client can read, and watched for the first weeks.
 Most first automations are live inside four to six weeks.
 
-Example projects (examples of the usual shape, not named clients):
-- Distribution: orders arrived by phone, email and WhatsApp and each was re-typed into billing by hand. We built one route in for all three channels, with the order record created automatically and the invoice raised from it. The same order is now entered once, not three times, and the typos stopped reaching customers.
-- Professional services: enquiries were tracked in an inbox and followed up whenever somebody remembered. We built an automated enquiry, follow-up and CRM workflow with reminders. Faster first response, and far less leakage between enquiry and quote.
+Example projects (illustrations of the usual shape of this work, not past clients):
+- Distribution: orders arrive by phone, email and WhatsApp and each is re-typed into billing by hand. The work is one route in for all three channels, with the order record created automatically and the invoice raised from it. The result: the same order is entered once, not three times, and typos stop reaching customers.
+- Professional services: enquiries sit in an inbox and get followed up whenever somebody remembers. The work is an automated enquiry, follow-up and CRM workflow with reminders. The result: a faster first response and far less leakage between enquiry and quote.
 
 ## AI assistants for a team (page card: ai_assistants)
 Part of the automation work. Most AI demos fail on contact with a real business because they are not plugged into anything: the value is not the model, it is what the model can see, meaning the business's products, prices, policies and history. An assistant connected to the business can answer customer questions, search the business's own information, summarise a report, follow up a lead or prepare a quote, with a person in the loop wherever a wrong answer would cost something. Where a mistake is expensive, AI drafts and a person approves. Uses: customer support, lead qualification, sales follow-ups, an internal knowledge assistant, report summaries, quote generation.
@@ -120,7 +120,7 @@ How a website project runs:
 4. Live: launched, handed over with written instructions, and watched for the first weeks.
 Most websites are live inside four to six weeks.
 
-Example project (clinics; an example of the usual shape, not a named client): the site listed services and a phone number, and everything patients wanted to know first had to be asked on the phone. We built a fast site around the four jobs, with an enquiry form wired straight to a phone. Enquiries now arrive already knowing the answers. The dayaminsights.com site itself is built the same way.
+Example project (clinics; an illustration of the usual shape of this work, not a past client): the usual starting point is a site that lists services and a phone number, so everything patients want to know first has to be asked on the phone. The work is a fast site built around the four jobs, with an enquiry form wired straight to a phone. The result: enquiries arrive already knowing the answers. The dayaminsights.com site itself is built the same way.
 
 ## How we work (page card: how_we_work)
 The ladder: every client arrives having done the hardest part, a business that works. We take it up five rungs, one at a time, with the tools each rung needs. You cannot skip a rung: an AI assistant sitting on five disconnected spreadsheets is just a faster way to be wrong.

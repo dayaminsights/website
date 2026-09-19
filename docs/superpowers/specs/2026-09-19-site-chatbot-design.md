@@ -213,10 +213,14 @@ History is **append-only**: the widget stores blocks exactly as the Worker retur
 - Adaptive thinking (the default when `thinking` is omitted) with `output_config.effort: "low"`, which suits short chat replies.
 - `max_tokens` 2048.
 - `system`: the rules block, then the knowledge block with `cache_control`, so the whole prefix (tools → system) is cached. The page note sits in the user turn, so the prefix never changes between visitors.
-- **Tool rounds.** The Worker runs up to three rounds per visitor message. Each tool result is a short acknowledgement ("shown to visitor", "lead sent"), so the model can continue in the same turn.
+- **Tool rounds.** Every tool only puts something on the visitor's screen. If the model has already written its message and the tools landed, the turn ends there. In the live eval, a second call after a tool always produced a restatement of the message just sent.
+  - It gets another call only if it wrote nothing before the tool or a tool failed; up to three tool rounds, then tools switch off.
+  - History may then end on tool results; the visitor's next message follows them, and the API merges the two user turns.
+  - Every lead is cleaned before it is emailed: fields are trimmed, and optional fields that are empty or contain markup are dropped. The model once leaked tool syntax into `preferred_time`.
 - **Stop reasons.** `refusal` becomes `error: refused`. `max_tokens` ends the bubble as it stands.
 - **Cost check.** Log `usage` per call (Workers logs) so real cost per conversation can be measured after launch.
-- **Estimate.** About US$0.08–0.12 for a ten-message conversation with a warm cache. Most conversations are shorter.
+- **Measured (2026-09-19, live eval, 31 visitor messages).** About US$0.0045 per visitor message with a warm cache, so roughly US$0.05 for a ten-message conversation.
+  - The ~10K-token tools + system prefix is written to the cache once and then read on every call at a tenth of the input price.
 
 ### Tools
 All three are `strict: true` with `additionalProperties: false`.

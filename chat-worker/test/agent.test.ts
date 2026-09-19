@@ -54,20 +54,53 @@ describe("runTurn", () => {
     expect(calls[0].messages).toEqual([...history, userTurn]);
   });
 
-  it("runs a tool round, then continues", async () => {
+  it("ends the turn at the card when the message is already written", async () => {
     const { fn, calls } = fake([
       msg("tool_use", [
-        { type: "text", text: "Here is the page." },
+        { type: "text", text: "A live dashboard fixes that. Where does your stock live today?" },
         { type: "tool_use", id: "tu_1", name: "suggest_page", input: { page: "dashboards", reason: "Live numbers" } },
       ]),
-      msg("end_turn", [{ type: "text", text: "Shall I pass this to the team?" }]),
     ]);
     const events: ChatEvent[] = [];
     const append = await runTurn(fn, [], userTurn, (e) => events.push(e));
-    expect(append.map((m) => m.role)).toEqual(["user", "assistant", "user", "assistant"]);
+    expect(calls).toHaveLength(1);
+    expect(append.map((m) => m.role)).toEqual(["user", "assistant", "user"]);
     expect((append[2].content as Anthropic.ToolResultBlockParam[])[0]).toMatchObject({ type: "tool_result", tool_use_id: "tu_1" });
-    expect(events.map((e) => e.event)).toEqual(["text", "card", "text"]);
+    expect(events.map((e) => e.event)).toEqual(["text", "card"]);
+  });
+
+  it("lets the model speak after a tool when it wrote nothing first", async () => {
+    const { fn, calls } = fake([
+      msg("tool_use", [{ type: "tool_use", id: "tu_1", name: "suggest_page", input: { page: "dashboards", reason: "Live numbers" } }]),
+      msg("end_turn", [{ type: "text", text: "That page shows how it works." }]),
+    ]);
+    const append = await runTurn(fn, [], userTurn, () => {});
+    expect(calls).toHaveLength(2);
     expect(calls[1].messages).toHaveLength(3);
+    expect(append.map((m) => m.role)).toEqual(["user", "assistant", "user", "assistant"]);
+  });
+
+  it("lets the model recover when a tool call fails", async () => {
+    const { fn, calls } = fake([
+      msg("tool_use", [
+        { type: "text", text: "Here is the page." },
+        { type: "tool_use", id: "tu_1", name: "suggest_page", input: { page: "admin", reason: "x" } },
+      ]),
+      msg("end_turn", [{ type: "text", text: "Sorry, that page does not exist." }]),
+    ]);
+    await runTurn(fn, [], userTurn, () => {});
+    expect(calls).toHaveLength(2);
+  });
+
+  it("accepts history that ends on tool results (the previous turn ended at a card)", async () => {
+    const history: Anthropic.MessageParam[] = [
+      { role: "user", content: [{ type: "text", text: "earlier" }] },
+      { role: "assistant", content: [{ type: "text", text: "See this." }, { type: "tool_use", id: "tu_0", name: "suggest_page", input: { page: "faq", reason: "x" } }] },
+      { role: "user", content: [{ type: "tool_result", tool_use_id: "tu_0", content: "shown" }] },
+    ];
+    const { fn, calls } = fake([msg("end_turn", [{ type: "text", text: "ok" }])]);
+    await runTurn(fn, history, userTurn, () => {});
+    expect(calls[0].messages).toEqual([...history, userTurn]);
   });
 
   it("turns tools off after three rounds", async () => {

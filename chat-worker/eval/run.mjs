@@ -22,7 +22,8 @@ const share = (text, re) => (text.match(re) || []).length / (text.replace(/[\s\d
 async function turn(state, page, input) {
   const body = { history: state.history, input, page: { path: page, title: "Eval" } };
   if (state.sig) body.sig = state.sig;
-  const out = { text: "", cards: [], leads: [], error: null };
+  // `segments` splits the reply at each tool event, so text written after a tool call is visible.
+  const out = { text: "", segments: [""], cards: [], leads: [], error: null };
   let res;
   try {
     res = await fetch(BASE + "/chat", { method: "POST", headers: { "Content-Type": "application/json", Origin: ORIGIN }, body: JSON.stringify(body) });
@@ -39,9 +40,9 @@ async function turn(state, page, input) {
     const data = /^data: (.+)$/m.exec(chunk)?.[1];
     if (!ev || !data) continue;
     const d = JSON.parse(data);
-    if (ev === "text") out.text += d.delta;
-    else if (ev === "card") out.cards.push(d);
-    else if (ev === "lead") out.leads.push(d);
+    if (ev === "text") { out.text += d.delta; out.segments[out.segments.length - 1] += d.delta; }
+    else if (ev === "card") { out.cards.push(d); out.segments.push(""); }
+    else if (ev === "lead") { out.leads.push(d); out.segments.push(""); }
     else if (ev === "done") { state.history = state.history.concat(d.append); state.sig = d.sig; }
     else if (ev === "error") out.error = d.code;
   }
@@ -57,6 +58,8 @@ function check(s, turns) {
   const fails = [];
   const errors = turns.map((t) => t.error).filter(Boolean);
   if (errors.length) fails.push("errors: " + errors.join(", "));
+  // The rules say: whole message first, then the tool, then stop. Text after a tool call is usually a repeat.
+  if (!c.allowAfterTool && turns.some((t) => (t.segments || []).slice(1).some((s) => s.trim()))) fails.push("wrote more after a tool call (repeats itself?)");
   if (c.noPrice !== false && PRICE.test(bot)) fails.push("price-like text: " + bot.match(PRICE)[0]);
   if (c.page && !cards.some((k) => k.kind === "page" && k.page === c.page)) fails.push(`no page card for ${c.page}`);
   if (c.anyPage && !cards.some((k) => k.kind === "page")) fails.push("no page card");
@@ -99,7 +102,7 @@ for (const s of scenarios) {
   );
   const md = [`# ${s.id}. ${s.name}`, `page: ${s.page}`, s.manual ? `read for: ${s.manual}` : "", ""]
     .concat(turns.flatMap((t) => [
-      `**Visitor:** ${t.input}`, "", `**Bot:** ${t.text || "(no text)"}`,
+      `**Visitor:** ${t.input}`, "", `**Bot:** ${(t.segments || [t.text]).filter((s) => s.trim()).join("\n\n> …after a tool call:\n\n") || "(no text)"}`,
       ...t.cards.map((k) => `> card: ${JSON.stringify(k)}`),
       ...t.leads.map((l) => `> lead: ${JSON.stringify(l)}`),
       t.error ? `> error: ${t.error}` : "", "",

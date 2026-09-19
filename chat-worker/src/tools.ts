@@ -69,7 +69,7 @@ export const TOOLS: Anthropic.Tool[] = [
         country: { type: "string", enum: ["india", "uae", "other"] },
         preferred_time: {
           type: "string",
-          description: "Only if they asked for a call: the day and time they prefer, with their timezone if known.",
+          description: "Leave this out unless the visitor named a day or time for a call. Then: that day and time, with their timezone if known.",
         },
       },
       required: ["name", "phone", "need_summary", "service", "readiness", "sector", "country"],
@@ -97,6 +97,27 @@ function result(id: string, content: string, isError = false): Anthropic.ToolRes
   return { type: "tool_result", tool_use_id: id, content, ...(isError ? { is_error: true } : {}) };
 }
 
+const REQUIRED_TEXT = ["name", "phone", "need_summary"];
+const OPTIONAL_TEXT = ["business", "city", "preferred_time"];
+
+/** The model occasionally leaks markup into a free-text field (seen in evals); none of it belongs in an email. */
+export function cleanLead(input: Record<string, unknown>): Lead {
+  const out: Record<string, unknown> = {};
+  for (const [k, v] of Object.entries(input)) {
+    if (typeof v !== "string") {
+      if (!(Array.isArray(v) && v.length === 0)) out[k] = v;
+      continue;
+    }
+    const t = v.trim();
+    if (OPTIONAL_TEXT.includes(k)) {
+      if (t && !/[<>]/.test(t)) out[k] = t;
+    } else {
+      out[k] = REQUIRED_TEXT.includes(k) ? t.replace(/[<>]/g, "").replace(/\s{2,}/g, " ").trim() : t;
+    }
+  }
+  return out as unknown as Lead;
+}
+
 /** Every tool is a message to the widget; the model only needs to know it landed. */
 export function runTool(block: Anthropic.ToolUseBlock, emit: Emit): Anthropic.ToolResultBlockParam {
   const input = (block.input ?? {}) as Record<string, unknown>;
@@ -106,14 +127,14 @@ export function runTool(block: Anthropic.ToolUseBlock, emit: Emit): Anthropic.To
       const href = PAGE_TARGETS[page];
       if (!href) return result(block.id, `Unknown page "${page}".`, true);
       emit({ event: "card", data: { kind: "page", page, href, reason: String(input.reason ?? "") } });
-      return result(block.id, "The card is on the visitor's screen.");
+      return result(block.id, "The card is on the visitor's screen, under your message.");
     }
     case "capture_lead":
-      emit({ event: "lead", data: input as unknown as Lead });
-      return result(block.id, "Sent to the team. They reply within one working day.");
+      emit({ event: "lead", data: cleanLead(input) });
+      return result(block.id, "Sent to the team; they reply within one working day.");
     case "handoff_whatsapp":
       emit({ event: "card", data: { kind: "whatsapp", summary: String(input.summary ?? "") } });
-      return result(block.id, "The WhatsApp button is on the visitor's screen.");
+      return result(block.id, "The WhatsApp button is on the visitor's screen, under your message.");
     default:
       return result(block.id, `Unknown tool "${block.name}".`, true);
   }

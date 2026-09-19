@@ -77,7 +77,14 @@ export async function runTurn(
       return append;
     }
     append.push({ role: "assistant", content: message.content });
-    append.push({ role: "user", content: toolUses.map((b) => runTool(b, emit)) });
+    const results = toolUses.map((b) => runTool(b, emit));
+    append.push({ role: "user", content: results });
+    // Every tool here only puts something on the visitor's screen. If the message is
+    // already written and the tools landed, the turn is over: given another call, the
+    // model restates what it just said (seen in every eval run). History may then end
+    // on tool results; the visitor's next turn follows them, and the API merges the two.
+    const wrote = message.content.some((b) => b.type === "text" && b.text.trim());
+    if (wrote && !results.some((r) => r.is_error)) return append;
   }
   // Only reachable if the model called a tool with tools switched off.
   throw new AgentError("unavailable");
