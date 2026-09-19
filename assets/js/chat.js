@@ -111,11 +111,11 @@
 
     launch = el('button', 'dc-launch');
     launch.type = 'button';
-    launch.setAttribute('aria-label', 'Ask us: chat with our AI assistant');
+    launch.setAttribute('aria-label', 'Talk to our AI agent');
     launch.setAttribute('aria-expanded', 'false');
     launch.setAttribute('aria-controls', 'dcPanel');
     launch.appendChild(el('span', 'dc-sq'));
-    launch.appendChild(el('span', 'dc-launch-label', 'Ask us'));
+    launch.appendChild(el('span', 'dc-launch-label', 'Talk to our AI agent'));
     dot = el('span', 'dc-dot');
     dot.hidden = true;
     launch.appendChild(dot);
@@ -275,12 +275,13 @@
   function setOpen(open, quiet){
     panel.hidden = !open;
     launch.setAttribute('aria-expanded', String(open));
+    openers.forEach(function(b){ b.setAttribute('aria-expanded', String(open)); });
     document.documentElement.classList.toggle('dc-lock', open && phone());
     state.open = open;
     save();
     if (open) {
       hideNudge();
-      dot.hidden = true;
+      setUnread(false);
       if (!state.log.length) greet(state.greeting || PAGE.nudge || DEFAULT_GREETING);
       scrollLog();
       if (!quiet) input.focus({ preventScroll: true });
@@ -422,7 +423,7 @@
       busy = false;
       sendBtn.disabled = false;
       save();
-      if (!isOpen()) dot.hidden = false;
+      if (!isOpen()) setUnread(true);
     });
   }
 
@@ -575,13 +576,43 @@
     placeCta();
     renderChips();
     if (state.open) {
-      if (phone()) { state.open = false; save(); dot.hidden = false; }
+      if (phone()) { state.open = false; save(); setUnread(true); }
       else setOpen(true, true);
     }
   }
 
+  // ===== "Ask us" in the header and the phone menu =====
+  // The pages carry the buttons hidden (without this script they would open
+  // nothing); they open the same panel as the corner launcher and share its
+  // unread dot. From the phone menu, the menu closes first so the panel is not
+  // stacked on top of it.
+  var openers = [];
+  function wireOpeners(){
+    openers = Array.prototype.slice.call(document.querySelectorAll('[data-chat-open]'));
+    openers.forEach(function(b){
+      b.hidden = false;
+      b.setAttribute('aria-controls', 'dcPanel');
+      b.setAttribute('aria-expanded', 'false');
+      b.addEventListener('click', function(){
+        var toggle = document.getElementById('navToggle');
+        if (toggle && toggle.getAttribute('aria-expanded') === 'true') toggle.click();
+        if (isOpen()) { setOpen(false); return; }
+        track('chat_open', { source: b.closest('.mm-cta') ? 'menu' : 'nav' });
+        setOpen(true);
+      });
+    });
+  }
+  function setUnread(on){
+    dot.hidden = !on;
+    openers.forEach(function(b){
+      var d = b.querySelector('.nav-ask-dot');
+      if (d) d.hidden = !on;
+    });
+  }
+
   function init(){
     build();
+    wireOpeners();
     restore();
     watchPage();
     armNudge();

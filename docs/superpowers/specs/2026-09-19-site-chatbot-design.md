@@ -31,8 +31,15 @@ Scope: one AI chatbot on every page of dayaminsights.com, plus the small backend
 
 ## 1. What the visitor sees
 
+### Header entry (added 2026-09-19, owner: the corner launcher was easy to miss; "highlight it so people use it")
+**Talk to our AI agent** sits in the sticky header of all nine pages, so it is on screen at every scroll position. It is the one filled button in the bar (navy, the blue signal square, the label), the same look as the corner launcher so the two read as one thing; "Tell us what you need →" beside it is outlined. Both open the same panel and share the unread dot. The buttons ship `hidden` and `chat.js` shows them, so without the script there is no dead button.
+- ≥1440px: both buttons, at 44px (a size down from page buttons: two at page size read as a wall beside six links).
+- 1120–1439px: the form CTA leaves the header (it is in the hero, mid-page and footer of every page, and the agent hands people to the form and WhatsApp); the links and the agent button keep the row. The links' gap is 24px at every width.
+- <1120px: the links hand over to the menu button; the agent button stays in the bar, compact, and the phone menu lists it too (tapping it closes the menu). Under 500px the bar shows the blue square alone, label kept for screen readers.
+- The handover used to be 1024; with six links the row was already wrapping there.
+
 ### Launcher
-Bottom-right on all nine pages (`index`, `dashboards`, `automation`, `ai-chatbot`, `websites`, `how-we-work`, `faq`, `privacy`, `404`). It is the logo's blue square with the label **Ask us**, on phones too: a bare square does not read as "chat", and being seen is the point. It sits clear of the safe-area inset and has a light hairline ring, so it keeps its edge over the navy sections. It fades in after the page has loaded, and hides while the mobile menu is open.
+Bottom-right on all nine pages (`index`, `dashboards`, `automation`, `ai-chatbot`, `websites`, `how-we-work`, `faq`, `privacy`, `404`). It is the logo's blue square with the label **Talk to our AI agent**, on phones too: a bare square does not read as "chat", and being seen is the point. It is the corner people look for by habit; the header button is the primary entry. It sits clear of the safe-area inset and has a light hairline ring, so it keeps its edge over the navy sections. It fades in after the page has loaded, and hides while the mobile menu is open.
 
 ### Nudge
 One small bubble above the launcher, shown after 20 seconds on the page or at half-page scroll, whichever comes first. It shows at most once per visit (per tab session). It never shows again after it is dismissed, and it never shows once the visitor has used the chat. Clicking it opens the panel with that line as the bot's greeting.

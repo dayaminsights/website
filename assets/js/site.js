@@ -242,7 +242,9 @@
     if (!link) return;
     var href = link.getAttribute('href') || '';
     var isContact = href.indexOf('mailto:') === 0 || href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1;
-    var isPrimary = link.classList.contains('btn-primary');
+    // The header's form CTA is outlined (the chat button beside it is the filled one), so
+    // any button in the header or the phone menu counts as a primary click too.
+    var isPrimary = link.classList.contains('btn-primary') || (link.classList.contains('btn') && !!link.closest('.nav-cta, .mm-cta'));
     if (!isContact && !isPrimary) return;
     if (typeof window.gtag === 'function'){
       window.gtag('event', 'generate_lead', {
@@ -336,7 +338,7 @@
     // Crossing back to desktop width with the menu open would otherwise
     // strand body{overflow:hidden} on a desktop layout.
     window.addEventListener('resize', function(){
-      if (window.innerWidth > 1023 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
+      if (window.innerWidth > 1119 && navToggle.getAttribute('aria-expanded') === 'true') setMenu(false);
     }, {passive:true});
   }
 

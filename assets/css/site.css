@@ -175,7 +175,7 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .brand .wm{position:relative;padding-left:var(--sp-3);white-space:nowrap}
 .brand .wm::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:1px;background:currentColor;opacity:.4}
 .brand .wm span{font-weight:400}
-.nav-links{display:flex;align-items:center;gap:var(--sp-6)}
+.nav-links{display:flex;align-items:center;gap:var(--sp-5)}
 .nav-links a{color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:500;transition:color var(--t-fast) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav-links a:hover{color:var(--ink)}}
 /* Current section, no click required. The underline is drawn rather than
@@ -198,6 +198,22 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
    the underline already says "this goes somewhere"; an arrow on every link
    was template chrome (premium pass). */
 a:not(.btn,.hs-row) .arrow{display:none}
+/* "Ask us": the chat, in the header on every page. The one filled button in the
+   bar, so it is where the eye lands; the form CTA beside it is outlined. Same
+   look as the corner launcher (navy, the blue signal square, the label), so the
+   two read as one thing. Hidden until chat.js is ready, because without the
+   script it would open nothing. */
+/* Header buttons are a size down from the page buttons: 44px, 14px text. Two of
+   them at page size read as a wall beside six links. */
+.nav-cta .btn{min-height:44px;padding:0 16px;font-size:14px;line-height:1.2}
+.nav-ask{gap:9px;padding-inline:14px 16px;line-height:1.2}
+.nav-ask[hidden]{display:none}
+.nav-ask-sq{flex:none;width:10px;height:10px;background:var(--accent)}
+@media (hover:hover) and (pointer:fine){.nav-ask:hover .nav-ask-sq{background:#fff}}
+.nav-ask{position:relative}
+.nav-ask-dot{position:absolute;top:-5px;right:-5px;width:12px;height:12px;background:var(--accent);border:2px solid var(--bg)}
+.nav-ask-dot[hidden]{display:none}
+.mm-cta .nav-ask{padding-inline:22px}
 .nav-toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:0;width:44px;height:44px;color:var(--ink);cursor:pointer;transition:transform var(--t-press) var(--ease-out)}
 .nav-toggle:active{transform:scale(.95)}
 /* ===== Mobile menu ===== */
@@ -218,7 +234,7 @@ a:not(.btn,.hs-row) .arrow{display:none}
 .mm-links a[aria-current="page"]{color:var(--accent)}
 .mm-cta{display:flex;flex-direction:column;gap:var(--sp-3);margin-top:auto;padding-top:var(--sp-5)}
 .mm-cta .btn{width:100%}
-@media(min-width:1024px){.mobile-menu{display:none!important}}
+@media(min-width:1120px){.mobile-menu{display:none!important}}
 
 /* ===== Section scaffolding ===== */
 /* Premium pass (2026-09-19): a label above every heading, tracked out in caps
@@ -1330,16 +1346,29 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .res-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr 1fr}
 }
-/* Brand, five links and the CTA need about 1024px to sit on one row with air
-   around them (measured at the tighter gap: 24px clear of brand and CTA at
-   1024, 13px at 1000). Under that the whole desktop nav hands over to the menu
-   button rather than wrap or crowd. The three service pages are top-level
-   links on purpose — no Solutions dropdown. */
-@media(max-width:1279px){.nav-links{gap:var(--sp-5)}}
-@media(max-width:1023px){
-  .nav-links,.nav-cta .btn-ghost,.nav-cta .btn-primary{display:none}
+/* The header row (measured 2026-09-19). Brand, six links, "Talk to our AI
+   agent" and the outlined form CTA need about 1440px to sit on one row with
+   air around them. From 1120 to 1439 the form CTA leaves the header (it is in
+   the hero, mid-page and the footer of every page, and the agent hands people
+   to the form and WhatsApp) so the links and the agent button keep the row.
+   Under 1120 the links hand over to the menu button; the agent button stays in
+   the bar beside it, compact. The three service pages are top-level links on
+   purpose — no Solutions dropdown. site.js closes the phone menu on resize at
+   the same 1120 threshold. The link gap is 24px at every width: 32px left the
+   two-button row 11px of air inside the 1360px content cap. */
+@media(max-width:1439px){.nav-cta .btn-ghost{display:none}}
+@media(max-width:1119px){
+  .nav-links,.nav-cta .btn:not(.nav-ask){display:none}
   .nav-toggle{display:grid;place-items:center}
   .nav-inner{gap:var(--sp-3)}
+  .nav-cta .nav-ask{min-height:44px;padding:0 14px 0 12px;font-size:14px}
+}
+/* Phones under 500px: brand, the blue square and the menu button; the label
+   stays for screen readers. */
+@media(max-width:499px){
+  .nav-cta .nav-ask{width:44px;padding:0;justify-content:center}
+  .nav-cta .nav-ask-sq{width:14px;height:14px}
+  .nav-cta .nav-ask-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 }
 @media(max-width:760px){
   .mid-cta{flex-direction:column;gap:var(--sp-4);text-align:center}
