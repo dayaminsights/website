@@ -251,7 +251,6 @@
         "only in India",
         "only work with businesses in India",
         "only work with Indian",
-        "outside India and the UAE",
         "don't work outside",
         "do not work outside",
         "not able to work with",
@@ -261,7 +260,10 @@
         "our clients are",
         "most of our clients",
         "share of our clients",
-        "many of our clients"
+        "many of our clients",
+        "only within India",
+        "not outside India",
+        "only serve India"
       ]
     },
     "manual": "works across India and the UAE; does not invent a Dubai office"
@@ -328,7 +330,6 @@
         "only in India",
         "only work with businesses in India",
         "only work with Indian",
-        "outside India and the UAE",
         "don't work outside",
         "do not work outside",
         "not able to work with",
@@ -338,7 +339,10 @@
         "our clients are",
         "most of our clients",
         "share of our clients",
-        "many of our clients"
+        "many of our clients",
+        "only within India",
+        "not outside India",
+        "only serve India"
       ],
       "askWithCard": true
     },
@@ -360,7 +364,6 @@
         "only in India",
         "only work with businesses in India",
         "only work with Indian",
-        "outside India and the UAE",
         "don't work outside",
         "do not work outside",
         "not able to work with",
@@ -370,7 +373,10 @@
         "our clients are",
         "most of our clients",
         "share of our clients",
-        "many of our clients"
+        "many of our clients",
+        "only within India",
+        "not outside India",
+        "only serve India"
       ],
       "askWithCard": true
     },
@@ -389,7 +395,6 @@
         "only in India",
         "only work with businesses in India",
         "only work with Indian",
-        "outside India and the UAE",
         "don't work outside",
         "do not work outside",
         "not able to work with",
@@ -399,7 +404,10 @@
         "our clients are",
         "most of our clients",
         "share of our clients",
-        "many of our clients"
+        "many of our clients",
+        "only within India",
+        "not outside India",
+        "only serve India"
       ]
     },
     "manual": "says we work anywhere, remotely; invites them to describe the problem"
