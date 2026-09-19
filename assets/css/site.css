@@ -175,7 +175,8 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 .brand .wm{position:relative;padding-left:var(--sp-3);white-space:nowrap}
 .brand .wm::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:1px;background:currentColor;opacity:.4}
 .brand .wm span{font-weight:400}
-.nav-links{display:flex;align-items:center;gap:var(--sp-5)}
+.nav-links{display:flex;align-items:center;gap:var(--sp-6)}
+@media(max-width:1279px){.nav-links{gap:var(--sp-5)}}
 .nav-links a{color:var(--muted);font-family:var(--font-ui);font-size:var(--fs-small);font-weight:500;transition:color var(--t-fast) var(--ease)}
 @media (hover:hover) and (pointer:fine){.nav-links a:hover{color:var(--ink)}}
 /* Current section, no click required. The underline is drawn rather than
@@ -203,8 +204,7 @@ a:not(.btn,.hs-row) .arrow{display:none}
    look as the corner launcher (navy, the blue signal square, the label), so the
    two read as one thing. Hidden until chat.js is ready, because without the
    script it would open nothing. */
-/* Header buttons are a size down from the page buttons: 44px, 14px text. Two of
-   them at page size read as a wall beside six links. */
+/* The header button is a size down from the page buttons: 44px, 14px text. */
 .nav-cta .btn{min-height:44px;padding:0 16px;font-size:14px;line-height:1.2}
 .nav-ask{gap:9px;padding-inline:14px 16px;line-height:1.2}
 .nav-ask[hidden]{display:none}
@@ -1346,17 +1346,14 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .res-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr 1fr}
 }
-/* The header row (measured 2026-09-19). Brand, six links, "Talk to our AI
-   agent" and the outlined form CTA need about 1440px to sit on one row with
-   air around them. From 1120 to 1439 the form CTA leaves the header (it is in
-   the hero, mid-page and the footer of every page, and the agent hands people
-   to the form and WhatsApp) so the links and the agent button keep the row.
-   Under 1120 the links hand over to the menu button; the agent button stays in
-   the bar beside it, compact. The three service pages are top-level links on
+/* The header row (measured 2026-09-19): brand, six links and one button,
+   "Talk to our AI agent". The form CTA that used to sit here is in the hero,
+   mid-page and the footer of every page and in the phone menu; two buttons
+   beside six links read as a crowd, and the agent hands people to the form and
+   WhatsApp anyway. Under 1120 the links hand over to the menu button; the agent
+   button stays in the bar beside it, compact. The three service pages are top-level links on
    purpose — no Solutions dropdown. site.js closes the phone menu on resize at
-   the same 1120 threshold. The link gap is 24px at every width: 32px left the
-   two-button row 11px of air inside the 1360px content cap. */
-@media(max-width:1439px){.nav-cta .btn-ghost{display:none}}
+   the same 1120 threshold. */
 @media(max-width:1119px){
   .nav-links,.nav-cta .btn:not(.nav-ask){display:none}
   .nav-toggle{display:grid;place-items:center}

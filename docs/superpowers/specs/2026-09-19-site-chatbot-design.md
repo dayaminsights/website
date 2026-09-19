@@ -32,9 +32,8 @@ Scope: one AI chatbot on every page of dayaminsights.com, plus the small backend
 ## 1. What the visitor sees
 
 ### Header entry (added 2026-09-19, owner: the corner launcher was easy to miss; "highlight it so people use it")
-**Talk to our AI agent** sits in the sticky header of all nine pages, so it is on screen at every scroll position. It is the one filled button in the bar (navy, the blue signal square, the label), the same look as the corner launcher so the two read as one thing; "Tell us what you need →" beside it is outlined. Both open the same panel and share the unread dot. The buttons ship `hidden` and `chat.js` shows them, so without the script there is no dead button.
-- ≥1440px: both buttons, at 44px (a size down from page buttons: two at page size read as a wall beside six links).
-- 1120–1439px: the form CTA leaves the header (it is in the hero, mid-page and footer of every page, and the agent hands people to the form and WhatsApp); the links and the agent button keep the row. The links' gap is 24px at every width.
+**Talk to our AI agent** sits in the sticky header of all nine pages, so it is on screen at every scroll position. It is the header's only button (navy, the blue signal square, the label), the same look as the corner launcher so the two read as one thing. The "Tell us what you need →" button that used to sit in the header is gone from it: with six links, two buttons read as a crowd (owner, on seeing it); the form CTA is in the hero, mid-page and footer of every page and in the phone menu, and the agent hands people to the form and WhatsApp anyway. The header button and the launcher open the same panel and share the unread dot. The button ships `hidden` and `chat.js` shows it, so without the script there is no dead button.
+- ≥1120px: links and the agent button, at 44px (a size down from page buttons).
 - <1120px: the links hand over to the menu button; the agent button stays in the bar, compact, and the phone menu lists it too (tapping it closes the menu). Under 500px the bar shows the blue square alone, label kept for screen readers.
 - The handover used to be 1024; with six links the row was already wrapping there.
 
