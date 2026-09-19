@@ -52,7 +52,7 @@ Desktop: 380×600, anchored above the launcher. Below 600px: a full-screen sheet
 
 ```
 ┌──────────────────────────────────┐
-│ ■ Dayam Insights           ⋯  ✕ │  navy header
+│ ■ Dayam Insights    New chat  ✕ │  navy header
 │   AI assistant · replies in secs │
 ├──────────────────────────────────┤
 │ ┌──────────────────────────┐     │  bot: white, hairline, square
@@ -79,7 +79,7 @@ Desktop: 380×600, anchored above the launcher. Below 600px: a full-screen sheet
 ```
 
 - **Look.** The site's own system: Inter, radius 0, hairlines, navy header (`--panel`), blue (`--accent`) used once (the send button / active state). Bubbles are square with navy hairlines, the same as the chat drawn in the `ai-chatbot` hero video, so the widget reads as that film made real. The page card takes the service colour of the page it points to (`--see`, `--auto`, `--grow`), the way the homepage cards do. The panel is the one floating element on the site, so it may carry a single soft shadow; nothing else changes.
-- **Header menu (`⋯`)**: "Start new chat" (clears the session).
+- **Header "New chat" button**: clears the session and starts over.
 - **Footer**: "This is the kind of chatbot we build →" links to `ai-chatbot.html`; on that page it reads "You're using one right now." Then "AI can make mistakes" and a Privacy link.
 - **Always labelled AI.** It never claims to be a person.
 
@@ -164,12 +164,13 @@ visitor ── chat.js (widget) ──POST /chat──▶ Cloudflare Worker ─�
 | `chat-worker/src/index.ts` | HTTP: CORS + origin allowlist, rate limits, input validation, tag escaping, SSE out | `agent.ts`, `history.ts`, Rate Limiting binding |
 | `chat-worker/src/history.ts` | Sign and verify the history (HMAC-SHA256); count visitor messages | Web Crypto, `HISTORY_SECRET` |
 | `chat-worker/src/agent.ts` | The Claude call and tool loop; maps tool calls to events | `@anthropic-ai/sdk`, `tools.ts`, `prompt.ts` |
-| `chat-worker/src/tools.ts` | The three tool schemas | — |
+| `chat-worker/src/tools.ts` | The three tool schemas, and turning each call into a widget event | `events.ts` |
+| `chat-worker/src/events.ts` | The stream event types and their SSE encoding | — |
 | `chat-worker/src/prompt.ts` + `knowledge.md` | Rules + knowledge, assembled into a stable, cached system prompt | — |
 | `chat-worker/eval/` | Scenario runner (section 5) | real API key |
 
 - **Loading.** `chat.js` loads with `defer` from one `<script>` line on each of the nine pages. `404.html` uses the root-absolute `/assets/js/chat.js`, like its other assets, because it serves at any depth. The script waits for `load` and an idle callback before injecting `chat.css` and the launcher, so it adds nothing to first paint or LCP. It is kept separate from `site.js` because it is large and self-contained.
-- **Worker URL.** A constant in `chat.js`: the production Worker URL, or `http://localhost:8787` (`wrangler dev`) when the page is served from localhost.
+- **Worker URL.** A constant in `chat.js`: the production Worker URL, or `http://localhost:8787` (`wrangler dev`) when the page is served from localhost. While the production constant is empty, the widget does nothing in production. So the pages can ship before the Worker is deployed; filling in the URL switches the bot on.
 - **Storage.** Every `sessionStorage` read and write is wrapped in try/catch. When storage is unavailable (private mode, blocked site data), the chat still works for the current page; it just does not survive navigation.
 - **Hosting `chat-worker/`.** It lives in this repo, is added to `_config.yml`'s exclude list and is deployed with `wrangler`.
 - **The repo is public.** Nothing secret goes in `chat-worker/`; the API key is set only with `wrangler secret put`.
@@ -225,9 +226,21 @@ All three are `strict: true` with `additionalProperties: false`.
   - Emits `lead`.
   - Calling it again with new detail (for example a preferred time, or a changed readiness) sends one update email; identical payloads are dropped by the widget.
 - `suggest_page`
-  - Input: `{page, reason}`. `page` is one of `dashboards.html`, `automation.html`, `ai-chatbot.html`, `websites.html`, `how-we-work.html`, `faq.html`, or `index.html#value`, with an optional in-page anchor from a fixed list (e.g. `automation.html#ai`). `reason` is one line on the card.
+  - Input: `{page, reason}`. `reason` is one line on the card. `page` is a named target, and each lands on the section that shows what we build:
+
+    | `page` | Goes to |
+    |---|---|
+    | `dashboards` | `/dashboards.html#questions` |
+    | `automation` | `/automation.html#work-that` |
+    | `ai_assistants` | `/automation.html#ai` |
+    | `chatbot` | `/ai-chatbot.html#what` |
+    | `websites` | `/websites.html#jobs` |
+    | `how_we_work` | `/how-we-work.html#ladder` |
+    | `faq` | `/faq.html` |
+    | `services` | `/index.html#value` |
+
   - Emits `card: page`. The card opens the page in the same tab, and the chat continues there.
-  - Suggesting the page the visitor is already on becomes "scroll to" rather than a link.
+  - When the visitor is already on that page, the link is just an in-page anchor, so it scrolls instead; on phones the panel closes first.
 - `handoff_whatsapp`
   - Input: `{summary}`.
   - Emits `card: whatsapp`, linking to `wa.me/917877640693` with the summary prefilled.
@@ -254,7 +267,7 @@ The Workers free plan allows 10 ms of CPU per request. Time spent waiting on the
 - reading the model's stream;
 - writing events back to the widget.
 
-A short chat is expected to stay well under the limit; a long one may get close. The eval run (section 5) records CPU time per request from the Workers logs.
+A short chat is expected to stay well under the limit; a long one may get close. The launch eval run (section 5) against the deployed Worker records CPU time per request.
 - If the longest conversations stay under about 7 ms, the free plan stays.
 - If they don't, the options are:
   - lower the history cap, which ends long chats sooner with a handoff;
@@ -308,7 +321,7 @@ The bot says what happens to contact details before asking for them.
   - `<page` escaping in visitor text; unknown page paths become `/`
   - signature: valid history passes; any edited byte, a missing signature on a non-empty history, or a signature from another secret gives `reset`
   - tool call → SSE event mapping
-  - `suggest_page` rejects pages outside the list
+  - `suggest_page` rejects targets outside the list
   - each error code
   - `done.append` is the exact new turns
 - **Widget suite** (`tools/checks/chat.js`, Playwright, Worker mocked at the network layer):
@@ -324,11 +337,12 @@ The bot says what happens to contact details before asking for them.
   - existing suites still green
 - **Conversation eval** (`chat-worker/eval/`, real model, run before launch and after any prompt change). Each scenario has a pass rule; price, tool, classification and language checks are automated, the rest read by hand.
   - A full run spends roughly US$1–2 of API credit.
-  - Run through `wrangler dev` against the real Worker code, so it also records CPU time per request (section 3).
+  - It can run against `wrangler dev` while the prompt is being tuned. The launch run goes against the deployed Worker, because only there does Cloudflare enforce and record CPU time; read it with `wrangler tail` or the Workers Logs (section 3).
+  - It paces its requests to stay under the per-IP limit.
 
 | # | Visitor | Passes when |
 |---|---|---|
-| 1 | Retail owner, weekly reports by hand | Diagnoses dashboards, `suggest_page` → `dashboards.html`, one question at a time |
+| 1 | Retail owner, weekly reports by hand | Diagnoses dashboards, `suggest_page` → `dashboards`, one question at a time |
 | 2 | "How much for a website?" | No figure; fixed price after a scope call; offers a person |
 | 3 | Pushes for a ballpark three times | Still no figure, still friendly, offers WhatsApp |
 | 4 | Writes in Hindi | Replies in Hindi |
