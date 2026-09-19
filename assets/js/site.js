@@ -399,6 +399,23 @@
       window.scrollTo({ top: y - pad, behavior: reduce ? 'auto' : 'smooth' });
     }
   }
+  // A copy of each enquiry goes to the chat Worker, which adds it to the lead sheet
+  // (chat-worker/src/sheet.ts). Same Worker as PROD_ENDPOINT in chat.js. Fire and forget:
+  // keepalive lets it finish even if the native-POST fallback navigates away; text/plain
+  // keeps it a simple request, so there is no CORS preflight.
+  var LEAD_COPY = /^(localhost|127\.0\.0\.1)$/.test(location.hostname)
+    ? 'http://localhost:8787/lead'
+    : 'https://dayam-chat.dayam-chat-worker.workers.dev/lead';
+  function copyLead(form){
+    var honey = form.querySelector('[name="_honey"]');
+    if (honey && honey.value) return;
+    var data = { page: location.pathname };
+    new FormData(form).forEach(function(v, k){ if (k.charAt(0) !== '_' && typeof v === 'string') data[k] = v; });
+    try {
+      fetch(LEAD_COPY, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=UTF-8' }, body: JSON.stringify(data), keepalive: true }).catch(function(){});
+    } catch (err) {}
+  }
+
   if (contactForm){
     var cfSubmit = contactForm.querySelector('.cf-submit');
     var cfNote = contactForm.querySelector('.cf-note');
@@ -411,6 +428,7 @@
       e.preventDefault();
       if (cfBusy) return;
       cfBusy = true;
+      copyLead(contactForm);
       if (cfSubmit) cfSubmit.disabled = true;
       var label = cfSubmit ? cfSubmit.innerHTML : '';
       if (cfSubmit) cfSubmit.textContent = 'Sending…';
