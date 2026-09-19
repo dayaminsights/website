@@ -8,6 +8,9 @@ export const MAX_VISITOR_MESSAGES = 40;
 export const MAX_HISTORY_MESSAGES = 200;
 export const MAX_BODY_CHARS = 200_000;
 export const MAX_META_CHARS = 200;
+/** Lead sheet: each field of a contact-form copy, and the whole copy. */
+export const MAX_FIELD_CHARS = 2000;
+export const MAX_LEAD_CHARS = 20_000;
 
 export const ALLOWED_ORIGINS = [
   "https://dayaminsights.com",
@@ -32,6 +35,9 @@ export const PAGES = [
 export interface Env {
   ANTHROPIC_API_KEY: string;
   HISTORY_SECRET: string;
+  /** The Apps Script web app that appends rows to the lead sheet; unset = no Sheet writes. */
+  SHEET_URL?: string;
+  SHEET_TOKEN?: string;
   RATE_LIMITER: { limit(options: { key: string }): Promise<{ success: boolean }> };
 }
 
