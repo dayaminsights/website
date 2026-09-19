@@ -694,7 +694,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .pad.tight{padding-block:clamp(44px,4.5vw,64px)}
 
 /* ===== CTA ===== */
-.cta-band{position:relative;border-radius:0;padding:clamp(40px,6vw,80px);text-align:center;background:var(--panel);color:var(--on-panel)}
+.cta-band{position:relative;border-radius:0;padding:0;text-align:center;background:transparent;color:var(--on-panel)}
 .cta-band h2{font-family:var(--font-ui);font-size:var(--fs-h2);font-weight:600;letter-spacing:-.022em;line-height:1.10;color:var(--on-panel);text-wrap:balance}
 .cta-band p{color:var(--on-panel-muted);font-size:var(--fs-body);margin:var(--sp-4) auto 0;max-width:var(--maxw-narrow);text-wrap:pretty}
 .cta-band .hero-cta{justify-content:center;margin-top:var(--sp-6)}
@@ -764,6 +764,10 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 .foot-col a{display:block;color:var(--on-panel);font-family:var(--font-ui);font-size:var(--fs-small);padding:var(--sp-2) 0;transition:color var(--t-fast) var(--ease)}
 .foot-col span{display:block;color:var(--on-panel-muted);font-family:var(--font-ui);font-size:var(--fs-small);padding:var(--sp-2) 0}
 @media (hover:hover) and (pointer:fine){.foot-col a:hover{color:var(--accent-on-panel)}}
+/* Where the navy contact section is the last thing in <main> (index), the
+   footer follows navy on navy: a hairline marks the seam and the footer’s top
+   padding drops to match its bottom, so the two do not read as one empty band. */
+main:has(> #cta:last-child) + footer{border-top:1px solid var(--line-invert);padding-top:var(--sp-7)}
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line-invert);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--on-panel-muted);flex-wrap:wrap;gap:var(--sp-3)}
 
 /* ===== Reveal animation =====
@@ -1379,7 +1383,6 @@ footer :focus-visible{outline-color:var(--focus-invert)}
   .proc-grid{grid-template-columns:1fr}
   .foot-grid{grid-template-columns:1fr}
   .foot-col a{padding:var(--sp-3) 0}
-  .cta-band{padding:var(--sp-7) var(--sp-5)}
   .dash-kpis{grid-template-columns:1fr 1fr}
   .dash-kpis .dk:nth-child(3){grid-column:span 2}
   .flow-row{flex-direction:column;gap:10px}
@@ -1429,9 +1432,8 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
    The last panel on the page gets one moment and no more: a rust rule drawing
    across the top of the band, and the question arriving on a masked line.
    Everything else here stays exactly as still as it was. */
-.cta-band{overflow:hidden}
-.cta-band::before{content:"";position:absolute;top:0;left:0;right:0;height:2px;background:var(--accent);transform:scaleX(0);transform-origin:left center;transition:transform 900ms var(--ease-out) 120ms}
-.cta-band.in::before{transform:scaleX(1)}
+#cta::after{content:"";position:absolute;top:0;left:0;height:2px;margin-inline:calc(50% - 50vw);width:100vw;background:var(--accent);transform:scaleX(0);transform-origin:left center;transition:transform 900ms var(--ease-out) 120ms}
+#cta:has(.cta-band.in)::after{transform:scaleX(1)}
 /* The padding keeps descenders on the last line clear of the mask; the
    negative margin gives the space back. */
 .cta-band h2 .ln{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
@@ -1439,7 +1441,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .cta-band.in h2 .ln > span{transform:none}
 
 @media(prefers-reduced-motion:reduce){
-  .cta-band::before{transform:scaleX(1)!important}
+  #cta::after{transform:scaleX(1)!important}
   .cta-band h2 .ln > span{transform:none!important}
 }
 
@@ -1608,9 +1610,10 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
    premium pass: full-bleed pastel washes read as a template, so the colour
    now lives in the precise places listed below (markers, steps, rules, the
    page label, the scroll bar) and the navy band gives each page its weight.
-   The contact section stays on the ground: its navy card is the colour there. */
+   The contact section is navy edge to edge; the accent rule sits on its top
+   edge (#cta::after, in the Final CTA block). */
 .band::before{background:var(--bg-2)}
-#cta.band::before{background:var(--bg)}
+#cta.band::before{background:var(--panel);border-color:var(--panel)}
 
 /* The navy section: the same components, with the ink and line tokens
    turned over. Light type on navy gets a little more leading. */
@@ -1630,7 +1633,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .nav-links a.is-current::after{background:var(--svc)}
 .mm-links a[aria-current="page"]{color:var(--svc-ink)}
 .eyebrow .dot{background:var(--svc)}
-.cta-band::before{background:var(--svc)}
+#cta::after{background:var(--svc)}
 ::selection{background:var(--svc-tag);color:var(--svc-on)}
 /* A service page’s hero label says where you are in its colour: the text in
    the readable ink of that hue, the square in the hue itself. (It was a filled
@@ -1681,9 +1684,6 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
    section padding were leaving 300–420px of nothing in three places. */
 /* The mid-page CTA closing a section: the section’s padding is the gap. */
 .mid-cta:last-child{margin-bottom:0}
-/* The cross-sell strip follows the contact section directly; that section’s
-   bottom padding already separates them. */
-#cta + #more{padding-top:0}
 /* Without the scrub (reduced motion) the steps are just a list, so they lose
    the half-screen height that only exists to drive the chart. */
 @media(prefers-reduced-motion:reduce){.sy-step{min-height:0;padding-block:var(--sp-5)}}
