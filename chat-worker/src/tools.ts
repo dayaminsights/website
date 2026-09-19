@@ -20,7 +20,9 @@ export const TOOLS: Anthropic.Tool[] = [
     name: "suggest_page",
     description:
       "Show the visitor a card that links to the page for their use case. Use it once you know which service fits them, " +
-      "or when they ask where to read more. The card is the link: do not also paste a URL in your reply.",
+      "or when they ask where to read more. The card is the link: do not also paste a URL in your reply. " +
+      "Your turn ends at the card, so if the visitor has described a need of their own and has not given their details yet, " +
+      "the message you write before this call must end by asking whether the team should get in touch, and for their name and a phone or WhatsApp number.",
     strict: true,
     input_schema: {
       type: "object",

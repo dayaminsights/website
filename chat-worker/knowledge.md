@@ -11,7 +11,7 @@ Dayam Insights is a systems partner for growing businesses that have outgrown sp
 
 We replace fragmented, manual processes with connected systems, built around the tools a business already uses rather than a platform it would have to move to. The owner keeps running the business; it gets easier to understand, operate and scale.
 
-- **Where:** based in Udaipur, Rajasthan, India, working with businesses across India and the UAE (Dubai, Abu Dhabi, Sharjah and elsewhere). Most of the work happens remotely: what we build is cloud-based, so where a client is matters far less than what their process looks like. We visit where a visit genuinely helps. For UAE clients the first conversation is in their working hours, and quotes can be in dirhams or rupees.
+- **Where:** based in Udaipur, Rajasthan, India. We work with businesses anywhere in the world. Our main markets are India and the UAE (Dubai, Abu Dhabi, Sharjah), and we are just as happy to work with a business in the US, the UK, Europe or anywhere else. The work happens remotely: what we build is cloud-based, so where a client is matters far less than what their process looks like. Calls are set in the client's working hours. We visit where a visit genuinely helps. UAE clients can have quotes in dirhams or rupees.
 - **Built for:** growing businesses past the point where one person can hold every process in their head, but not yet running an in-house technology team. Sectors: retail and multi-store, distribution and wholesale, manufacturing, clinics, professional services.
 - **How we work:** the first conversation is short and free, and often ends with us saying what not to automate. Then a fixed price before any work starts, a first piece live in four to six weeks, and everything running in accounts the client owns.
 - **What clients keep:** the logins, the data, the systems. If they stop working with us, nothing switches off. We hand over written instructions in plain language and train whoever will use it, so most clients need us less than they expect to.
@@ -171,7 +171,7 @@ Growing businesses where manual processes, reporting or disconnected systems hav
 No. Everything we build is meant to be run by the people already doing the job. We hand over written instructions in plain language, and we train whoever will be using it.
 
 **Do you work with businesses outside your city?**
-Yes. We work with businesses across India and the UAE, and most of the work happens remotely: what we build is cloud-based, so where you are matters far less than what your process looks like. We visit where a visit genuinely helps.
+Yes. We work with businesses anywhere in the world (our main markets are India and the UAE), and the work happens remotely: what we build is cloud-based, so where you are matters far less than what your process looks like. We visit where a visit genuinely helps.
 
 **Do I have to stop using Excel?**
 No. Most of our work connects the tools you already use rather than replacing them. Your team can keep entering data the way they do today; the difference is that it stops needing to be re-typed into three other places.
@@ -203,7 +203,7 @@ That is the point of it. It reads your stock, price list, delivery zones and pol
 It says so and hands the conversation to a person, with the transcript. Anything binding (a discount, a credit term, a promised date) is drafted for a person to approve, never sent on its own.
 
 **Do you build chatbots for businesses in the UAE?**
-Yes. We are based in Udaipur and work with businesses across India and the UAE, and the assistant can quote in dirhams or rupees from your own price list.
+Yes. We are based in Udaipur and work with businesses anywhere in the world (our main markets are India and the UAE), and the assistant can quote in your own currency from your own price list, dirhams and rupees included.
 
 **How long until it is live?**
 Most first chatbots are live inside four to six weeks: scope in week one, connected to your data and tested on real questions from your inbox, then watched for the first weeks after launch.

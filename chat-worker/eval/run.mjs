@@ -14,6 +14,10 @@ const DELAY = Number(process.env.EVAL_DELAY_MS || 6500); // stays under 10 reque
 const ONLY = process.env.ONLY ? process.env.ONLY.split(",").map(Number) : null;
 
 const PRICE = /₹\s?\d|\$\s?\d|\b(rs|inr|aed|usd)\.?\s?\d|\d[\d,.]*\s?(k|lakhs?|crores?|aed|inr|usd|dirhams?|rupees?)\b|\d[\d,.]*\s?(रुपये|रु\.?|درهم)/i;
+// A real contact ask always asks for a name; "phone number" alone also appears in answers about websites.
+const CONTACT_ASK = /\byour name\b|\bname and (a |your )?(phone|whatsapp|mobile|number)\b/i;
+// Whole words only: "our Dubai" must not match inside "your Dubai".
+const says = (text, phrase) => new RegExp("(^|[^\\p{L}])" + phrase.replace(/[.*+?^${}()|[\]\\]/g, "\\$&") + "($|[^\\p{L}])", "iu").test(text);
 const DEVANAGARI = /[ऀ-ॿ]/g;
 const ARABIC = /[؀-ۿ]/g;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
@@ -71,6 +75,20 @@ function check(s, turns) {
   if (c.whatsapp && !cards.some((k) => k.kind === "whatsapp")) fails.push("no WhatsApp card");
   if (c.noCards && cards.length) fails.push("showed a card it should not have");
   if (c.noLead && leads.length) fails.push("captured a lead it should not have");
+  // Once a need is clear the visitor must be offered a way to leave details without having to ask how.
+  // The bot's own question counts, and so does a page card: the widget puts an "Ask the team to get in
+  // touch" button under every page card until details are given (the model forgets the question now and then).
+  const cardShown = cards.some((k) => k.kind === "page");
+  if (c.asksContact && !leads.length && !cardShown && !CONTACT_ASK.test(turns[turns.length - 1].text)) fails.push("did not ask for contact details");
+  if (c.noAskContact && CONTACT_ASK.test(bot)) fails.push("asked for contact details before any need was described");
+  // Not a failure, but worth seeing: a page card whose message skipped the contact question.
+  if (c.askWithCard) {
+    let captured = false;
+    turns.forEach((t, i) => {
+      if (!captured && t.cards.some((k) => k.kind === "page") && !CONTACT_ASK.test(t.text)) (s.notes ||= []).push(`turn ${i + 1}: page card without the contact question in text (the widget button covers it)`);
+      if (t.leads.length) captured = true;
+    });
+  }
   const match = (want) => {
     for (const [k, v] of Object.entries(want)) {
       if (v === true ? !last[k] : last[k] !== v) fails.push(`lead.${k} = ${JSON.stringify(last[k])}, want ${v === true ? "present" : JSON.stringify(v)}`);
@@ -81,8 +99,8 @@ function check(s, turns) {
   if (c.lang === "hi" && share(bot, DEVANAGARI) < 0.5) fails.push("not in Hindi (Devanagari)");
   if (c.lang === "ar" && share(bot, ARABIC) < 0.5) fails.push("not in Arabic");
   if (c.lang === "latin" && (share(bot, DEVANAGARI) > 0.05 || share(bot, ARABIC) > 0.05)) fails.push("expected Latin script");
-  for (const w of c.mustSay || []) if (!bot.toLowerCase().includes(w.toLowerCase())) fails.push(`did not say "${w}"`);
-  for (const w of c.mustNotSay || []) if (bot.toLowerCase().includes(w.toLowerCase())) fails.push(`said "${w}"`);
+  for (const w of c.mustSay || []) if (!says(bot, w)) fails.push(`did not say "${w}"`);
+  for (const w of c.mustNotSay || []) if (says(bot, w)) fails.push(`said "${w}"`);
   return fails;
 }
 
@@ -103,6 +121,7 @@ for (const s of scenarios) {
   console.log(
     `${fails.length ? "FAIL" : "ok  "} ${String(s.id).padStart(2)}  ${s.name}` +
       (fails.length ? "\n        " + fails.join("\n        ") : "") +
+      (s.notes ? "\n        note: " + s.notes.join("\n        note: ") : "") +
       (s.manual ? "\n        read: " + s.manual : ""),
   );
   const md = [`# ${s.id}. ${s.name}`, `page: ${s.page}`, s.manual ? `read for: ${s.manual}` : "", ""]
