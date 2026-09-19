@@ -96,7 +96,7 @@
 <!-- The mark signs the first page of a visit only; later pages open on the
      finished mark (see .mark-seen in site.css). -->
 <script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/site.css?v=20260919d">
+<link rel="stylesheet" href="assets/css/site.css?v=20260919e">
 <!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
      no-JS path is handed the finished frame. -->
 <noscript><style>
@@ -124,8 +124,9 @@
         tool, and whether hosting is Power BI Service, Fabric or
         something else, would let #included stop being generic.
 
-     2. A REAL CLIENT DASHBOARD. #proof shows an example project.
-        One screenshot with the numbers blurred replaces it.
+     2. A REAL CLIENT DASHBOARD. The #proof band (an "Example
+        project") was removed 2026-09-19 as filler. One screenshot
+        with the numbers blurred, above #cta, brings proof back.
      ============================================================ -->
 </head>
 <body class="svc-see">
@@ -242,24 +243,24 @@
 <section class="pad wrap band" id="problem" aria-labelledby="h-problem">
   <div class="section-head reveal">
     <h2 class="title" id="h-problem">You are not short of numbers. You are short of the answer.</h2>
-    <p>The data already exists &mdash; it is in the billing software, the stock sheet and somebody&rsquo;s inbox. <strong>What costs you is the distance between the data and the decision</strong>. These are the four ways that distance shows up, and the four questions in the next section are, one for one, how a screen closes them.</p>
+    <p>The data already exists, in the billing software, the stock sheet and somebody&rsquo;s inbox. <strong>What costs you is the distance between the data and the decision.</strong></p>
   </div>
   <div class="prob-grid">
     <div class="prob reveal" data-d="1">
       <h3>The number takes a week to assemble.</h3>
-      <p>Somebody exports, somebody pastes, somebody checks. By the time the report is circulated it describes a week you can no longer do anything about.</p>
+      <p>Export, paste, check. By the time it circulates, it describes a week you can no longer change.</p>
     </div>
     <div class="prob reveal" data-d="2">
       <h3>Two people, two answers.</h3>
-      <p>Sales says one figure, accounts says another, and both are right by their own definition. Half the meeting goes on whose spreadsheet to believe.</p>
+      <p>Sales says one figure, accounts another. Half the meeting goes on whose spreadsheet to believe.</p>
     </div>
     <div class="prob reveal" data-d="3">
       <h3>Nobody notices until it is expensive.</h3>
-      <p>Stock runs out, a customer goes quiet, a margin slips. It was in the data for weeks &mdash; nothing was watching, so nobody was told.</p>
+      <p>Stock runs out, a customer goes quiet. It was in the data for weeks; nothing was watching.</p>
     </div>
     <div class="prob reveal" data-d="4">
       <h3>You see the total, not the reason.</h3>
-      <p>Sales are down nine per cent. Which branch, which product, which week? Finding out is another day of exports, so mostly it does not get found out.</p>
+      <p>Sales are down nine per cent. Which branch, which product? Finding out is another day of exports.</p>
     </div>
   </div>
 </section>
@@ -268,13 +269,13 @@
 <section class="pad wrap web-show" id="questions" aria-labelledby="h-questions">
   <div class="section-head reveal">
     <h2 class="title" id="h-questions">Four questions one screen has to answer.</h2>
-    <p>One for each gap above. We build to these four and stop &mdash; <strong>a dashboard that answers everything gets read by nobody</strong>, and a chart that changes no decision is a chart you are paying to maintain.</p>
+    <p>One for each gap above. We build to these four and stop &mdash; <strong>a dashboard that answers everything gets read by nobody</strong>.</p>
   </div>
 
   <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <h3 class="title sm">One screen that answers &ldquo;are we doing okay?&rdquo;</h3>
-      <p>Right now that answer costs two phone calls, three spreadsheets and a week. We connect the systems you already use, agree what each number means, and keep the answer current on its own &mdash; daily, hourly, or the moment something crosses a line you care about.</p>
+      <p>Right now that answer costs two phone calls, three spreadsheets and a week. We connect the systems you already use, agree what each number means, and keep the answer current on its own.</p>
     </div>
 
     <!-- The dashboard mock from the homepage: same component, same behaviour. -->
@@ -338,7 +339,7 @@
   <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <h2 class="title sm" id="h-included">Built on the systems you already have.</h2>
-      <p>Nothing here asks you to replace your billing software or move your business onto a new platform. We read what those systems already produce, agree what each number means with the people who use it, and leave the whole thing running in accounts in your name.</p>
+      <p>Nothing here asks you to replace your billing software. We read what your systems already produce and leave the dashboard running in accounts in your name.</p>
       <p class="pull">You keep the logins. If you stop working with us, the dashboard keeps refreshing.</p>
       <div class="cta-row">
         <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a fixed price <span class="arrow">&rarr;</span></a>
@@ -403,25 +404,25 @@
     <div class="proc reveal" data-d="1">
       <div class="num mono">01</div>
       <h3>Agree</h3>
-      <p>Which decisions the screen has to serve, and what each number means. Written down, with a fixed price and a date.</p>
+      <p>Which decisions the screen serves, and what each number means. A fixed price and a date, in writing.</p>
       <span class="ptag mono">Week 1</span>
     </div>
     <div class="proc reveal" data-d="2">
       <div class="num mono">02</div>
       <h3>Connect</h3>
-      <p>We read your billing, stock and accounting systems where they are. If one will not talk, you hear the workaround and its cost now, not later.</p>
+      <p>We read your billing, stock and accounting systems where they are.</p>
       <span class="ptag mono">Week 1&ndash;2</span>
     </div>
     <div class="proc reveal" data-d="3">
       <div class="num mono">03</div>
       <h3>Build</h3>
-      <p>The view, the definitions, the refresh and the alerts. Checked against the numbers you already trust before anyone relies on it.</p>
+      <p>The view, the definitions, the refresh and the alerts, checked against numbers you already trust.</p>
       <span class="ptag mono">Week 2&ndash;4</span>
     </div>
     <div class="proc reveal" data-d="4">
       <div class="num mono">04</div>
       <h3>Live</h3>
-      <p>Handed over with written instructions, in your accounts, and watched for the first weeks so the first Monday is not the test.</p>
+      <p>Handed over in writing, in your accounts, and watched for the first weeks.</p>
       <span class="ptag mono">Then yours</span>
     </div>
   </div>
@@ -431,53 +432,12 @@
   </div>
 </section>
 
-<!-- PROOF -->
-<section class="pad wrap band" id="proof" aria-labelledby="h-proof">
-  <div class="section-head reveal">
-    <h2 class="title" id="h-proof">The first one is usually the smallest one.</h2>
-    <p>We would rather replace one report that costs you a day a week than build a wall of charts nobody opens. <strong>The smallest useful screen, in your hands, is worth more than the complete one on a slide.</strong> Below is the shape one of these projects usually takes.</p>
-  </div>
-  <div class="res-list">
-    <article class="res wide reveal" id="retail">
-      <div class="res-copy">
-        <div class="res-meta"><span class="sector">Retail</span><span class="res-tag mono">Example project</span></div>
-        <h3 class="res-title">One view of sales and stock, refreshed daily.</h3>
-        <dl class="res-lines">
-          <div><dt>Problem</dt><dd>Weekly reporting depended on several spreadsheets, each maintained by a different person, and each with its own quiet idea of what counted as a sale.</dd></div>
-          <div><dt>Solution</dt><dd>A central sales and inventory dashboard, fed straight from billing and stock data, with the definitions agreed once and written down.</dd></div>
-          <div><dt>Outcome</dt><dd>Management gained one view of performance, refreshed daily instead of assembled weekly &mdash; and stopped arguing about whose number was right.</dd></div>
-        </dl>
-      </div>
-      <div class="res-fig" aria-hidden="true">
-      <svg class="bp" viewBox="0 0 480 320" role="img" aria-labelledby="bp-d1-t">
-        <title id="bp-d1-t">Blueprint of a sales and stock dashboard fed by billing and stock data</title>
-        <defs><pattern id="bpg-d1" width="32" height="32" patternUnits="userSpaceOnUse"><path class="bp-grid" d="M32 0H0V32"/></pattern></defs>
-        <rect width="480" height="320" fill="url(#bpg-d1)"/>
-        <rect class="g-line draw" pathLength="1" x="64" y="64" width="192" height="128" style="--i:0"/>
-        <rect class="g-line draw" pathLength="1" x="288" y="64" width="128" height="56" style="--i:1"/>
-        <rect class="g-line draw" pathLength="1" x="288" y="136" width="128" height="56" style="--i:2"/>
-        <path class="g-line draw" pathLength="1" d="M256 92H288M256 164H288" style="--i:3"/>
-        <path class="g-line draw dim" pathLength="1" d="M64 224V240M256 224V240M64 232H256" style="--i:4"/>
-        <path class="g-line draw dim" pathLength="1" d="M416 120a96 96 0 0 1-32 72" style="--i:5"/>
-        <g class="g-lbl sm"><text x="66" y="58">Module A &mdash; Sales &amp; stock dashboard</text><text x="290" y="58">Billing</text><text x="290" y="130">Stock</text><text x="160" y="254" text-anchor="middle">refresh: daily</text><text x="404" y="212" text-anchor="end">r = 96</text></g>
-        <rect class="g-sig" x="252" y="122" width="8" height="8"/>
-      </svg>
-        <span class="fig">Fig. &mdash; Dashboard</span>
-      </div>
-    </article>
-  </div>
-  <div class="cta-row reveal" data-d="4">
-    <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Build something like this <span class="arrow">&rarr;</span></a>
-  </div>
-  <p class="res-note left reveal" data-d="5">Working with us and happy to say so? A named case study here &mdash; your company, your numbers, your words &mdash; replaces the example. <a href="#contact">Tell us</a>.</p>
-</section>
-
 <!-- CONTACT -->
 <section class="pad wrap band" id="cta" aria-labelledby="h-cta">
   <div class="cta-band reveal" id="contact">
     <span class="eyebrow"><span class="dot"></span>Start here</span>
     <h2 id="h-cta"><span class="ln"><span>What do you need to be able to see?</span></span></h2>
-    <p>Tell us the question you keep having to chase the answer to, and where that answer lives today. We&rsquo;ll come back with the screen we would build first, a fixed price and a date. No sales pitch, no obligation.</p>
+    <p>Tell us the question you keep chasing the answer to, and where it lives today. We come back with the first screen we would build, a fixed price and a date. No sales pitch, no obligation.</p>
 
     <form class="contact-form" action="https://formsubmit.co/dayaminsights@gmail.com" method="POST">
       <!-- FormSubmit config. Without JS the browser posts straight to FormSubmit
