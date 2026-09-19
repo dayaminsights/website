@@ -1,0 +1,37 @@
+ROTATE THE ANTHROPIC API KEY (to do later)
+===========================================
+
+Why: the key the website chatbot uses today was pasted into a chat on 19 Sep 2026,
+so treat it as exposed and replace it. Nothing breaks while you wait, but do it soon.
+This file holds no key. Never paste a key into this file: the repo is public.
+
+
+1. MAKE A NEW KEY
+   - Go to https://console.anthropic.com  ->  Settings  ->  API Keys  ->  Create Key
+   - Name it e.g. "dayam-chat-worker". Copy it (it starts with sk-ant-).
+
+2. PUT THE NEW KEY ON THE LIVE CHATBOT
+   Open a terminal in the website folder and run:
+
+       cd chat-worker
+       npx wrangler secret put ANTHROPIC_API_KEY
+
+   Paste the new key when it asks, press Enter. It takes effect straight away,
+   no redeploy needed. (If it says you are not logged in: npx wrangler login)
+
+3. CHECK THE CHATBOT STILL ANSWERS
+   Open https://dayaminsights.com, click "Ask us", send any question.
+   A normal reply = the new key works.
+
+4. DELETE THE OLD KEY
+   Back in https://console.anthropic.com  ->  API Keys:
+   delete the key created on 19 Sep 2026 (the old one). Only after step 3 works.
+
+5. SET A MONTHLY SPEND LIMIT (if not done yet)
+   https://console.anthropic.com  ->  Settings  ->  Limits  ->  set a monthly limit.
+   Measured cost is about US$0.0045 per visitor message.
+
+6. LOCAL TESTING ONLY (optional)
+   The file chat-worker/.dev.vars (not in git) still holds the old key for
+   "npm run dev". Open it in Notepad and replace the ANTHROPIC_API_KEY= line with
+   the new key, or delete the file if you do not test locally.
