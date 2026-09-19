@@ -271,6 +271,15 @@
     // first play.
     var from = parseFloat(v.getAttribute('data-start')) || 0, seeked = !(from > 0);
     var held = reduce, visible = false;
+    // preload="metadata" in the markup keeps phones on the poster (a few
+    // hundred KB at most). A wide viewport on an unmetered line may fetch
+    // ahead so the first seconds are buffered when the loop starts; data
+    // saver and 2G/3G start paused on the poster — the finished frame — with
+    // the play control still offered.
+    var conn = navigator.connection || {};
+    var slow = !!conn.saveData || /^(slow-2g|2g|3g)$/.test(conn.effectiveType || '');
+    if (slow) held = true;
+    else if (window.matchMedia('(min-width: 1000px)').matches) v.preload = 'auto';
     function sync(){
       fig.classList.toggle('is-paused', held);
       if (btn){

@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F8FAFC">
-<meta name="description" content="Business dashboards and analytics for growing Indian businesses — sales, stock, cash and customers on one live screen, fed straight from the systems you already use and refreshed without anyone assembling it.">
-<title>Business Dashboards &amp; Analytics for Growing Businesses | Dayam Insights</title>
+<meta name="description" content="Power BI dashboards and KPI reporting for businesses in Dubai, the UAE and India. Sales, stock, cash and customers on one live screen, refreshed on their own.">
+<title>Power BI Dashboards &amp; KPI Reporting — Dubai &amp; India | Dayam Insights</title>
 <!-- ?v= busts the favicon cache: browsers keep tab icons in their own store
      and do not refetch them on reload, so the old white-backed icon would
      otherwise persist for anyone who had visited before. Bump it if the icon
@@ -24,7 +24,7 @@
 <meta property="og:image" content="https://dayaminsights.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dayam Insights — business dashboards and analytics for growing Indian businesses.">
+<meta property="og:image:alt" content="Dayam Insights — business dashboards and analytics for growing businesses in India and the UAE.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Business Dashboards &amp; Analytics | Dayam Insights">
 <meta name="twitter:description" content="Sales, stock, cash and customers on one live screen — fed from the systems you already use, refreshed without anyone assembling it.">
@@ -41,10 +41,13 @@
       "serviceType": "Business intelligence dashboards and reporting automation",
       "description": "Live management dashboards and reporting automation for growing businesses. Data is taken from the billing, stock, accounting and CRM systems a business already runs, every number is given one agreed definition, and the view refreshes on a schedule instead of being assembled by hand.",
       "provider": { "@id": "https://dayaminsights.com/#org" },
-      "areaServed": { "@type": "Country", "name": "India" },
+      "areaServed": [
+        { "@type": "Country", "name": "India" },
+        { "@type": "Country", "name": "United Arab Emirates" }
+      ],
       "audience": {
         "@type": "BusinessAudience",
-        "description": "Growing Indian businesses whose reporting is assembled by hand from spreadsheets — retail and multi-store, distribution and wholesale, manufacturing, clinics and professional services."
+        "description": "Growing businesses in India and the UAE whose reporting is assembled by hand from spreadsheets — retail and multi-store, distribution and wholesale, manufacturing, clinics and professional services."
       },
       "hasOfferCatalog": {
         "@type": "OfferCatalog",
@@ -70,16 +73,26 @@
 <!-- Google Analytics 4. The generate_lead handlers in assets/js/site.js and at the bottom of the
      page guard on typeof gtag, so they stay safe no-ops if this is ever
      removed or blocked by the visitor. -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-24QJPZPKZR');
+  // The tag itself is the heaviest file on the page (~170KB), so it is
+  // fetched after the load event rather than competing with the poster,
+  // the font and the stylesheet on a slow connection. Everything queued in
+  // dataLayer before it arrives (including the page_view) is replayed by it.
+  window.addEventListener('load', function(){
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR';
+    document.head.appendChild(s);
+  });
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Inter is self-hosted as one variable file (weights 400-800): no
+     third-party stylesheet before first paint, one font request instead of
+     five. The @font-face lives at the top of site.css. -->
+<link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" as="image" href="assets/video/dashboards-hero.webp" fetchpriority="high">
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- Scroll reveals hold their pre-state in CSS and are released by JS, so the
      no-JS path is handed the finished frame. -->
@@ -137,7 +150,8 @@
     </a>
     <nav class="nav-links" aria-label="Main">
       <a href="dashboards.html" class="is-current" aria-current="page">Dashboards</a>
-      <a href="automation.html">Automation &amp; AI</a>
+      <a href="automation.html">Automation</a>
+      <a href="ai-chatbot.html">AI chatbot</a>
       <a href="websites.html">Websites</a>
       <a href="how-we-work.html">How we work</a>
       <a href="faq.html">FAQ</a>
@@ -152,9 +166,10 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu" hidden>
-  <nav class="mm-links" aria-label="Main">
+  <nav class="mm-links" aria-label="Mobile">
     <a href="dashboards.html" class="is-current" aria-current="page">Dashboards</a>
-    <a href="automation.html">Automation &amp; AI</a>
+    <a href="automation.html">Automation</a>
+    <a href="ai-chatbot.html">AI chatbot</a>
     <a href="websites.html">Websites</a>
     <a href="how-we-work.html">How we work</a>
     <a href="faq.html">FAQ</a>
@@ -174,11 +189,11 @@
     <!-- Three masked lines for the column beside the video, on the homepage
          hero's timing. -->
     <h1 class="title page-title" id="h-dash">
-      <span class="ln"><span>Stop assembling</span></span>
-      <span class="ln"><span>the answer.</span></span>
-      <span class="ln"><span>Start reading it<span class="accent">.</span></span></span>
+      <span class="ln"><span>Business dashboards:</span></span>
+      <span class="ln"><span>read the answer,</span></span>
+      <span class="ln"><span>stop assembling it<span class="accent">.</span></span></span>
     </h1>
-    <p>Sales, stock, cash and customers on one live screen: fed straight from the systems you already use, defined once so everyone means the same thing, and current without anybody spending Monday morning on it.</p>
+    <p>Business dashboards and Power BI reporting for growing businesses in Dubai, the UAE and India: sales, stock, cash and customers on one live screen, fed straight from the systems you already use, defined once so everyone means the same thing, and current without anybody spending Monday morning on it.</p>
     <div class="hero-cta">
       <a href="#contact" class="btn btn-primary" data-intent="Dashboards &amp; reporting">Get a fixed price <span class="arrow">&rarr;</span></a>
       <a href="#questions" class="link-cta">See what we build <span class="arrow">&rarr;</span></a>
@@ -189,10 +204,11 @@
        keep the poster. data-start is the poster's moment in the loop, so
        playback picks up exactly where the still is: 2.4s, the "before" just
        framed, so the story moves within half a second of the first frame
-       rather than opening on the ending. preload="auto" lets the browser
-       fetch those first seconds while the page is still parsing. -->
+       rather than opening on the ending. preload="metadata" keeps
+       phones on the poster; site.js raises it to auto on wide, unmetered
+       screens so the first seconds are ready when the loop starts. -->
   <figure class="hero-video">
-    <video muted loop playsinline preload="auto" width="1620" height="1080" poster="assets/video/dashboards-hero.jpg" data-start="2.4" aria-describedby="hv-dashboards">
+    <video muted loop playsinline preload="metadata" width="1620" height="1080" poster="assets/video/dashboards-hero.webp" data-start="2.4" aria-describedby="hv-dashboards">
       <!-- Exact codecs, so a browser that cannot decode one skips straight to the
            next instead of trying and stalling. H.264 first: hardware-decoded
            almost everywhere. -->
@@ -328,7 +344,7 @@
   <div class="web-grid web-block reveal-left">
     <div class="web-copy">
       <span class="eyebrow" data-ch="02"><span class="dot"></span>What comes with it</span>
-      <h3 class="title sm" id="h-included">Built on the systems you already have.</h3>
+      <h2 class="title sm" id="h-included">Built on the systems you already have.</h2>
       <p>Nothing here asks you to replace your billing software or move your business onto a new platform. We read what those systems already produce, agree what each number means with the people who use it, and leave the whole thing running in accounts in your name.</p>
       <p class="pull">You keep the logins. If you stop working with us, the dashboard keeps refreshing.</p>
       <div class="cta-row">
@@ -434,7 +450,7 @@
     <article class="res wide reveal" id="retail">
       <div class="res-copy">
         <div class="res-meta"><span class="sector">Retail</span><span class="res-tag mono">Example project</span></div>
-        <h2 class="res-title">One view of sales and stock, refreshed daily.</h2>
+        <h3 class="res-title">One view of sales and stock, refreshed daily.</h3>
         <dl class="res-lines">
           <div><dt>Problem</dt><dd>Weekly reporting depended on several spreadsheets, each maintained by a different person, and each with its own quiet idea of what counted as a sale.</dd></div>
           <div><dt>Solution</dt><dd>A central sales and inventory dashboard, fed straight from billing and stock data, with the definitions agreed once and written down.</dd></div>
@@ -564,20 +580,20 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a href="index.html" class="brand" aria-label="Dayam Insights — home">
-          <img class="glyph" src="assets/img/logo-white.png" alt="" width="30" height="32">
+          <img class="glyph" src="assets/img/logo-white.svg" alt="" width="30" height="32">
           <span class="wm">Dayam <span>Insights</span></span>
         </a>
         <p>We help growing businesses turn messy, manual operations into connected systems — so the business gets easier to understand, operate and scale.</p>
       </div>
       <div class="foot-col">
-        <h2>Solutions</h2>
-        <a href="dashboards.html">Dashboards &amp; analytics</a>
-        <a href="automation.html">Workflow automation</a>
-        <a href="automation.html#ai">AI assistants</a>
-        <a href="websites.html">Websites &amp; digital</a>
+        <p class="foot-h">Solutions</p>
+        <a href="dashboards.html">Business dashboards &amp; Power BI</a>
+        <a href="automation.html">Business &amp; workflow automation</a>
+        <a href="ai-chatbot.html">AI chatbots for website &amp; WhatsApp</a>
+        <a href="websites.html">Website design &amp; development</a>
       </div>
       <div class="foot-col">
-        <h2>Built for</h2>
+        <p class="foot-h">Built for</p>
         <span>Retail &amp; multi-store</span>
         <span>Manufacturing</span>
         <span>Distribution &amp; wholesale</span>
@@ -585,14 +601,16 @@
         <span>Professional services</span>
       </div>
       <div class="foot-col">
-        <h2>Company</h2>
+        <p class="foot-h">Company</p>
         <a href="how-we-work.html">How we work</a>
         <a href="faq.html">FAQ</a>
         <a href="#contact">Talk to us</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </div>
     <div class="foot-bottom">
       <span>&copy; <span id="yr"></span> Dayam Insights. All rights reserved.</span>
+      <span>Based in Udaipur &middot; Working across India &amp; the UAE</span>
       <span class="mono">Data &middot; Automation &middot; AI &middot; Websites</span>
     </div>
   </div>

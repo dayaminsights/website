@@ -1,0 +1,15 @@
+# GitHub Pages builds this repo with Jekyll (there is no .nojekyll), so this
+# exclude list is what keeps working files off the published site. Everything
+# not listed is copied as-is; nothing here is processed or templated.
+exclude:
+  - PROJECT_NOTES.md
+  - Dayam_Insights_SEO_Audit_Brief.md
+  - Dayam_Insights_SEO_Audit_Report.md
+  - docs/
+  - motion/
+  - node_modules/
+  - tmp_shots/
+  - "tmp_*"
+  - "*.md"
+  - package.json
+  - package-lock.json

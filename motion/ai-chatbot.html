@@ -1,0 +1,434 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex">
+<title>Motion source — AI chatbot hero</title>
+<!-- Source for assets/video/ai-chatbot-hero.{mp4,webm,jpg}. Render with:
+       node motion/render.js ai-chatbot
+     Open this file in a browser to watch it play live.
+
+     One conversation, told twice. The cast is not the other pages' desktop
+     window: it is the customer's phone (the WhatsApp chat is the stage), the
+     owner's phone beside it, and — the thing this video exists to show — the
+     rows the chatbot reads before it answers.
+       0–2.5    the camera pulls back out of a blue square — the business's
+                mark in the chat header on the customer's phone, 23:14
+       2.5–7.4  before: the customer asks about stock, price and delivery;
+                grey ticks; 23:31 "Hello?"; 23:52 another question; 07:40
+                "Never mind, found it elsewhere." The owner's phone sleeps
+                through it with the badge climbing. FIRST REPLY: never
+       7.4–10.3 a navy title card with the Dayam Insights lockup
+       10.3–21.5 after: the same first message. The bot types; three source
+                cards slide out beside the chat with the exact rows it read
+                (stock, trade price, delivery zone) and it answers in seconds.
+                It offers a quote; the owner's phone wakes with one thing to
+                approve; one tap and the PDF lands in the chat. The customer
+                asks for credit terms — the bot passes that to a person, and
+                says so. 23:14 to 23:16. FIRST REPLY: 6 s
+       21.8–26  the camera pushes in on the resolved chat (poster is 2.4, the
+                before just framed, like the other pages)
+       26–30    the camera dives into the last bot bubble's blue square until
+                it fills the frame — which is frame 0, so the loop has no seam
+
+     Same rig: a 3:2 stage (1080×720), one paused GSAP timeline that
+     render(t) seeks, pure function of time. Bubbles are measured with real
+     font metrics on the first render (after the fonts load), never guessed. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=block" rel="stylesheet">
+<style>
+  html,body{margin:0;background:#F8FAFC}
+  svg{display:block;width:1080px;height:720px;font-family:Inter,sans-serif}
+  svg *{vector-effect:non-scaling-stroke}
+  .mono{letter-spacing:1.5px;font-weight:600}
+  .num{font-variant-numeric:tabular-nums}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3.13.0/dist/gsap.min.js"></script>
+<script src="lib.js"></script>
+</head>
+<body>
+<svg id="stage" viewBox="0 0 1080 720" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <pattern id="grid" width="24" height="24" patternUnits="userSpaceOnUse">
+      <path d="M24 0H0V24" fill="none" stroke="#07162D" stroke-opacity=".05" stroke-width="1"/>
+    </pattern>
+    <clipPath id="chatClip"><rect x="111" y="163" width="278" height="413"/></clipPath>
+    <clipPath id="ownClip"><rect x="831" y="269" width="158" height="260"/></clipPath>
+    <filter id="lift" x="-30%" y="-20%" width="160%" height="150%">
+      <feDropShadow dx="0" dy="12" stdDeviation="11" flood-color="#07162D" flood-opacity=".16"/>
+    </filter>
+  </defs>
+  <rect width="1080" height="720" fill="#F8FAFC"/>
+
+  <g id="world">
+    <rect id="gridbg" x="-4000" y="-4000" width="9080" height="8720" fill="url(#grid)"/>
+
+    <!-- ===== What the bot reads: three source cards beside the chat ===== -->
+    <g id="side">
+      <g id="wires"></g>
+      <g id="srcs"></g>
+
+      <!-- ===== The owner's phone ===== -->
+      <g id="ownLayer">
+        <g transform="translate(-40 0)">
+        <g id="own">
+          <rect x="830" y="220" width="160" height="310" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5" filter="url(#lift)"/>
+          <rect x="899" y="229" width="22" height="4" fill="#CBD5E1"/>
+          <!-- before: a lock screen that is never opened -->
+          <g id="lock">
+            <text x="910" y="262" font-size="7.5" class="mono" fill="#94A3B8" text-anchor="middle">DO NOT DISTURB</text>
+            <text id="oClock" x="910" y="306" font-size="30" font-weight="700" fill="#07162D" text-anchor="middle" class="num">23:14</text>
+            <text id="oDay" x="910" y="322" font-size="8" fill="#64748B" text-anchor="middle">Tuesday</text>
+            <g id="notif" opacity="0">
+              <rect x="840" y="342" width="140" height="46" fill="#F8FAFC" stroke="#E5EAF2"/>
+              <text x="848" y="355" font-size="7.5" class="mono" fill="#475569">WHATSAPP</text>
+              <text x="848" y="368" font-size="9.5" font-weight="600" fill="#07162D">Al Noor Trading</text>
+              <text x="848" y="380" font-size="7.5" fill="#64748B">Hi — do you have the 5L can…</text>
+              <rect x="958" y="349" width="14" height="14" fill="#07162D"/>
+              <text id="oCnt" x="965" y="359.5" font-size="8" font-weight="600" fill="#F8FAFC" text-anchor="middle" class="num">1</text>
+            </g>
+          </g>
+          <!-- after: the two things a person had to do -->
+          <g id="awake" opacity="0">
+            <text x="842" y="256" font-size="9" class="mono" fill="#475569">FOR YOU</text>
+            <text id="pCnt" x="978" y="259" font-size="18" font-weight="700" fill="#07162D" text-anchor="end" class="num">0</text>
+            <line x1="840" y1="267" x2="980" y2="267" stroke="#E5EAF2"/>
+            <g id="cards" clip-path="url(#ownClip)"></g>
+          </g>
+        </g>
+        <text x="910" y="550" font-size="9" class="mono" fill="#334155" text-anchor="middle">YOUR PHONE</text>
+        </g>
+      </g>
+    </g>
+
+    <!-- ===== The customer's phone: the chat is the stage ===== -->
+    <g id="focus" transform="translate(30 -40) scale(1.12)">
+      <g id="cphone">
+        <rect x="110" y="90" width="280" height="540" fill="#FFFFFF" stroke="#07162D" stroke-width="1.5" filter="url(#lift)"/>
+        <rect x="239" y="99" width="22" height="4" fill="#CBD5E1"/>
+        <text id="cClock" x="376" y="121" font-size="9" font-weight="600" fill="#07162D" text-anchor="end" class="num">23:14</text>
+        <rect id="avatar" x="124" y="134" width="10" height="10" fill="#1E7BFF"/>
+        <text x="140" y="143" font-size="10" font-weight="600" fill="#07162D">Gulf Coatings LLC</text>
+        <text id="cSub" x="140" y="154" font-size="7.5" fill="#64748B">last seen today at 19:02</text>
+        <line x1="110" y1="162" x2="390" y2="162" stroke="#E5EAF2"/>
+        <g clip-path="url(#chatClip)">
+          <g id="chatBefore"></g>
+          <g id="chatAfter" opacity="0"></g>
+        </g>
+        <line x1="110" y1="577" x2="390" y2="577" stroke="#E5EAF2"/>
+        <rect x="122" y="586" width="230" height="26" fill="#FFFFFF" stroke="#CBD5E1"/>
+        <text x="131" y="603" font-size="9" fill="#94A3B8">Message</text>
+        <rect x="358" y="586" width="26" height="26" fill="#07162D"/>
+        <path d="M366 599 h10 m-4 -4 l4 4 l-4 4" fill="none" stroke="#F8FAFC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </g>
+      <text x="250" y="652" font-size="9" class="mono" fill="#334155" text-anchor="middle">CUSTOMER’S PHONE</text>
+    </g>
+
+    <text x="1050" y="40" font-size="9" class="mono" fill="#94A3B8" text-anchor="end">■ EXAMPLE</text>
+  </g>
+
+  <!-- ===== HUD: one number ===== -->
+  <g id="hud" opacity="0">
+    <text x="30" y="40" font-size="10" class="mono" fill="#475569">FIRST REPLY</text>
+    <text id="hRep" x="30" y="76" font-size="32" font-weight="700" fill="#07162D" class="num">—</text>
+  </g>
+
+  <!-- ===== The turn: a title card in screen space, above everything ===== -->
+  <g id="turn">
+    <rect id="card" x="0" y="0" width="0" height="720" fill="#07162D"/>
+    <g id="lockup" opacity="0">
+      <g transform="translate(361 318) scale(.283)">
+        <rect x="0" y="0" width="48" height="48" fill="#1E7BFF"/>
+        <rect x="4" y="69" width="40" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M75,0H134.5A148.5,148.5 0 0 1 134.5,297H75V259H134.5A113,110 0 0 0 134.5,39H75Z"/>
+        <rect x="75" y="69" width="39" height="228" fill="#F8FAFC"/>
+        <path fill="#F8FAFC" d="M95,69H137.5A79.5,79.5 0 0 1 200.4,197.2A246.2,246.2 0 0 0 158.8,107H95Z"/>
+      </g>
+      <line x1="462" y1="326" x2="462" y2="396" stroke="#F8FAFC" stroke-opacity=".4" stroke-width="1.5"/>
+      <text x="479" y="372" font-size="34" font-weight="700" fill="#F8FAFC" letter-spacing="-.7">Dayam<tspan font-weight="400"> Insights</tspan></text>
+    </g>
+  </g>
+</svg>
+
+<script>
+(function(){
+  var $ = M.$, set = M.set, clamp = M.clamp, lerp = M.lerp, p = M.p;
+  var NS = 'http://www.w3.org/2000/svg';
+  function el(tag, attrs, parent, text){ var e = document.createElementNS(NS, tag); set(e, attrs); if (text != null) e.textContent = text; parent.appendChild(e); return e; }
+  var E = { p3o: gsap.parseEase('power3.out'), p3io: gsap.parseEase('power3.inOut') };
+  gsap.defaults({ ease: 'power3.out', lazy: false });
+
+  var DUR = 30, CX = 540, CY = 360, ZOOM = 140;
+  var WIDE = { s: 1, fx: 540, fy: 362 };
+  var LEAN = { s: 1.04, fx: 520, fy: 370 };
+  var PUSH = { s: 1.75, fx: 310, fy: 480 };
+  // #focus (the customer's phone) is drawn at 1.12 through its group transform;
+  // anything outside it that has to meet the phone goes through px()/py().
+  var F = { k: 1.12, tx: 30, ty: -40 };
+  var px = function(x){ return x * F.k + F.tx; }, py = function(y){ return y * F.k + F.ty; };
+  var V0 = { x: px(124 + 5), y: py(134 + 5) };     // the mark in the chat header
+  var CHAT = { left: 124, right: 376, top: 173, bottom: 568, gap: 8, maxW: 200 };
+  var CARD = { x: 840, top: 274, step: 56, h: 48 };
+
+  // ----- the two conversations -----
+  // who: 'c' customer (right), 'b' bot (left). typing: the bot's indicator
+  // occupies the slot from typing until t. day: a date pill.
+  var Q1 = ['Hi — do you have the 5L can', 'in stock? Price for 200?'];
+  var BEFORE = [
+    { t: 2.0, who: 'c', lines: Q1, time: '23:14' },
+    { t: 4.0, who: 'c', lines: ['Hello?'], time: '23:31' },
+    { t: 5.0, who: 'c', lines: ['Also, do you deliver to', 'Jebel Ali?'], time: '23:52' },
+    { t: 6.25, day: 'WEDNESDAY' },
+    { t: 6.3, who: 'c', lines: ['Never mind, found it', 'elsewhere.'], time: '07:40' }
+  ];
+  var AFTER = [
+    { t: 10.6, who: 'c', lines: Q1, time: '23:14', read: true },
+    { t: 12.1, who: 'b', typing: 11.1, lines: ['Yes — 68 in stock. 200 × 5L at', 'your trade rate is AED 9,400.'], time: '23:14' },
+    { t: 13.3, who: 'b', lines: ['Delivery to Jebel Ali is', 'next-day, AED 150.'], time: '23:14' },
+    { t: 14.3, who: 'b', lines: ['Want a quote you can forward?'], time: '23:14' },
+    { t: 15.3, who: 'c', lines: ['Yes please, for 200.'], time: '23:15', read: true },
+    { t: 16.4, who: 'b', typing: 15.7, lines: ['Drafting it now. A person', 'checks it before it goes out.'], time: '23:15' },
+    { t: 18.3, who: 'b', pdf: true, lines: ['Quote 1041.pdf'], sub: 'AED 9,550 · approved by Ahmed', time: '23:15' },
+    { t: 19.2, who: 'c', lines: ['Perfect, go ahead.', 'Can we get 30 days credit?'], time: '23:16', read: true },
+    { t: 20.3, who: 'b', typing: 19.6, lines: ['That’s for Ahmed, not me —', 'I’ve passed it on. He’ll reply', 'first thing tomorrow.'], time: '23:16' }
+  ];
+  // The rows the bot reads, and when each card slides out.
+  var SRC = [
+    { t: 11.3,  label: 'STOCK',          row: '5L can · 68 in stock' },
+    { t: 11.55, label: 'PRICE LIST',     row: '5L can · trade rate · AED 47.00' },
+    { t: 11.8,  label: 'DELIVERY ZONES', row: 'Jebel Ali · next day · AED 150' }
+  ];
+  var QUOTE_T = 16.6, TAP_T = 17.7, CREDIT_T = 20.6;
+
+  // ----- build: bubbles measured with the real font, on the first render -----
+  var built = false, before, after, finalScroll = 0, DIVE = { x: 0, y: 0 };
+  function ticks(g, x, y, blue){
+    var col = blue ? '#1E7BFF' : '#94A3B8';
+    el('path', { d: 'M' + x + ' ' + (y + 3) + ' l2.2 2.2 L' + (x + 6.5) + ' ' + y, fill: 'none', stroke: col, 'stroke-width': 1.1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+    el('path', { d: 'M' + (x + 3) + ' ' + (y + 3) + ' l2.2 2.2 L' + (x + 9.5) + ' ' + y, fill: 'none', stroke: col, 'stroke-width': 1.1, 'stroke-linecap': 'round', 'stroke-linejoin': 'round' }, g);
+  }
+  function buildChat(items, parent){
+    var y = CHAT.top;
+    return items.map(function(it){
+      var g = el('g', { opacity: 0 }, parent);
+      var out = { it: it, g: g, y: y, start: it.typing != null ? it.typing : it.t };
+      if (it.day) {
+        el('rect', { x: 250 - 36, y: y, width: 72, height: 14, fill: '#F1F5F9' }, g);
+        el('text', { x: 250, y: y + 10, 'font-size': 7, class: 'mono', fill: '#64748B', 'text-anchor': 'middle' }, g, it.day);
+        out.h = 14; y += out.h + CHAT.gap; return out;
+      }
+      var bot = it.who === 'b';
+      var lines = it.lines.map(function(s){ return el('text', { 'font-size': 9.5, 'font-weight': it.pdf ? 600 : 400, fill: '#07162D', class: 'num' }, g, s); });
+      var w = 0; lines.forEach(function(tx){ w = Math.max(w, tx.getComputedTextLength()); });
+      var sub = null;
+      if (it.pdf) { sub = el('text', { 'font-size': 7.5, fill: '#64748B', class: 'num' }, g, it.sub); w = Math.max(w, sub.getComputedTextLength()); }
+      var bw = clamp(Math.ceil(w) + 16 + (it.pdf ? 24 : 0), 64, CHAT.maxW);
+      var bh = 8 + (it.pdf ? 26 : it.lines.length * 13) + 11;
+      var bx = bot ? CHAT.left + 14 : CHAT.right - bw;
+      var rect = el('rect', { x: bx, y: y, width: bw, height: bh, fill: bot ? '#FFFFFF' : '#F1F5F9', stroke: bot ? '#07162D' : '#E5EAF2', 'stroke-width': 1 }, g);
+      g.insertBefore(rect, g.firstChild);
+      if (bot) out.avatar = el('rect', { x: CHAT.left, y: y + 2, width: 8, height: 8, fill: '#1E7BFF' }, g);
+      var tx0 = bx + 8 + (it.pdf ? 22 : 0);
+      lines.forEach(function(tx, i){ set(tx, { x: tx0, y: y + 8 + 9.5 + i * 13 }); });
+      if (it.pdf) {
+        set(sub, { x: tx0, y: y + 8 + 9.5 + 12 });
+        el('path', { d: 'M' + (bx + 9) + ' ' + (y + 10) + ' h9 l4 4 v13 h-13 z M' + (bx + 18) + ' ' + (y + 10) + ' v4 h4', fill: 'none', stroke: '#07162D', 'stroke-width': 1.1, 'stroke-linejoin': 'round' }, g);
+      }
+      var tm = el('text', { x: bx + bw - 7, y: y + bh - 5, 'font-size': 7, fill: '#94A3B8', 'text-anchor': 'end', class: 'num' }, g, it.time);
+      if (!bot) { var tw = tm.getComputedTextLength(); out.tick = el('g', {}, g); ticks(out.tick, bx + bw - 7 - tw - 13, y + bh - 10, !!it.read); }
+      out.h = bh; out.bx = bx; out.bw = bw;
+      y += bh + CHAT.gap;
+      return out;
+    });
+  }
+  // The typing indicator, drawn once and moved to whichever slot is typing.
+  var typing = el('g', { opacity: 0 }, $('chatAfter'));
+  el('rect', { x: CHAT.left + 14, y: 0, width: 44, height: 22, fill: '#FFFFFF', stroke: '#07162D', 'stroke-width': 1 }, typing);
+  el('rect', { x: CHAT.left, y: 2, width: 8, height: 8, fill: '#1E7BFF' }, typing);
+  var dots = [0, 1, 2].map(function(i){ return el('rect', { x: CHAT.left + 14 + 9 + i * 10, y: 9, width: 4, height: 4, fill: '#07162D' }, typing); });
+
+  // Source cards and their wires.
+  var srcEls = SRC.map(function(s, i){
+    var y = 214 + i * 86;
+    var g = el('g', { opacity: 0 }, $('srcs'));
+    el('rect', { x: 500, y: y, width: 240, height: 58, fill: '#FFFFFF', stroke: '#07162D', 'stroke-width': 1.2, filter: 'url(#lift)' }, g);
+    el('text', { x: 512, y: y + 17, 'font-size': 8, class: 'mono', fill: '#475569' }, g, s.label);
+    el('text', { x: 512, y: y + 38, 'font-size': 10.5, 'font-weight': 600, fill: '#07162D', class: 'num' }, g, s.row);
+    el('rect', { x: 722, y: y + 25, width: 8, height: 8, fill: '#1E7BFF' }, g);
+    var wire = el('path', { fill: 'none', stroke: '#07162D', 'stroke-width': 1.2, 'stroke-dasharray': '3 4', opacity: 0 }, $('wires'));
+    return { g: g, y: y + 29, wire: wire };
+  });
+
+  // Owner's phone, after: the quote to approve, then the credit question.
+  function ownCard(title, sub, btn){
+    var g = el('g', { opacity: 0 }, $('cards'));
+    el('rect', { x: CARD.x, y: 0, width: 140, height: CARD.h, fill: '#FFFFFF', stroke: '#07162D' }, g);
+    var bar = el('rect', { x: CARD.x, y: 0, width: 3, height: CARD.h, fill: '#1E7BFF', opacity: 0 }, g);
+    el('rect', { x: 848, y: 13, width: 8, height: 8, fill: '#1E7BFF' }, g);
+    el('text', { x: 863, y: 21, 'font-size': 11, 'font-weight': 600, fill: '#07162D' }, g, title);
+    el('text', { x: 863, y: 37, 'font-size': 8.5, fill: '#475569', class: 'num' }, g, sub);
+    var o = { g: g, bar: bar };
+    if (btn) { o.btn = el('rect', { x: 934, y: 25, width: 40, height: 16, fill: '#07162D' }, g); o.lbl = el('text', { x: 954, y: 36.5, 'font-size': 8, 'font-weight': 600, fill: '#F8FAFC', 'text-anchor': 'middle' }, g, btn); }
+    return o;
+  }
+  var OWN = [ { t: QUOTE_T, c: ownCard('Quote to approve', 'AED 9,550', 'Approve') }, { t: CREDIT_T, c: ownCard('Credit terms asked', 'Al Noor · reply tomorrow') } ];
+
+  function build(){
+    before = buildChat(BEFORE, $('chatBefore'));
+    after = buildChat(AFTER, $('chatAfter'));
+    $('chatAfter').appendChild(typing);       // above the bubbles it stands in for
+    var last = after[after.length - 1];
+    finalScroll = Math.max(0, last.y + last.h - CHAT.bottom);
+    DIVE = { x: px(CHAT.left + 4), y: py(last.y + 2 + 4 - finalScroll) };
+    built = true;
+  }
+
+  // ----- timeline -----
+  var S = { pull: 0, hud: 0, lean: 0, drift: 0, push: 0, dive: 0, wipeIn: 0, wipeOut: 0, logo: 0, dim: 0 };
+  var tl = gsap.timeline({ paused: true });
+  tl.to(S, { pull: 1, duration: 2.5, ease: 'expo.out' }, .1)
+    .to(S, { hud: 1, duration: .9 }, 1.7)
+    .to(S, { lean: 1, duration: 1.2, ease: 'power3.inOut' }, 3.0)
+    .to(S, { lean: 0, duration: 1.0, ease: 'power3.inOut' }, 6.4)
+    .to(S, { wipeIn: 1, duration: .6, ease: 'power4.inOut' }, 7.4)
+    .to(S, { logo: 1, duration: .55, ease: 'power3.out' }, 7.9)
+    .set('#chatBefore', { opacity: 0 }, 8.3)
+    .set('#lock', { opacity: 0 }, 8.3)
+    .set('#chatAfter', { opacity: 1 }, 8.3)
+    .set('#awake', { opacity: 1 }, 8.3)
+    .to(S, { logo: 0, duration: .3, ease: 'power2.in' }, 9.0)
+    .to(S, { wipeOut: 1, duration: .65, ease: 'power4.inOut' }, 9.15)
+    .to(S, { drift: 1, duration: 11, ease: 'sine.inOut' }, 10.5)
+    .to(S, { dim: 1, duration: .8 }, 14.6)
+    .to(S, { hud: 0, duration: .6 }, 21.7)
+    .to(S, { push: 1, duration: 2, ease: 'power3.inOut' }, 21.8)
+    .to(S, { dive: 1, duration: 3.65, ease: 'power2.in' }, 26.1)
+    .set({}, {}, DUR);
+
+  function cam(s, fx, fy){ $('world').setAttribute('transform', 'translate(' + CX + ' ' + CY + ') scale(' + s.toFixed(4) + ') translate(' + (-fx).toFixed(3) + ' ' + (-fy).toFixed(3) + ')'); }
+  function camAt(s, qx, qy, sx, sy){ cam(s, qx - (sx - CX) / s, qy - (sy - CY) / s); }
+
+  // Chat scroll: the newest started item's bottom sits on the viewport floor; the move eases in.
+  function scrollOf(items, t){
+    var off = 0, prev = 0;
+    for (var i = 0; i < items.length; i++) {
+      var it = items[i];
+      if (t < it.start) break;
+      var want = Math.max(0, it.y + it.h - CHAT.bottom);
+      off = lerp(prev, want, E.p3o(p(t, it.start, it.start + .45)));
+      prev = want;
+    }
+    return off;
+  }
+  function drawChat(items, group, t, sc){
+    group.setAttribute('transform', 'translate(0 ' + (-sc).toFixed(2) + ')');
+    var typingAt = null;
+    items.forEach(function(o){
+      var a = E.p3o(p(t, o.it.t, o.it.t + .35));
+      set(o.g, { opacity: a.toFixed(3), transform: 'translate(0 ' + (8 * (1 - a)).toFixed(2) + ')' });
+      if (o.it.typing != null && t >= o.it.typing && t < o.it.t) typingAt = o.y;
+    });
+    return typingAt;
+  }
+  function clockAt(items, t, fallback){
+    var c = fallback;
+    items.forEach(function(o){ if (!o.it.day && t >= o.it.t) c = o.it.time; });
+    return c;
+  }
+
+  function render(t){
+    if (!built) build();
+    t = ((t % DUR) + DUR) % DUR;
+    tl.seek(t, true);
+    var rebuilt = t >= 8.3;
+
+    // ----- camera -----
+    var s = lerp(WIDE.s, LEAN.s, S.lean), fx = lerp(WIDE.fx, LEAN.fx, S.lean), fy = lerp(WIDE.fy, LEAN.fy, S.lean);
+    s *= 1 + .05 * S.drift; fx += 24 * S.drift;
+    s = lerp(s, PUSH.s, S.push); fx = lerp(fx, PUSH.fx, S.push); fy = lerp(fy, PUSH.fy, S.push);
+    if (S.pull < 1) {
+      var z = S.pull, sz = Math.exp(lerp(Math.log(ZOOM), Math.log(s), z));
+      camAt(sz, V0.x, V0.y, lerp(CX, CX + s * (V0.x - fx), z), lerp(CY, CY + s * (V0.y - fy), z));
+    } else if (S.dive > 0) {
+      var z2 = S.dive, sd = Math.exp(lerp(Math.log(s), Math.log(ZOOM), z2));
+      camAt(sd, DIVE.x, DIVE.y, lerp(CX + s * (DIVE.x - fx), CX, z2), lerp(CY + s * (DIVE.y - fy), CY, z2));
+    } else cam(s, fx, fy);
+
+    // Light parallax: the owner's phone and the grid sit on different planes from the chat.
+    var par = (S.pull >= 1 && S.dive === 0) ? (1 - S.push) : 0;
+    var dx = (fx - WIDE.fx) * par, dy = (fy - WIDE.fy) * par;
+    $('ownLayer').setAttribute('transform', 'translate(' + (-dx * .16).toFixed(2) + ' ' + (-dy * .16).toFixed(2) + ')');
+    $('gridbg').setAttribute('transform', 'translate(' + (dx * .12).toFixed(2) + ' ' + (dy * .12).toFixed(2) + ')');
+    $('side').setAttribute('opacity', (1 - .78 * S.push).toFixed(3));
+    set($('card'), { x: (1080 * S.wipeOut).toFixed(1), width: (1080 * Math.max(0, S.wipeIn - S.wipeOut)).toFixed(1) });
+    set($('lockup'), { opacity: S.logo.toFixed(3), transform: 'translate(0 ' + (10 * (1 - S.logo)).toFixed(2) + ')' });
+
+    // ----- the chat -----
+    var items = rebuilt ? after : before, group = rebuilt ? $('chatAfter') : $('chatBefore');
+    var sc = scrollOf(items, t);
+    var typingAt = drawChat(items, group, t, sc);
+    if (!rebuilt) $('chatAfter').setAttribute('transform', 'translate(0 0)');
+    if (typingAt != null) {
+      set(typing, { opacity: 1, transform: 'translate(0 ' + typingAt.toFixed(2) + ')' });
+      dots.forEach(function(d, i){ d.setAttribute('opacity', (.25 + .75 * (.5 + .5 * Math.sin((t * 2.4 - i * .28) * Math.PI * 2))).toFixed(3)); });
+    } else typing.setAttribute('opacity', 0);
+    var clock = clockAt(items, t, '23:14');
+    $('cClock').textContent = clock;
+    $('cSub').textContent = rebuilt ? 'online' : 'last seen today at 19:02';
+
+    // ----- the owner's phone -----
+    $('oClock').textContent = clock;
+    $('oDay').textContent = clock === '07:40' ? 'Wednesday' : 'Tuesday';
+    var unread = before.filter(function(o){ return !o.it.day && t >= o.it.t + .3; }).length;
+    set($('notif'), { opacity: rebuilt ? 0 : E.p3o(p(t, 2.25, 2.65)).toFixed(3) });
+    $('oCnt').textContent = String(Math.max(1, unread));
+    var forYou = 0;
+    OWN.forEach(function(o, i){
+      var a = E.p3o(p(t, o.t, o.t + .45));
+      if (a <= 0) { o.c.g.setAttribute('opacity', 0); return; }
+      forYou++;
+      var below = 0;
+      for (var j = i + 1; j < OWN.length; j++) below += E.p3io(p(t, OWN[j].t - .3, OWN[j].t + .05));
+      set(o.c.g, { opacity: a.toFixed(3), transform: 'translate(0 ' + (CARD.top + below * CARD.step - 14 * (1 - a)).toFixed(2) + ')' });
+      o.c.bar.setAttribute('opacity', (1 - p(t, o.t + .4, o.t + 1.2)).toFixed(3));
+      if (o.c.btn) {
+        // The one tap a person makes: the button flashes blue and reads Sent.
+        var tap = p(t, TAP_T, TAP_T + .08) * (1 - p(t, TAP_T + .3, TAP_T + .55));
+        var done = t >= TAP_T + .3;
+        o.c.btn.setAttribute('fill', tap > .5 ? '#1E7BFF' : (done ? '#F8FAFC' : '#07162D'));
+        o.c.btn.setAttribute('stroke', done ? '#07162D' : 'none');
+        o.c.lbl.textContent = done ? 'Sent' : 'Approve';
+        o.c.lbl.setAttribute('fill', done ? '#07162D' : '#F8FAFC');
+      }
+    });
+    $('pCnt').textContent = String(forYou);
+
+    // ----- what the bot read: cards slide out beside the chat, wired to the reply -----
+    var reply = after[1];
+    var ry = py(reply.y + 12 - sc);             // the reply bubble's top edge on screen
+    srcEls.forEach(function(sE, i){
+      var a = rebuilt ? E.p3o(p(t, SRC[i].t, SRC[i].t + .5)) : 0;
+      var vis = a * (1 - .6 * S.dim);
+      set(sE.g, { opacity: vis.toFixed(3), transform: 'translate(' + (-28 * (1 - a)).toFixed(2) + ' 0)' });
+      var y2 = clamp(ry + i * 6, py(170), py(570));
+      sE.wire.setAttribute('d', 'M500 ' + sE.y + ' C 478 ' + sE.y + ', 490 ' + y2.toFixed(1) + ', ' + px(391).toFixed(1) + ' ' + y2.toFixed(1));
+      sE.wire.setAttribute('opacity', (.55 * vis).toFixed(3));
+    });
+
+    // ----- HUD: one number -----
+    $('hud').setAttribute('opacity', S.hud.toFixed(3));
+    var rep = '—';
+    if (!rebuilt) { if (t >= 6.3) rep = 'never'; else if (t >= 5.0) rep = '38 min'; else if (t >= 4.0) rep = '17 min'; }
+    else if (t >= 12.1) rep = '6 s';
+    $('hRep').textContent = rep;
+    $('hRep').setAttribute('fill', rebuilt && t >= 12.1 ? '#1E7BFF' : '#07162D');
+  }
+
+  window.POSTER_T = 2.4;
+  window.SIZE = [1080, 720];
+  M.boot(render, DUR);
+})();
+</script>
+</body>
+</html>

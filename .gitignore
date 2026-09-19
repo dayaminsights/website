@@ -5,4 +5,11 @@ mockups/
 # Temporary audit/verification harness
 tmp_*.js
 tmp_*.png
+tmp_*.json
+tmp_*.err
+tmp_shots/
 node_modules/
+
+# Audit paperwork — the repo is public and everything committed is served
+Dayam_Insights_SEO_Audit_Brief.md
+Dayam_Insights_SEO_Audit_Report.md

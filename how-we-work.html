@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#F8FAFC">
-<meta name="description" content="The ladder we take a working business up, one rung at a time — innovate, integrate, automate, accelerate, elevate — and how an engagement runs after you say yes.">
+<meta name="description" content="How we work with businesses in India and the UAE: a short free call, a fixed price before any work starts, everything built in accounts you own.">
 <title>How We Work — The Ladder and the Engagement | Dayam Insights</title>
 <!-- ?v= busts the favicon cache: browsers keep tab icons in their own store
      and do not refetch them on reload, so the old white-backed icon would
@@ -24,24 +24,56 @@
 <meta property="og:image" content="https://dayaminsights.com/og-image.png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="Dayam Insights — business dashboards, workflow automation, AI assistants and websites for growing Indian businesses.">
+<meta property="og:image:alt" content="Dayam Insights — business dashboards, workflow automation, AI assistants and websites for growing businesses in India and the UAE.">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="How We Work — The Ladder and the Engagement | Dayam Insights">
 <meta name="twitter:description" content="The ladder we take a working business up, one rung at a time — innovate, integrate, automate, accelerate, elevate — and how an engagement runs after you say yes.">
 <meta name="twitter:image" content="https://dayaminsights.com/og-image.png">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebPage",
+      "@id": "https://dayaminsights.com/how-we-work.html",
+      "url": "https://dayaminsights.com/how-we-work.html",
+      "name": "How we work",
+      "isPartOf": { "@id": "https://dayaminsights.com/#org" },
+      "about": { "@id": "https://dayaminsights.com/#org" }
+    },
+    {
+      "@type": "BreadcrumbList",
+      "@id": "https://dayaminsights.com/how-we-work.html#crumbs",
+      "itemListElement": [
+        { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://dayaminsights.com/" },
+        { "@type": "ListItem", "position": 2, "name": "How we work", "item": "https://dayaminsights.com/how-we-work.html" }
+      ]
+    }
+  ]
+}
+</script>
 <!-- Google Analytics 4. The generate_lead handlers in assets/js/site.js and at the bottom of the
      page guard on typeof gtag, so they stay safe no-ops if this is ever
      removed or blocked by the visitor. -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR"></script>
 <script>
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
   gtag('js', new Date());
   gtag('config', 'G-24QJPZPKZR');
+  // The tag itself is the heaviest file on the page (~170KB), so it is
+  // fetched after the load event rather than competing with the poster,
+  // the font and the stylesheet on a slow connection. Everything queued in
+  // dataLayer before it arrives (including the page_view) is replayed by it.
+  window.addEventListener('load', function(){
+    var s = document.createElement('script'); s.async = true;
+    s.src = 'https://www.googletagmanager.com/gtag/js?id=G-24QJPZPKZR';
+    document.head.appendChild(s);
+  });
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<!-- Inter is self-hosted as one variable file (weights 400-800): no
+     third-party stylesheet before first paint, one font request instead of
+     five. The @font-face lives at the top of site.css. -->
+<link rel="preload" href="assets/fonts/inter-latin-var.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/site.css">
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
@@ -89,7 +121,8 @@
     </a>
     <nav class="nav-links" aria-label="Main">
       <a href="dashboards.html">Dashboards</a>
-      <a href="automation.html">Automation &amp; AI</a>
+      <a href="automation.html">Automation</a>
+      <a href="ai-chatbot.html">AI chatbot</a>
       <a href="websites.html">Websites</a>
       <a href="how-we-work.html" class="is-current" aria-current="page">How we work</a>
       <a href="faq.html">FAQ</a>
@@ -104,9 +137,10 @@
 </header>
 
 <div class="mobile-menu" id="mobileMenu" hidden>
-  <nav class="mm-links" aria-label="Main">
+  <nav class="mm-links" aria-label="Mobile">
     <a href="dashboards.html">Dashboards</a>
-    <a href="automation.html">Automation &amp; AI</a>
+    <a href="automation.html">Automation</a>
+    <a href="ai-chatbot.html">AI chatbot</a>
     <a href="websites.html">Websites</a>
     <a href="how-we-work.html" class="is-current" aria-current="page">How we work</a>
     <a href="faq.html">FAQ</a>
@@ -213,7 +247,7 @@
           <p><span class="rb-lab">What we do</span>AI assistants working on your own data, a website that sells while the shop is shut, and capability you did not have a year ago.</p>
           <p><span class="rb-lab">What changes</span>You compete on a level the businesses still re-typing cannot reach.</p>
         </div>
-        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Claude</span><span class="tool">OpenAI</span><span class="tool">Websites &amp; landing pages</span><span class="tool">Your own cloud</span><a class="tool tool-link" href="automation.html#ai">See AI and automation <span class="arrow">&rarr;</span></a></div>
+        <div class="rp-tools"><span class="rb-lab">Tools</span><span class="tool">Claude</span><span class="tool">OpenAI</span><span class="tool">Websites &amp; landing pages</span><span class="tool">Your own cloud</span><a class="tool tool-link" href="ai-chatbot.html">See AI chatbots <span class="arrow">&rarr;</span></a></div>
       </div>
     </div>
   </div>
@@ -286,20 +320,20 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <a href="index.html" class="brand" aria-label="Dayam Insights — home">
-          <img class="glyph" src="assets/img/logo-white.png" alt="" width="30" height="32">
+          <img class="glyph" src="assets/img/logo-white.svg" alt="" width="30" height="32">
           <span class="wm">Dayam <span>Insights</span></span>
         </a>
         <p>We help growing businesses turn messy, manual operations into connected systems — so the business gets easier to understand, operate and scale.</p>
       </div>
       <div class="foot-col">
-        <h2>Solutions</h2>
-        <a href="dashboards.html">Dashboards &amp; analytics</a>
-        <a href="automation.html">Workflow automation</a>
-        <a href="automation.html#ai">AI assistants</a>
-        <a href="websites.html">Websites &amp; digital</a>
+        <p class="foot-h">Solutions</p>
+        <a href="dashboards.html">Business dashboards &amp; Power BI</a>
+        <a href="automation.html">Business &amp; workflow automation</a>
+        <a href="ai-chatbot.html">AI chatbots for website &amp; WhatsApp</a>
+        <a href="websites.html">Website design &amp; development</a>
       </div>
       <div class="foot-col">
-        <h2>Built for</h2>
+        <p class="foot-h">Built for</p>
         <span>Retail &amp; multi-store</span>
         <span>Manufacturing</span>
         <span>Distribution &amp; wholesale</span>
@@ -307,14 +341,16 @@
         <span>Professional services</span>
       </div>
       <div class="foot-col">
-        <h2>Company</h2>
+        <p class="foot-h">Company</p>
         <a href="how-we-work.html">How we work</a>
         <a href="faq.html">FAQ</a>
         <a href="index.html#contact">Talk to us</a>
+        <a href="privacy.html">Privacy</a>
       </div>
     </div>
     <div class="foot-bottom">
       <span>&copy; <span id="yr"></span> Dayam Insights. All rights reserved.</span>
+      <span>Based in Udaipur &middot; Working across India &amp; the UAE</span>
       <span class="mono">Data &middot; Automation &middot; AI &middot; Websites</span>
     </div>
   </div>
