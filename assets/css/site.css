@@ -1216,7 +1216,7 @@ main:has(> #cta:last-child) + footer{border-top:1px solid var(--line-invert);pad
 .scrolly{position:relative}
 .sy-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.06fr);gap:clamp(32px,5vw,72px);margin-top:var(--sp-8);align-items:start}
 
-.sy-step{min-height:40vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
+.sy-step{min-height:30vh;display:flex;flex-direction:column;justify-content:center;padding-right:var(--sp-5);opacity:.3;transition:opacity var(--t-base) var(--ease)}
 .sy-step.is-on{opacity:1}
 .sy-num{font-family:var(--font-mono);font-size:var(--fs-label);font-weight:600;letter-spacing:.14em;color:var(--ink-2)}
 .sy-step h3{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.014em;line-height:1.2;margin:var(--sp-3) 0;text-wrap:balance}
@@ -1800,3 +1800,33 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .res-list .res{align-items:start}
 .res-list .res-fig{align-self:stretch;display:flex;flex-direction:column}
 .res-list .res-fig .bp{flex:1 1 auto;height:auto;object-fit:contain}
+
+/* ===== Phone compaction (2026-09-19, visitors: "too much text, too long a scroll") =====
+   The copy was halved first; what was left of the length was layout. Measured
+   at 390px: the footer ran 1,290px (four stacked columns), the four process
+   steps 960px, the four problem cards 740px, the three hub cards 1,880px.
+   Nothing is hidden; each block just stops spending a screen on chrome. */
+@media(max-width:760px){
+  /* Footer: brand across the top, Solutions beside Company, the sectors as one line. */
+  .foot-grid{grid-template-columns:1fr 1fr;gap:var(--sp-6) var(--sp-5)}
+  .foot-brand{grid-column:1 / -1}
+  .foot-col:nth-child(3){grid-column:1 / -1;order:1}
+  .foot-col:nth-child(3) span{display:inline;padding:0}
+  .foot-col:nth-child(3) span + span::before{content:" \00B7  "}
+  /* Process: each step a row — number left, words right — not a centred column. */
+  .proc-grid{gap:var(--sp-5) 0}
+  .proc{display:grid;grid-template-columns:40px minmax(0,1fr);column-gap:var(--sp-4);align-items:start;text-align:left;padding:0}
+  .proc .num{width:40px;height:40px;margin:0;font-size:15px;grid-row:1 / span 3}
+  .proc h3{margin-bottom:var(--sp-1)}
+  .proc p{max-width:none;margin:0}
+  .proc .ptag{margin-top:var(--sp-2)}
+  /* Problem cards: a hairline list. One line of copy each does not need a box. */
+  .prob-grid{gap:0;border-top:1px solid var(--line-strong)}
+  .prob{border:0;border-bottom:1px solid var(--line);padding:var(--sp-4) 0;background:transparent}
+}
+@media(max-width:600px){
+  /* Hub cards: a wider crop of the still, so three cards are not three screens. */
+  .vcard img{aspect-ratio:2 / 1}
+  /* What comes with it: eight short points read fine two-up at 390px. */
+  .points-row{grid-template-columns:repeat(2,minmax(0,1fr));gap:var(--sp-3) var(--sp-4)}
+}
