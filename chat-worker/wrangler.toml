@@ -1,0 +1,23 @@
+name = "dayam-chat"
+main = "src/index.ts"
+compatibility_date = "2026-06-01"
+compatibility_flags = ["nodejs_compat"]
+
+# knowledge.md is imported as a string.
+[[rules]]
+type = "Text"
+globs = ["**/*.md"]
+fallthrough = true
+
+# Burst limit per visitor IP. The binding only supports 10 s or 60 s windows.
+[[ratelimits]]
+name = "RATE_LIMITER"
+namespace_id = "1001"
+
+  [ratelimits.simple]
+  limit = 10
+  period = 60
+
+# Workers Logs: token usage per call, CPU time per request.
+[observability]
+enabled = true
