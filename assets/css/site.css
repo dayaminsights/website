@@ -208,8 +208,9 @@ a:not(.btn,.hs-row) .arrow{display:none}
 .nav-cta .btn{min-height:44px;padding:0 16px;font-size:14px;line-height:1.2}
 .nav-ask{gap:9px;padding-inline:14px 16px;line-height:1.2}
 .nav-ask[hidden]{display:none}
-.nav-ask-sq{flex:none;width:10px;height:10px;background:var(--accent)}
-@media (hover:hover) and (pointer:fine){.nav-ask:hover .nav-ask-sq{background:#fff}}
+/* The AI mark: a four-point star with straight edges, the blue accent. */
+.nav-ask-ico{flex:none;width:16px;height:16px;fill:var(--accent)}
+@media (hover:hover) and (pointer:fine){.nav-ask:hover .nav-ask-ico{fill:#fff}}
 .nav-ask{position:relative}
 .nav-ask-dot{position:absolute;top:-5px;right:-5px;width:12px;height:12px;background:var(--accent);border:2px solid var(--bg)}
 .nav-ask-dot[hidden]{display:none}
@@ -1364,7 +1365,7 @@ footer :focus-visible{outline-color:var(--focus-invert)}
    stays for screen readers. */
 @media(max-width:499px){
   .nav-cta .nav-ask{width:44px;padding:0;justify-content:center}
-  .nav-cta .nav-ask-sq{width:14px;height:14px}
+  .nav-cta .nav-ask-ico{width:20px;height:20px}
   .nav-cta .nav-ask-label{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 }
 @media(max-width:760px){

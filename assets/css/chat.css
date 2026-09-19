@@ -17,6 +17,8 @@
 .dc-launch:active{transform:scale(.97)}
 .dc-launch:focus-visible,.dc-panel :focus-visible,.dc-nudge :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
 .dc-sq{flex:none;width:12px;height:12px;background:var(--accent)}
+/* The AI mark on the launcher, matching the header button (site.css .nav-ask-ico). */
+.dc-ico{flex:none;width:16px;height:16px;fill:var(--accent)}
 .dc-dot{position:absolute;top:-5px;right:-5px;width:12px;height:12px;background:var(--accent);border:2px solid var(--bg)}
 .dc-dot[hidden]{display:none}
 
