@@ -263,11 +263,12 @@
     var v = fig.querySelector('video'), btn = fig.querySelector('.hv-toggle');
     if (!v) return;
     v.muted = true;                 // a property, not just the attribute, or some browsers refuse to start it
-    // The poster is a moment from the middle of the loop, so playback starts
-    // there instead of at 0 — otherwise the still would jump to a different
-    // frame the instant the video took over. A seek only sticks once the
-    // browser has the metadata (Edge silently drops one set earlier), so it
-    // happens on the way into the first play.
+    // The poster is a moment inside the loop (2.4s, the "before" just framed,
+    // not the blue-square opening), so playback starts there instead of at 0 —
+    // otherwise the still would jump to a different frame the instant the
+    // video took over. A seek only sticks once the browser has the metadata
+    // (Edge silently drops one set earlier), so it happens on the way into the
+    // first play.
     var from = parseFloat(v.getAttribute('data-start')) || 0, seeked = !(from > 0);
     var held = reduce, visible = false;
     function sync(){

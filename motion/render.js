@@ -2,6 +2,7 @@
 //
 //   node motion/render.js websites                 → assets/video/websites-hero.{mp4,webm,jpg}
 //   node motion/render.js websites --frames 0 6 13 → tmp_websites_<t>.png stills to review timing
+//   node motion/render.js websites --poster        → only assets/video/websites-hero.jpg, from POSTER_T
 //
 // The scene is stepped one exact frame at a time (window.render(t)) rather
 // than screen-recorded, so the output never stutters or drops frames, and each
@@ -13,7 +14,7 @@ const fs = require('fs');
 const { pathToFileURL } = require('url');
 
 const name = process.argv[2];
-if (!name) { console.error('usage: node motion/render.js <scene> [--frames t1 t2 …]'); process.exit(1); }
+if (!name) { console.error('usage: node motion/render.js <scene> [--frames t1 t2 …] [--poster]'); process.exit(1); }
 const FPS = 30, SCALE = 1.5;
 // x264 quality; VP9 runs 12 higher on its own scale. A scene that moves the
 // camera every frame costs far more bits than one that doesn't — 27 keeps flat
@@ -51,7 +52,13 @@ const outDir = path.join(root, 'assets', 'video');
   fs.mkdirSync(outDir, { recursive: true });
   // The poster doubles as the reduced-motion still, and the page starts
   // playback at the same moment so nothing jumps when the video takes over.
+  // --poster re-cuts just this still when POSTER_T moves; the video is unchanged.
   fs.writeFileSync(path.join(outDir, `${name}-hero.jpg`), await shot(cfg.poster, { type: 'jpeg', quality: 84 }));
+  if (process.argv.includes('--poster')) {
+    console.log(`poster ${name}-hero.jpg (t=${cfg.poster}s)`);
+    await br.close();
+    return;
+  }
 
   // One pass, two files. H.264 is decoded in hardware almost everywhere, so it
   // is listed first; level 4.0 is all 1080p30 needs and keeps older phone

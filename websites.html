@@ -189,9 +189,13 @@
   <!-- Silent 30s 3:2 loop beside the headline, rendered from
        motion/websites.html. site.js starts it (no autoplay attribute), so
        reduced motion and no-JS keep the poster. data-start is the poster's
-       moment in the loop, so playback picks up exactly where the still is. -->
+       moment in the loop, so playback picks up exactly where the still is:
+       2.4s, the "before" just framed, so the story moves within half a second
+       of the first frame rather than opening on the ending. preload="auto"
+       lets the browser fetch those first seconds while the page is still
+       parsing. -->
   <figure class="hero-video">
-    <video muted loop playsinline preload="metadata" width="1620" height="1080" poster="assets/video/websites-hero.jpg" data-start="24.6" aria-describedby="hv-web">
+    <video muted loop playsinline preload="auto" width="1620" height="1080" poster="assets/video/websites-hero.jpg" data-start="2.4" aria-describedby="hv-web">
       <!-- Exact codecs, so a browser that cannot decode one skips straight to the
            next instead of trying and stalling. H.264 first: hardware-decoded
            almost everywhere. -->
