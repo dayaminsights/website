@@ -194,6 +194,7 @@
       var meta = CARDS[card.page] || { label: 'Read more', svc: '' };
       a = el('a', 'dc-card ' + (meta.svc || 'dc-card-plain'));
       a.href = card.href;
+      a.setAttribute('data-page', card.page);
       a.appendChild(el('span', 'dc-card-k', meta.label));
       if (card.reason) a.appendChild(el('span', 'dc-card-r', card.reason));
       a.appendChild(el('span', 'dc-card-go', samePage(card.href) ? 'Show me →' : 'See how it works →'));
@@ -216,7 +217,25 @@
     state.log.push({ who: 'card', card: card });
     if (card.kind === 'page') state.suggested.push(card.page);
     logEl.appendChild(cardNode(card));
+    placeCta();
     scrollLog();
+  }
+
+  // Under the latest page card, until the visitor has left details: a way to hand them over
+  // even when the model's message forgot to ask (it does, now and then).
+  function placeCta(){
+    var old = logEl.querySelector('.dc-cta');
+    if (old) old.remove();
+    var cards = logEl.querySelectorAll('.dc-card[data-page]');
+    if (state.leads.length || !cards.length) return;
+    var b = el('button', 'dc-chip dc-cta', 'Ask the team to get in touch');
+    b.type = 'button';
+    b.addEventListener('click', function(){
+      if (busy) return;
+      b.remove();
+      send('I’d like the team to get in touch.');
+    });
+    cards[cards.length - 1].insertAdjacentElement('afterend', b);
   }
 
   function showTyping(on){
@@ -450,6 +469,7 @@
     var update = state.leads.length > 0;
     state.leads.push(key);
     save();
+    placeCta();
     var fd = new FormData();
     fd.append('_subject', (update ? 'Chatbot lead update · ' : 'Chatbot lead · ') +
       String(lead.readiness || '').toUpperCase() + ' · ' + (lead.service || '') + ' · ' + (lead.name || ''));
@@ -518,6 +538,7 @@
       if (e.who === 'card') logEl.appendChild(cardNode(e.card));
       else addBubble(e.who, e.text);
     });
+    placeCta();
     renderChips();
     if (state.open) {
       if (phone()) { state.open = false; save(); dot.hidden = false; }
