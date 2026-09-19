@@ -495,6 +495,38 @@
     })(2);
   }
 
+  // ===== Stay out of the way =====
+  // The contact form is the page's own way in: the nudge never lands on top of
+  // it, and one already showing leaves when the form scrolls into view. On a
+  // phone the launcher sits over the hero's controls (the homepage index, a
+  // service page's video and its pause button) and over the form's own fields,
+  // so it steps aside while either is on screen.
+  // Read on demand rather than from the observer: the half-page trigger fires
+  // inside the same scroll event that brings the form in, before any observer
+  // callback has run.
+  function formOnScreen(){
+    var f = document.querySelector('.contact-form');
+    if (!f) return false;
+    var r = f.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  }
+  function watchPage(){
+    if (!('IntersectionObserver' in window)) return;
+    var heroIn = false, formIn = false;
+    function tuck(){ launch.classList.toggle('dc-tucked', (heroIn || formIn) && phone() && !isOpen()); }
+    var form = document.querySelector('.contact-form');
+    if (form) new IntersectionObserver(function(es){
+      formIn = es[0].isIntersecting;
+      if (formIn) hideNudge();
+      tuck();
+    }).observe(form);
+    var hero = document.querySelector('.hero-stage, .page-hero .hero-video');
+    if (hero) new IntersectionObserver(function(es){
+      heroIn = es[0].isIntersecting;
+      tuck();
+    }).observe(hero);
+  }
+
   // ===== Nudge: once per visit, after 20 s or half the page =====
   function armNudge(){
     if (!PAGE.nudge || state.nudged || state.used || state.log.length) return;
@@ -505,6 +537,8 @@
     }
     function fire(){
       if (fired) return;
+      // Over the form: try again once it has scrolled away.
+      if (formOnScreen()) { clearTimeout(t); t = setTimeout(fire, 6000); return; }
       fired = true;
       clearTimeout(t);
       removeEventListener('scroll', onScroll);
@@ -549,6 +583,7 @@
   function init(){
     build();
     restore();
+    watchPage();
     armNudge();
     // Back/forward cache: another page may have moved the conversation on.
     addEventListener('pageshow', function(e){
