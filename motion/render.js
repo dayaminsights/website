@@ -1,14 +1,14 @@
 // Renders a motion source in this folder to a hero video.
 //
-//   node motion/render.js websites                 → assets/video/websites-hero.{mp4,webm,jpg}
-//   node motion/render.js websites --frames 0 6 13 → tmp_websites_<t>.png stills to review timing
-//   node motion/render.js websites --poster        → only assets/video/websites-hero.jpg, from POSTER_T
+//   node motion/render.js websites                 → assets/video/websites-hero.{mp4,webm,webp}
+//   node motion/render.js websites --frames 0 6 13 → tmp/websites_<t>.png stills to review timing
+//   node motion/render.js websites --poster        → only assets/video/websites-hero.webp, from POSTER_T
 //
 // The scene is stepped one exact frame at a time (window.render(t)) rather
 // than screen-recorded, so the output never stutters or drops frames, and each
 // PNG is piped straight into ffmpeg without touching the disk.
 const { chromium } = require('playwright');
-const { spawn } = require('child_process');
+const { spawn, spawnSync } = require('child_process');
 const path = require('path');
 const fs = require('fs');
 const { pathToFileURL } = require('url');
@@ -41,8 +41,9 @@ const outDir = path.join(root, 'assets', 'video');
 
   const fi = process.argv.indexOf('--frames');
   if (fi > -1) {
+    fs.mkdirSync(path.join(root, 'tmp'), { recursive: true });
     for (const t of process.argv.slice(fi + 1).map(Number)) {
-      fs.writeFileSync(path.join(root, `tmp_${name}_${t}.png`), await shot(t));
+      fs.writeFileSync(path.join(root, 'tmp', `${name}_${t}.png`), await shot(t));
       console.log('still ' + t + 's');
     }
     await br.close();
@@ -53,9 +54,14 @@ const outDir = path.join(root, 'assets', 'video');
   // The poster doubles as the reduced-motion still, and the page starts
   // playback at the same moment so nothing jumps when the video takes over.
   // --poster re-cuts just this still when POSTER_T moves; the video is unchanged.
-  fs.writeFileSync(path.join(outDir, `${name}-hero.jpg`), await shot(cfg.poster, { type: 'jpeg', quality: 84 }));
+  // WebP at quality 80 is what the pages reference (~20–26 KB, a quarter of the
+  // JPEG this used to write).
+  const poster = path.join(outDir, `${name}-hero.webp`);
+  const wp = spawnSync('ffmpeg', ['-y', '-loglevel', 'error', '-f', 'image2pipe', '-c:v', 'png', '-i', '-',
+    '-c:v', 'libwebp', '-quality', '80', poster], { input: await shot(cfg.poster), stdio: ['pipe', 'inherit', 'inherit'] });
+  if (wp.status !== 0) throw new Error('ffmpeg (poster) exited ' + wp.status);
   if (process.argv.includes('--poster')) {
-    console.log(`poster ${name}-hero.jpg (t=${cfg.poster}s)`);
+    console.log(`poster ${name}-hero.webp (t=${cfg.poster}s)`);
     await br.close();
     return;
   }
@@ -88,5 +94,5 @@ const outDir = path.join(root, 'assets', 'video');
   await done;
   await br.close();
   const kb = f => Math.round(fs.statSync(f).size / 1024);
-  console.log(`done in ${Math.round((Date.now() - t0) / 1000)}s — ${cfg.size[0] * SCALE}×${cfg.size[1] * SCALE}, mp4 ${kb(mp4)} KB, webm ${kb(webm)} KB, poster ${kb(mp4.replace('.mp4', '.jpg'))} KB (t=${cfg.poster}s)`);
+  console.log(`done in ${Math.round((Date.now() - t0) / 1000)}s — ${cfg.size[0] * SCALE}×${cfg.size[1] * SCALE}, mp4 ${kb(mp4)} KB, webm ${kb(webm)} KB, poster ${kb(poster)} KB (t=${cfg.poster}s)`);
 })().catch(e => { console.error(e); process.exit(1); });

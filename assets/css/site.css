@@ -1650,7 +1650,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .res-tag,.rp-own,.ai-who,.ai-src{font-size:11px}
 
 /* ===== Spacing pass (2026-09-19) =====
-   Measured empty bands, not eyeballed ones (tmp_space.js): margins stacking on
+   Measured empty bands, not eyeballed ones (tools/checks/space.js): margins stacking on
    section padding were leaving 300–420px of nothing in three places. */
 /* The mid-page CTA closing a section: the section’s padding is the gap. */
 .mid-cta:last-child{margin-bottom:0}
@@ -1743,7 +1743,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .example-link a{text-decoration-color:var(--svc)}
 
 /* ===== Service pages: section alignment (2026-09-19) =====
-   Measured with tmp_align.js: in every two-column block the copy column ran
+   Measured with tools/checks/align.js: in every two-column block the copy column ran
    past its figure (160-310px in #included, 208px in dashboards' #questions),
    and the proof figure floated centred beside copy 60-90px taller. */
 

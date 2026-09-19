@@ -3,13 +3,12 @@
 # not listed is copied as-is; nothing here is processed or templated.
 exclude:
   - PROJECT_NOTES.md
-  - Dayam_Insights_SEO_Audit_Brief.md
-  - Dayam_Insights_SEO_Audit_Report.md
   - docs/
   - motion/
   - chat-worker/
+  - tools/
+  - tmp/
   - node_modules/
-  - tmp_shots/
   - "tmp_*"
   - "*.md"
   - package.json

@@ -2,14 +2,12 @@
 index.wireframes-backup.html
 mockups/
 
-# Temporary audit/verification harness
-tmp_*.js
-tmp_*.png
-tmp_*.json
-tmp_*.err
-tmp_shots/
+# Verification harness (tools/) and everything it writes (tmp/).
+# tmp_* still catches any stray scratch file dropped at the root.
+tools/
+tmp/
+tmp_*
 node_modules/
 
 # Audit paperwork — the repo is public and everything committed is served
-Dayam_Insights_SEO_Audit_Brief.md
-Dayam_Insights_SEO_Audit_Report.md
+docs/seo/
