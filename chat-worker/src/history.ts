@@ -2,8 +2,15 @@ import type Anthropic from "@anthropic-ai/sdk";
 
 const enc = new TextEncoder();
 
+// Imported once per secret and reused: every request verifies and then signs.
+const keys = new Map<string, Promise<CryptoKey>>();
 function hmacKey(secret: string): Promise<CryptoKey> {
-  return crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
+  let key = keys.get(secret);
+  if (!key) {
+    key = crypto.subtle.importKey("raw", enc.encode(secret), { name: "HMAC", hash: "SHA-256" }, false, ["sign", "verify"]);
+    keys.set(secret, key);
+  }
+  return key;
 }
 
 function toHex(buf: ArrayBuffer): string {

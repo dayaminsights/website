@@ -209,7 +209,10 @@ The Worker streams Server-Sent Events:
 History is **append-only**: the widget stores blocks exactly as the Worker returned them (including any thinking blocks) and never edits earlier turns. The Worker is stateless.
 
 ### Model call
-- `claude-sonnet-5` through the official `@anthropic-ai/sdk`, streaming.
+- `claude-sonnet-5` through the official `@anthropic-ai/sdk`, **not streamed** (changed after the CPU measurement below).
+  - Parsing the model's stream events took most of the Worker's CPU. Replies are two to four sentences, so each one arrives whole after the typing dots.
+  - The Worker still sends the widget the same events, so the widget didn't change.
+  - The client and the signing key are created once per Worker instance and reused.
 - Adaptive thinking (the default when `thinking` is omitted) with `output_config.effort: "low"`, which suits short chat replies.
 - `max_tokens` 2048.
 - `system`: the rules block, then the knowledge block with `cache_control`, so the whole prefix (tools → system) is cached. The page note sits in the user turn, so the prefix never changes between visitors.
@@ -282,7 +285,13 @@ That choice goes to the owner with the measurements.
 **Measured on the deployed Worker (2026-09-19, launch eval).** 29 requests: CPU median 21 ms, 90th percentile 47 ms, max 57 ms. Wall time was about 3 s median, almost all of it waiting on the model.
 - All 29 completed, since Cloudflare tolerates occasional overruns on the free plan. But every request is over the 10 ms limit, so the free plan cannot be relied on once traffic arrives.
 - If Cloudflare starts cutting requests off, the widget shows its "can't answer right now" fallback with WhatsApp.
-- Recommendation: Workers Paid (US$5/month) before the bot is promoted. The owner decides.
+- The owner chose to fit the free plan rather than pay.
+
+**Re-measured after the fix (same day, 29 requests): CPU median 6 ms, 90th percentile 25 ms, max 34 ms.**
+- Once instances are warm, every request used 2–7 ms, under the limit.
+- The overruns (15–34 ms) all came in the first ~2.5 minutes after the deploy: the one-off cost of a fresh instance running the SDK's code for the first time. A quiet site will see some of these cold requests.
+- Cloudflare completed all 58 requests across both runs.
+- Decision: stay on the free plan and watch the Workers Logs for requests cut off for CPU. If cut-offs show up, Workers Paid (US$5/month) is the fix; the widget falls back to WhatsApp meanwhile.
 
 ### Owner's one-time setup
 1. Cloudflare account (free); deploy the Worker (the plan gives the commands).

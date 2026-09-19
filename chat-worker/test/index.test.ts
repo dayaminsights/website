@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type Anthropic from "@anthropic-ai/sdk";
-import type { StreamFn } from "../src/agent";
+import type { ModelCall } from "../src/agent";
 import type { Env } from "../src/config";
 import { signHistory, verifyHistory } from "../src/history";
 import { handle } from "../src/index";
@@ -12,7 +12,7 @@ function env(allow = true): Env {
   return { ANTHROPIC_API_KEY: "test", HISTORY_SECRET: SECRET, RATE_LIMITER: { limit: async () => ({ success: allow }) } };
 }
 
-function reply(text: string): StreamFn {
+function reply(text: string): ModelCall {
   return async (_messages, onText) => {
     onText(text);
     return {

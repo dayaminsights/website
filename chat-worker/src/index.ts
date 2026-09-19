@@ -1,14 +1,21 @@
 import Anthropic from "@anthropic-ai/sdk";
-import { AgentError, claudeStream, runTurn, type StreamFn } from "./agent";
+import { AgentError, claudeCall, runTurn, type ModelCall } from "./agent";
 import { ALLOWED_ORIGINS, MAX_BODY_CHARS, MAX_VISITOR_MESSAGES, type Ctx, type Env } from "./config";
 import { encodeEvent, type ChatEvent, type ErrorCode } from "./events";
 import { countVisitorTurns, signHistory, verifyHistory } from "./history";
 import { buildUserTurn, parseChatRequest } from "./request";
 
+// One client per Worker instance, reused across requests: building it is CPU the free plan can't spare.
+let client: Anthropic | undefined;
+let clientKey = "";
+
 export default {
   fetch(request: Request, env: Env, ctx: Ctx): Promise<Response> {
-    const client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
-    return handle(request, env, claudeStream(client), (p) => ctx.waitUntil(p));
+    if (!client || clientKey !== env.ANTHROPIC_API_KEY) {
+      client = new Anthropic({ apiKey: env.ANTHROPIC_API_KEY });
+      clientKey = env.ANTHROPIC_API_KEY;
+    }
+    return handle(request, env, claudeCall(client), (p) => ctx.waitUntil(p));
   },
 };
 
@@ -27,7 +34,7 @@ const STATUS: Record<ErrorCode, number> = {
 export async function handle(
   request: Request,
   env: Env,
-  stream: StreamFn,
+  call: ModelCall,
   waitUntil: (p: Promise<unknown>) => void = () => {},
 ): Promise<Response> {
   const origin = request.headers.get("Origin") ?? "";
@@ -77,7 +84,7 @@ export async function handle(
 
   const work = (async () => {
     try {
-      const append = await runTurn(stream, req.history, buildUserTurn(req), emit);
+      const append = await runTurn(call, req.history, buildUserTurn(req), emit);
       const sig = await signHistory([...req.history, ...append], env.HISTORY_SECRET);
       emit({ event: "done", data: { append, sig } });
     } catch (err) {

@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type Anthropic from "@anthropic-ai/sdk";
-import { runTurn, type StreamFn } from "../src/agent";
+import { claudeCall, runTurn, type ModelCall } from "../src/agent";
 import type { ChatEvent } from "../src/events";
 
 type Block = { type: "text"; text: string } | { type: "tool_use"; id: string; name: string; input: unknown };
@@ -20,7 +20,7 @@ function msg(stop: string, content: Block[]): Anthropic.Message {
 
 function fake(replies: Anthropic.Message[]) {
   const calls: { messages: Anthropic.MessageParam[]; allowTools: boolean }[] = [];
-  const fn: StreamFn = async (messages, onText, allowTools) => {
+  const fn: ModelCall = async (messages, onText, allowTools) => {
     calls.push({ messages: structuredClone(messages), allowTools });
     const next = replies.shift();
     if (!next) throw new Error("no more replies");
@@ -123,9 +123,40 @@ describe("runTurn", () => {
   });
 
   it("throws unavailable when the call fails", async () => {
-    const fn: StreamFn = async () => {
+    const fn: ModelCall = async () => {
       throw new Error("network");
     };
     await expect(runTurn(fn, [], userTurn, () => {})).rejects.toMatchObject({ code: "unavailable" });
+  });
+});
+
+describe("claudeCall", () => {
+  // A stand-in for the SDK client: records the request, returns a finished message.
+  function client(reply: Anthropic.Message) {
+    const requests: Record<string, unknown>[] = [];
+    const c = { messages: { create: async (params: Record<string, unknown>) => { requests.push(params); return reply; } } };
+    return { c: c as unknown as Anthropic, requests };
+  }
+
+  it("makes one non-streaming request and hands each text block over in order", async () => {
+    const { c, requests } = client(msg("tool_use", [
+      { type: "text", text: "First." },
+      { type: "tool_use", id: "t", name: "suggest_page", input: {} },
+      { type: "text", text: "Second." },
+    ]));
+    const texts: string[] = [];
+    const message = await claudeCall(c)([userTurn], (t) => texts.push(t), true);
+    expect(texts).toEqual(["First.", "Second."]);
+    expect(message.stop_reason).toBe("tool_use");
+    expect(requests).toHaveLength(1);
+    expect(requests[0].stream).toBeUndefined();
+    expect(requests[0].model).toBe("claude-sonnet-5");
+    expect(requests[0].tool_choice).toEqual({ type: "auto" });
+  });
+
+  it("switches tools off when asked", async () => {
+    const { c, requests } = client(msg("end_turn", [{ type: "text", text: "ok" }]));
+    await claudeCall(c)([userTurn], () => {}, false);
+    expect(requests[0].tool_choice).toEqual({ type: "none" });
   });
 });

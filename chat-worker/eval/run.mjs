@@ -58,8 +58,13 @@ function check(s, turns) {
   const fails = [];
   const errors = turns.map((t) => t.error).filter(Boolean);
   if (errors.length) fails.push("errors: " + errors.join(", "));
-  // The rules say: whole message first, then the tool, then stop. Text after a tool call is usually a repeat.
-  if (!c.allowAfterTool && turns.some((t) => (t.segments || []).slice(1).some((s) => s.trim()))) fails.push("wrote more after a tool call (repeats itself?)");
+  // The rules say: whole message first, then the tool, then stop. Text on both sides of a tool
+  // call is a repeat; text only after it is fine (the model called the tool first, then spoke).
+  const repeated = (t) => {
+    const seg = (t.segments || []).map((s) => s.trim());
+    return seg.some((s, i) => s && seg.slice(i + 1).some(Boolean));
+  };
+  if (!c.allowAfterTool && turns.some(repeated)) fails.push("wrote on both sides of a tool call (repeats itself?)");
   if (c.noPrice !== false && PRICE.test(bot)) fails.push("price-like text: " + bot.match(PRICE)[0]);
   if (c.page && !cards.some((k) => k.kind === "page" && k.page === c.page)) fails.push(`no page card for ${c.page}`);
   if (c.anyPage && !cards.some((k) => k.kind === "page")) fails.push("no page card");

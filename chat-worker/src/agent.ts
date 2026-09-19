@@ -4,10 +4,10 @@ import type { Emit, ErrorCode } from "./events";
 import { SYSTEM } from "./prompt";
 import { TOOLS, runTool } from "./tools";
 
-/** One model call: streams text deltas out, resolves with the finished message. */
-export type StreamFn = (
+/** One model call: hands the reply's text to onText, resolves with the finished message. */
+export type ModelCall = (
   messages: Anthropic.MessageParam[],
-  onText: (delta: string) => void,
+  onText: (text: string) => void,
   allowTools: boolean,
 ) => Promise<Anthropic.Message>;
 
@@ -17,10 +17,16 @@ export class AgentError extends Error {
   }
 }
 
-/** The real StreamFn. The system breakpoint shares tools + system across visitors; the top-level one caches each conversation. */
-export function claudeStream(client: Anthropic): StreamFn {
+/**
+ * The real ModelCall. Not streamed: parsing hundreds of stream events took most of the
+ * Worker's CPU (median 21 ms against the free plan's 10 ms), and replies are two to four
+ * sentences, so the visitor waits a moment longer on the typing dots and gets the whole
+ * reply at once. The system breakpoint shares tools + system across visitors; the
+ * top-level one caches each conversation.
+ */
+export function claudeCall(client: Anthropic): ModelCall {
   return async (messages, onText, allowTools) => {
-    const stream = client.messages.stream({
+    const message = await client.messages.create({
       model: MODEL,
       max_tokens: MAX_TOKENS,
       output_config: { effort: "low" },
@@ -30,8 +36,7 @@ export function claudeStream(client: Anthropic): StreamFn {
       cache_control: { type: "ephemeral" },
       messages,
     });
-    stream.on("text", onText);
-    const message = await stream.finalMessage();
+    for (const b of message.content) if (b.type === "text" && b.text) onText(b.text);
     console.log(JSON.stringify({ stop: message.stop_reason, usage: message.usage }));
     return message;
   };
@@ -50,7 +55,7 @@ function textOnly(content: Anthropic.ContentBlock[]): Anthropic.TextBlockParam[]
  * the visitor's own. Throws AgentError when there is nothing safe to keep.
  */
 export async function runTurn(
-  stream: StreamFn,
+  call: ModelCall,
   history: Anthropic.MessageParam[],
   userTurn: Anthropic.MessageParam,
   emit: Emit,
@@ -59,7 +64,7 @@ export async function runTurn(
   for (let round = 0; round <= MAX_TOOL_ROUNDS; round++) {
     let message: Anthropic.Message;
     try {
-      message = await stream(
+      message = await call(
         [...history, ...append],
         (delta) => emit({ event: "text", data: { delta } }),
         round < MAX_TOOL_ROUNDS,
