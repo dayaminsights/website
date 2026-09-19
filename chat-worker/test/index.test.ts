@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import type Anthropic from "@anthropic-ai/sdk";
 import type { ModelCall } from "../src/agent";
 import type { Env } from "../src/config";
@@ -122,5 +122,80 @@ describe("a turn", () => {
       throw new Error("down");
     });
     expect(events(await res.text())).toEqual([{ event: "error", data: { code: "unavailable" } }]);
+  });
+});
+
+afterEach(() => vi.unstubAllGlobals());
+
+function sheetEnv(): Env {
+  return { ...env(), SHEET_URL: "https://script.example/exec", SHEET_TOKEN: "t" };
+}
+function leadPost(body: unknown, origin = ORIGIN): Request {
+  return new Request("https://chat.example/lead", { method: "POST", headers: { Origin: origin, "Content-Type": "text/plain", "CF-Connecting-IP": "1.2.3.4" }, body: JSON.stringify(body) });
+}
+
+describe("/lead", () => {
+  it("forwards a contact-form copy to the Sheet and answers 204", async () => {
+    const f = vi.fn(async () => Response.json({ ok: true }));
+    vi.stubGlobal("fetch", f);
+    const waits: Promise<unknown>[] = [];
+    const res = await handle(leadPost({ page: "/index.html", name: "Ravi", phone: "98765", intent: "A website", message: "New site" }), sheetEnv(), reply("x"), (p) => waits.push(p));
+    expect(res.status).toBe(204);
+    expect(res.headers.get("Access-Control-Allow-Origin")).toBe(ORIGIN);
+    await Promise.all(waits);
+    expect(JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string).row).toMatchObject({ source: "Contact form", name: "Ravi", need: "A website" });
+  });
+  it("refuses other origins, nameless copies and bad JSON", async () => {
+    expect((await handle(leadPost({ name: "a" }, "https://evil.example"), sheetEnv(), reply("x"))).status).toBe(403);
+    expect((await handle(leadPost({ message: "hi" }), sheetEnv(), reply("x"))).status).toBe(400);
+    const bad = new Request("https://chat.example/lead", { method: "POST", headers: { Origin: ORIGIN }, body: "{" });
+    expect((await handle(bad, sheetEnv(), reply("x"))).status).toBe(400);
+  });
+});
+
+describe("chatbot leads in the Sheet", () => {
+  const leadTurn = (): ModelCall => async (_m, onText) => {
+    onText("Thanks Asha.");
+    return {
+      id: "m", type: "message", role: "assistant", model: "claude-sonnet-5", stop_reason: "tool_use", stop_sequence: null,
+      content: [
+        { type: "text", text: "Thanks Asha.", citations: null },
+        { type: "tool_use", id: "tl", name: "capture_lead", input: { name: "Asha", phone: "98765", need_summary: "Clinic.", service: "chatbot", readiness: "ready_to_talk", sector: "clinic", country: "uae" } },
+      ],
+      usage: { input_tokens: 1, output_tokens: 1 },
+    } as unknown as Anthropic.Message;
+  };
+
+  it("writes one row per captured lead, with the conversation, after the reply", async () => {
+    const f = vi.fn(async () => Response.json({ ok: true }));
+    vi.stubGlobal("fetch", f);
+    const waits: Promise<unknown>[] = [];
+    const res = await handle(post({ ...first, input: "I am Asha, 98765" }), sheetEnv(), leadTurn(), (p) => waits.push(p));
+    await res.text();
+    await Promise.all(waits);
+    expect(f).toHaveBeenCalledOnce();
+    const row = JSON.parse((f.mock.calls[0] as unknown as [string, RequestInit])[1].body as string).row;
+    expect(row).toMatchObject({ source: "Chatbot", name: "Asha", page: "/index.html", need: "chatbot" });
+    expect(JSON.parse(row.conversation)).toEqual([{ from: "visitor", text: "I am Asha, 98765" }, { from: "assistant", text: "Thanks Asha." }, { from: "lead" }]);
+  });
+
+  it("marks a lead as an update when the conversation already has one", async () => {
+    const f = vi.fn(async () => Response.json({ ok: true }));
+    vi.stubGlobal("fetch", f);
+    const done = events(await (await handle(post({ ...first, input: "I am Asha" }), sheetEnv(), leadTurn())).text()).find((e) => e.event === "done")!;
+    const waits: Promise<unknown>[] = [];
+    await (await handle(post({ ...first, input: "Call Tuesday", history: done.data.append, sig: done.data.sig }), sheetEnv(), leadTurn(), (p) => waits.push(p))).text();
+    await Promise.all(waits);
+    const last = f.mock.calls.at(-1) as unknown as [string, RequestInit];
+    expect(JSON.parse(last[1].body as string).row.source).toBe("Chatbot update");
+  });
+
+  it("writes nothing when no lead was captured", async () => {
+    const f = vi.fn();
+    vi.stubGlobal("fetch", f);
+    const waits: Promise<unknown>[] = [];
+    await (await handle(post(first), sheetEnv(), reply("Hello"), (p) => waits.push(p))).text();
+    await Promise.all(waits);
+    expect(f).not.toHaveBeenCalled();
   });
 });

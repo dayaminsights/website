@@ -1,9 +1,11 @@
 import Anthropic from "@anthropic-ai/sdk";
 import { AgentError, claudeCall, runTurn, type ModelCall } from "./agent";
-import { ALLOWED_ORIGINS, MAX_BODY_CHARS, MAX_VISITOR_MESSAGES, type Ctx, type Env } from "./config";
-import { encodeEvent, type ChatEvent, type ErrorCode } from "./events";
+import { ALLOWED_ORIGINS, MAX_BODY_CHARS, MAX_LEAD_CHARS, MAX_VISITOR_MESSAGES, type Ctx, type Env } from "./config";
+import { encodeEvent, type ChatEvent, type ErrorCode, type Lead } from "./events";
 import { countVisitorTurns, signHistory, verifyHistory } from "./history";
 import { buildUserTurn, parseChatRequest } from "./request";
+import { chatRow, formRow, writeRow } from "./sheet";
+import { countLeadCalls } from "./transcript";
 
 // One client per Worker instance, reused across requests: building it is CPU the free plan can't spare.
 let client: Anthropic | undefined;
@@ -30,7 +32,10 @@ const STATUS: Record<ErrorCode, number> = {
   refused: 503,
 };
 
-/** POST /chat. Everything before the stream starts answers with a status and {error}; after, with an error event. */
+/**
+ * POST /chat: one chat turn. Everything before the stream starts answers with a status and
+ * {error}; after, with an error event. POST /lead: a contact-form copy for the lead sheet.
+ */
 export async function handle(
   request: Request,
   env: Env,
@@ -42,7 +47,8 @@ export async function handle(
   const cors: Record<string, string> = allowed ? { "Access-Control-Allow-Origin": origin, Vary: "Origin" } : { Vary: "Origin" };
   const fail = (code: ErrorCode) => Response.json({ error: code }, { status: STATUS[code], headers: cors });
 
-  if (new URL(request.url).pathname !== "/chat") return new Response("Not found", { status: 404 });
+  const path = new URL(request.url).pathname;
+  if (path !== "/chat" && path !== "/lead") return new Response("Not found", { status: 404 });
   if (request.method === "OPTIONS") {
     if (!allowed) return new Response(null, { status: 403 });
     return new Response(null, {
@@ -61,6 +67,21 @@ export async function handle(
   const ip = request.headers.get("CF-Connecting-IP") ?? "unknown";
   if (!(await env.RATE_LIMITER.limit({ key: ip })).success) return fail("rate_limited");
 
+  if (path === "/lead") {
+    const copy = await request.text();
+    if (copy.length > MAX_LEAD_CHARS) return fail("too_long");
+    let form: unknown;
+    try {
+      form = JSON.parse(copy);
+    } catch {
+      return fail("bad_request");
+    }
+    const row = formRow(form);
+    if (!row) return fail("bad_request");
+    waitUntil(writeRow(env, row));
+    return new Response(null, { status: 204, headers: cors });
+  }
+
   const raw = await request.text();
   if (raw.length > MAX_BODY_CHARS) return fail("too_long");
   let body: unknown;
@@ -77,20 +98,31 @@ export async function handle(
   const { readable, writable } = new TransformStream<Uint8Array, Uint8Array>();
   const writer = writable.getWriter();
   const encoder = new TextEncoder();
+  // Leads captured this turn, for the lead sheet once the reply is out.
+  const leads: Lead[] = [];
   // If the visitor closes the tab, writes fail; the turn just ends.
   const emit = (e: ChatEvent) => {
+    if (e.event === "lead") leads.push(e.data);
     writer.write(encoder.encode(encodeEvent(e))).catch(() => {});
   };
 
+  const userTurn = buildUserTurn(req);
   const work = (async () => {
+    let append = [userTurn];
     try {
-      const append = await runTurn(call, req.history, buildUserTurn(req), emit);
+      append = await runTurn(call, req.history, userTurn, emit);
       const sig = await signHistory([...req.history, ...append], env.HISTORY_SECRET);
       emit({ event: "done", data: { append, sig } });
     } catch (err) {
       emit({ event: "error", data: { code: err instanceof AgentError ? err.code : "unavailable" } });
     } finally {
       await writer.close().catch(() => {});
+      // After the visitor has their reply: one Sheet row per lead, with the conversation.
+      if (leads.length) {
+        const conversation = [...req.history, ...append];
+        const before = countLeadCalls(req.history);
+        await Promise.all(leads.map((lead, i) => writeRow(env, chatRow(lead, conversation, req.page.path, before + i > 0))));
+      }
     }
   })();
   waitUntil(work);
