@@ -64,13 +64,13 @@
 
 .dc-chips{display:flex;flex-wrap:wrap;gap:8px;padding:0 16px 12px}
 .dc-chips[hidden]{display:none}
-.dc-chip{min-height:36px;padding:0 12px;border:1px solid var(--line-strong);background:var(--surface);color:var(--ink);font:500 14px/1 var(--font-ui);cursor:pointer;transition:transform var(--t-press) var(--ease-out),border-color var(--t-fast) var(--ease)}
+.dc-chip{min-height:36px;padding:0 12px;border:1px solid var(--control-line);background:var(--surface);color:var(--ink);font:500 14px/1 var(--font-ui);cursor:pointer;transition:transform var(--t-press) var(--ease-out),border-color var(--t-fast) var(--ease)}
 .dc-chip:active{transform:scale(.97)}
 .dc-cta{align-self:flex-start;border-color:var(--ink);font-weight:600}
 @media (hover:hover) and (pointer:fine){.dc-chip:hover{border-color:var(--ink)}}
 
 .dc-form{display:flex;align-items:flex-end;gap:8px;margin:0;padding:10px 12px;border-top:1px solid var(--line)}
-.dc-input{flex:1;min-height:44px;max-height:120px;padding:11px 12px;border:1px solid var(--line-strong);border-radius:0;background:var(--surface);color:var(--ink);font:400 16px/1.4 var(--font-ui);resize:none}
+.dc-input{flex:1;min-height:44px;max-height:120px;padding:11px 12px;border:1px solid var(--control-line);border-radius:0;background:var(--surface);color:var(--ink);font:400 16px/1.4 var(--font-ui);resize:none}
 .dc-input:focus{outline:none;border-color:var(--ink)}
 .dc-send{flex:none;width:44px;height:44px;display:grid;place-items:center;border:0;background:var(--accent-hover);color:#fff;cursor:pointer;transition:transform var(--t-press) var(--ease-out)}
 .dc-send:active{transform:scale(.95)}

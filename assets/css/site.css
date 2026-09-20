@@ -24,6 +24,11 @@
   --line:#E5EAF2;
   --line-strong:#CBD5E1;
   --line-invert:rgba(248,250,252,.14);
+  /* A hairline that separates is decorative and may stay faint; a line that
+     outlines a control (an input, a chip, a ghost button) is the only thing
+     saying where the control is, so it clears 3:1 against its ground. */
+  --control-line:#7E8DA1;                         /* 3.4:1 on white */
+  --control-line-invert:rgba(248,250,252,.42);    /* 3.7:1 on the navy panel */
 
   /* ink */
   --ink:#07162D;
@@ -215,7 +220,7 @@ a:not(.btn,.hs-row) .arrow{display:none}
 .nav-ask-dot{position:absolute;top:-5px;right:-5px;width:12px;height:12px;background:var(--accent);border:2px solid var(--bg)}
 .nav-ask-dot[hidden]{display:none}
 .mm-cta .nav-ask{padding-inline:22px}
-.nav-toggle{display:none;background:none;border:1px solid var(--line-strong);border-radius:0;width:44px;height:44px;color:var(--ink);cursor:pointer;transition:transform var(--t-press) var(--ease-out)}
+.nav-toggle{display:none;background:none;border:1px solid var(--control-line);border-radius:0;width:44px;height:44px;color:var(--ink);cursor:pointer;transition:transform var(--t-press) var(--ease-out)}
 .nav-toggle:active{transform:scale(.95)}
 /* ===== Mobile menu ===== */
 .nav-toggle .nt-close{display:none}
@@ -700,7 +705,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .cta-band .hero-cta{justify-content:center;margin-top:var(--sp-6)}
 .cta-band .btn-primary{background:var(--on-panel);color:var(--panel)}
 @media (hover:hover) and (pointer:fine){.cta-band .btn-primary:hover{background:var(--accent-hover);color:#fff}}
-.cta-band .btn-ghost{background:transparent;border-color:var(--line-invert);color:var(--on-panel)}
+.cta-band .btn-ghost{background:transparent;border-color:var(--control-line-invert);color:var(--on-panel)}
 @media (hover:hover) and (pointer:fine){.cta-band .btn-ghost:hover{background:rgba(248,250,252,.08);border-color:var(--on-panel)}}
 .cta-band :focus-visible{outline-color:var(--focus-invert)}
 .cta-band .eyebrow{color:var(--on-panel-muted)}
@@ -712,13 +717,13 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .cf-field{display:flex;flex-direction:column;gap:var(--sp-2)}
 .cf-field > span{font-family:var(--font-ui);font-size:14px;font-weight:500;letter-spacing:0;color:var(--on-panel-muted)}
 .cf-field > span em{font-style:normal}
-.cf-field input,.cf-field textarea,.cf-field select{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--on-panel);background:var(--panel-2);border:1px solid var(--line-invert);border-radius:0;padding:12px 14px;min-height:44px;width:100%;transition:border-color var(--t-fast) var(--ease)}
+.cf-field input,.cf-field textarea,.cf-field select{font-family:var(--font-ui);font-size:var(--fs-small);color:var(--on-panel);background:var(--panel-2);border:1px solid var(--control-line-invert);border-radius:0;padding:12px 14px;min-height:44px;width:100%;transition:border-color var(--t-fast) var(--ease)}
 .cf-field textarea{resize:vertical;min-height:88px}
 /* iOS zooms into any field under 16px and doesn’t zoom back out. Touch only,
    so the desktop form keeps the UI size. */
 @media (pointer:coarse){.cf-field input,.cf-field textarea,.cf-field select{font-size:16px}}
 .cf-field input::placeholder,.cf-field textarea::placeholder{color:var(--on-panel-muted);opacity:.7}
-@media (hover:hover) and (pointer:fine){.cf-field input:hover,.cf-field textarea:hover,.cf-field select:hover{border-color:rgba(248,250,252,.28)}}
+@media (hover:hover) and (pointer:fine){.cf-field input:hover,.cf-field textarea:hover,.cf-field select:hover{border-color:rgba(248,250,252,.72)}}
 .cf-field input:focus-visible,.cf-field textarea:focus-visible,.cf-field select:focus-visible{outline:2px solid var(--focus-invert);outline-offset:2px;border-color:transparent}
 /* The native arrow is drawn in the OS accent on a dark panel and reads as a
    defect, so the control is stripped and given the page’s own chevron. */
@@ -767,7 +772,7 @@ footer :focus-visible{outline-color:var(--focus-invert)}
 /* Where the navy contact section is the last thing in <main> (index), the
    footer follows navy on navy: a hairline marks the seam and the footer’s top
    padding drops to match its bottom, so the two do not read as one empty band. */
-main:has(> #cta:last-child) + footer{border-top:1px solid var(--line-invert);padding-top:var(--sp-7)}
+main:has(> section:last-child .cta-band) + footer{border-top:1px solid var(--line-invert);padding-top:var(--sp-7)}
 .foot-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:var(--sp-7);padding-top:var(--sp-5);border-top:1px solid var(--line-invert);font-family:var(--font-mono);font-size:var(--fs-micro);color:var(--on-panel-muted);flex-wrap:wrap;gap:var(--sp-3)}
 
 /* ===== Reveal animation =====
@@ -1432,8 +1437,8 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
    The last panel on the page gets one moment and no more: a rust rule drawing
    across the top of the band, and the question arriving on a masked line.
    Everything else here stays exactly as still as it was. */
-#cta::after{content:"";position:absolute;top:0;left:0;height:2px;margin-inline:calc(50% - 50vw);width:100vw;background:var(--accent);transform:scaleX(0);transform-origin:left center;transition:transform 900ms var(--ease-out) 120ms}
-#cta:has(.cta-band.in)::after{transform:scaleX(1)}
+section:has(> .cta-band)::after{content:"";position:absolute;top:0;left:0;height:2px;margin-inline:calc(50% - 50vw);width:100vw;background:var(--accent);transform:scaleX(0);transform-origin:left center;transition:transform 900ms var(--ease-out) 120ms}
+section:has(> .cta-band.in)::after{transform:scaleX(1)}
 /* The padding keeps descenders on the last line clear of the mask; the
    negative margin gives the space back. */
 .cta-band h2 .ln{display:block;overflow:hidden;padding-bottom:.1em;margin-bottom:-.1em}
@@ -1441,7 +1446,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .cta-band.in h2 .ln > span{transform:none}
 
 @media(prefers-reduced-motion:reduce){
-  #cta::after{transform:scaleX(1)!important}
+  section:has(> .cta-band)::after{transform:scaleX(1)!important}
   .cta-band h2 .ln > span{transform:none!important}
 }
 
@@ -1507,7 +1512,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .vcard img{display:block;width:100%;height:auto;aspect-ratio:3 / 2;object-fit:cover;background:var(--bg);transition:transform 600ms var(--ease-cine)}
 @media (hover:hover) and (pointer:fine){.vcard:hover img{transform:scale(1.025)}}
 .vc-body{display:flex;flex-direction:column;flex:1;padding:var(--sp-5)}
-.vc-key{font-family:var(--font-mono);font-size:14px;font-weight:600;letter-spacing:0;font-variant-numeric:tabular-nums;color:var(--accent);margin-bottom:var(--sp-3)}
+.vc-key{font-family:var(--font-mono);font-size:14px;font-weight:600;letter-spacing:0;font-variant-numeric:tabular-nums;color:var(--accent-hover);margin-bottom:var(--sp-3)}
 .vcard h3{font-family:var(--font-ui);font-size:var(--fs-h3);font-weight:600;letter-spacing:-.015em;line-height:1.15;margin:0 0 var(--sp-2);color:var(--ink)}
 .vc-line{font-family:var(--font-ui);font-size:var(--fs-small);line-height:1.5;color:var(--muted);margin:0 0 var(--sp-4);text-wrap:pretty}
 .vc-signs{list-style:none;margin:0 0 var(--sp-5);padding:var(--sp-4) 0 0;border-top:1px solid var(--line);display:flex;flex-direction:column;gap:var(--sp-2)}
@@ -1611,16 +1616,18 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
    now lives in the precise places listed below (markers, steps, rules, the
    page label, the scroll bar) and the navy band gives each page its weight.
    The contact section is navy edge to edge; the accent rule sits on its top
-   edge (#cta::after, in the Final CTA block). */
+   edge (the ::after in the Final CTA block). Any section holding a .cta-band
+   gets the navy, not only #cta: the CTA on how-we-work, faq and privacy sits
+   under id="next", and keying the navy to the id left light-on-light text. */
 .band::before{background:var(--bg-2)}
-#cta.band::before{background:var(--panel);border-color:var(--panel)}
+.band:has(.cta-band)::before{background:var(--panel);border-color:var(--panel)}
 
 /* The navy section: the same components, with the ink and line tokens
    turned over. Light type on navy gets a little more leading. */
 .band.dark{
   --bg:#07162D;--bg-2:#07162D;--surface:#0D2240;--surface-sunken:#0A1C36;--placeholder:rgba(248,250,252,.18);
   --ink:#F8FAFC;--ink-2:#D5DEEA;--muted:#A9B8CC;--muted-2:#A9B8CC;
-  --line:rgba(248,250,252,.12);--line-strong:rgba(248,250,252,.24);
+  --line:rgba(248,250,252,.12);--line-strong:rgba(248,250,252,.24);--control-line:var(--control-line-invert);
   --focus:var(--focus-invert);
   color:var(--ink);
 }
@@ -1633,7 +1640,7 @@ header.nav.scrolled{background:rgba(248,250,252,.88)}
 .nav-links a.is-current::after{background:var(--svc)}
 .mm-links a[aria-current="page"]{color:var(--svc-ink)}
 .eyebrow .dot{background:var(--svc)}
-#cta::after{background:var(--svc)}
+section:has(> .cta-band)::after{background:var(--svc)}
 ::selection{background:var(--svc-tag);color:var(--svc-on)}
 /* A service page’s hero label says where you are in its colour: the text in
    the readable ink of that hue, the square in the hue itself. (It was a filled
