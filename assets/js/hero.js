@@ -337,14 +337,6 @@
       }
       return buf.slice(cut);
     }
-    // One wave per word, spaced like speech, so a streamed chunk reads as words, not a burst.
-    function pulseWords(text){
-      var words = String(text).split(/\s+/).filter(Boolean).slice(0, 14);
-      words.forEach(function(w, i){
-        setTimeout(function(){ orb.pulse(.35 + Math.min(.45, w.replace(/\W/g, '').length * .05)); }, i * 75);
-      });
-    }
-
     // The thread follows the reply only while the reader is at the bottom;
     // scrolling up to reread leaves them where they are.
     answer.addEventListener('scroll', function(){ stick = answer.scrollHeight - answer.scrollTop - answer.clientHeight < 40; }, { passive: true });
@@ -378,7 +370,8 @@
         segText = '';
       }
       segText += delta;
-      segEl.innerHTML = Chat.md(segText);
+      var open = (segText.match(/\*\*/g) || []).length % 2;
+      segEl.innerHTML = Chat.md(open ? segText + '**' : segText);
       keepDown();
     }
     function addCard(card){
@@ -388,26 +381,30 @@
       msg.appendChild(Chat.cardNode(card));
       keepDown();
     }
-    // After every answer: the next step, in the visitor's terms. The plan link
-    // presets the contact form to the service the agent pointed at.
-    var INTENT = { dashboards: 'Dashboards & reporting', automation: 'Workflow automation', ai_assistants: 'An AI assistant', chatbot: 'An AI assistant', websites: 'A website' };
+    // After every answer: the next step, without leaving the conversation. The
+    // agent takes the visitor's details in the chat itself (its capture_lead tool),
+    // so the first button asks it to; once details are in, only WhatsApp remains.
+    var TEAM = 'I’d like the team to get in touch.';
     function addNext(){
       if (!msg) return;
       Array.prototype.forEach.call(answer.querySelectorAll('.hc-next'), function(n){ n.remove(); });
       var bar = document.createElement('div');
       bar.className = 'hc-next';
-      var go = document.createElement('a');
-      go.className = 'hc-go';
-      go.href = '#contact';
-      go.setAttribute('data-intent', INTENT[page] || 'Not sure yet');
-      go.innerHTML = 'Get a fixed-price plan <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      var go = null;
+      if (!(Chat.state().leads || []).length) {
+        go = document.createElement('button');
+        go.type = 'button';
+        go.className = 'hc-go';
+        go.innerHTML = 'Have the team contact me <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+        go.addEventListener('click', function(){ ask(TEAM); });
+      }
       var wa = document.createElement('a');
       wa.className = 'hc-wa';
       wa.href = Chat.whatsapp('Hi Dayam Insights, I asked your AI agent: ' + (question || 'about my business') + '.');
       wa.target = '_blank';
       wa.rel = 'noopener';
       wa.textContent = 'WhatsApp a person';
-      bar.appendChild(go);
+      if (go) bar.appendChild(go);
       bar.appendChild(wa);
       msg.appendChild(bar);
       keepDown();
@@ -442,8 +439,42 @@
       cyclePH();
     }
 
+    // The Worker sends each reply whole (it is not streamed, to stay inside the
+    // free plan's CPU limit), so the hero writes it out word by word at a reading
+    // pace, and the orb follows each word as it appears. Cards and the end of the
+    // turn wait until the words are out. Reduced motion shows the reply at once.
+    var incoming = '', waiting = [], revealT = 0;
+    function reveal(){
+      revealT = 0;
+      if (!incoming) { var w = waiting; waiting = []; w.forEach(function(ev){ handle(ev[0], ev[1]); }); return; }
+      // A long backlog is written faster, a few words at a time, so it never lags far behind.
+      var backlog = incoming.length > 400, m = (backlog ? /^(\s*\S+\s*){1,3}/ : /^\s*\S+\s*/).exec(incoming), word = m ? m[0] : incoming;
+      incoming = incoming.slice(word.length);
+      if (mode !== 'speaking') setMode('speaking');
+      addText(word);
+      pending = speakSentences(pending + word);   // each sentence is spoken as it appears
+      if (!voice.on() || !voice.speaking()) orb.pulse(.35 + Math.min(.45, word.replace(/\W/g, '').length * .05));
+      var pause = backlog ? 0 : /[.!?]["”’)]*\s*$/.test(word) ? 260 : /[,;:]\s*$/.test(word) ? 120 : 0;
+      revealT = setTimeout(reveal, (backlog ? 40 : 70) + Math.random() * (backlog ? 30 : 70) + pause);
+    }
+    function flush(){
+      clearTimeout(revealT); revealT = 0;
+      if (incoming) { addText(incoming); incoming = ''; }
+      var w = waiting; waiting = [];
+      w.forEach(function(ev){ handle(ev[0], ev[1]); });
+    }
     // Every turn, wherever it was asked (here or in the panel).
     function onTurn(type, d){
+      if (type === 'turn') flush();
+      if (type === 'delta' && !reduce) {
+        incoming += d.delta;
+        if (!revealT) reveal();
+        return;
+      }
+      if ((type === 'card' || type === 'done' || type === 'error') && (incoming || revealT)) { waiting.push([type, d]); return; }
+      handle(type, d);
+    }
+    function handle(type, d){
       if (type === 'turn') {
         voice.stop();
         pending = '';
@@ -458,8 +489,6 @@
       } else if (type === 'delta') {
         if (mode !== 'speaking') setMode('speaking');
         addText(d.delta);
-        // While a voice is speaking, the orb follows the spoken words instead.
-        if (!voice.on() || !voice.speaking()) pulseWords(d.delta);
         pending = speakSentences(pending + d.delta);
       } else if (type === 'card') {
         addCard(d.card);
@@ -592,6 +621,7 @@
       addEventListener('pageshow', function(e){
         if (!e.persisted) return;
         voice.stop();
+        clearTimeout(revealT); revealT = 0; incoming = ''; waiting = [];
         pending = '';
         asking = '';
         answer.removeAttribute('aria-busy');
