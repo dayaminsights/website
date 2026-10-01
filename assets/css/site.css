@@ -356,7 +356,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .hc-full{display:block;margin:12px 0 4px;padding:0;border:0;background:none;color:var(--on-panel);font:500 14px var(--font-ui);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--hc-line-2);cursor:pointer}
 .hc-chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 24px 16px}
 .hc-chips[hidden]{display:none}
-.hc-chip{min-height:36px;padding:0 12px;border:1px solid var(--hc-line-2);background:transparent;color:var(--on-panel-muted);font:500 13.5px/1.2 var(--font-ui);text-align:left;cursor:pointer;transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+.hc-chip{min-height:36px;padding:0 9px;border:1px solid var(--hc-line-2);background:transparent;color:var(--on-panel-muted);font:500 13px/1.2 var(--font-ui);text-align:left;cursor:pointer;transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
 @media (hover:hover) and (pointer:fine){.hc-chip:hover:not(:disabled){color:var(--on-panel);border-color:var(--on-panel-muted)}}
 .hc-chip:disabled{opacity:.5;cursor:default}
 .hc-ask{display:flex;align-items:stretch;flex:0 0 58px;border-top:1px solid var(--hc-line)}
