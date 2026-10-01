@@ -104,6 +104,70 @@
     };
   }
 
+  // ===== Voice =====
+  // The browser's own voices (free; the owner compared them with OpenAI TTS and
+  // chose these). Off on arrival, kept for the visit. One utterance per sentence:
+  // Chrome cuts long utterances off at ~15 s, and speech can start before the
+  // reply has finished streaming. A reply with no voice for its language stays
+  // text-only rather than being read in the wrong accent.
+  var VOICE_KEY = 'dayamVoice';
+  var PREFER = {
+    en: [/^Google UK English Female$/, /^Google US English$/, /natural/i],
+    hi: [/^Google हिन्दी$/],
+    ar: []
+  };
+  function Voice(){
+    var synth = window.speechSynthesis;
+    var ok = !!synth && typeof window.SpeechSynthesisUtterance === 'function';
+    var on = false, queue = [], busy = false, onWord = function(){}, onDone = function(){};
+    try { on = ok && sessionStorage.getItem(VOICE_KEY) === '1'; } catch (e) {}
+    if (ok) synth.getVoices();   // Chrome loads the list lazily; ask early.
+
+    function lang(text){ return /[\u0900-\u097F]/.test(text) ? 'hi' : /[\u0600-\u06FF]/.test(text) ? 'ar' : 'en'; }
+    function pick(code){
+      var all = synth.getVoices().filter(function(v){ return String(v.lang).toLowerCase().indexOf(code) === 0; });
+      for (var i = 0; i < PREFER[code].length; i++) {
+        for (var j = 0; j < all.length; j++) if (PREFER[code][i].test(all[j].name)) return all[j];
+      }
+      return all[0] || null;
+    }
+    // What a person would read aloud: link text without the URL, no markdown marks.
+    function plain(s){
+      return String(s).replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/https?:\/\/\S+/g, '')
+        .replace(/[*_`#>]/g, '').replace(/^\s*[-•]\s+/gm, '').replace(/\s+/g, ' ').trim();
+    }
+    function next(){
+      if (busy) return;
+      if (!queue.length) { onDone(); return; }
+      var text = queue.shift(), v = pick(lang(text));
+      if (!v) { next(); return; }
+      var u = new SpeechSynthesisUtterance(text);
+      u.voice = v;
+      u.lang = v.lang;
+      u.onboundary = function(e){ if (!e.name || e.name === 'word') onWord(); };
+      u.onend = u.onerror = function(){ busy = false; next(); };
+      busy = true;
+      synth.speak(u);
+    }
+    return {
+      supported: ok,
+      on: function(){ return on; },
+      set: function(yes){
+        on = ok && !!yes;
+        try { sessionStorage.setItem(VOICE_KEY, on ? '1' : '0'); } catch (e) {}
+        if (!on) this.stop();
+      },
+      say: function(sentence){
+        if (!on) return;
+        var s = plain(sentence);
+        if (s) { queue.push(s); next(); }
+      },
+      stop: function(){ queue = []; busy = false; if (ok) synth.cancel(); },
+      speaking: function(){ return busy || queue.length > 0; },
+      hooks: function(word, done){ onWord = word; onDone = done; }
+    };
+  }
+
   // ===== Console =====
   // Drawn at once; wired to the conversation when chat.js is ready.
   (function(){
@@ -114,7 +178,9 @@
     var form = root.querySelector('.hc-ask');
     var input = root.querySelector('.hc-input');
     var sendBtn = root.querySelector('.hc-send');
-    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '';
+    var spk = root.querySelector('.hc-voice');
+    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '', pending = '';
+    var voice = Voice();
     var hintHTML = answer.innerHTML;
     var field = Field(root.querySelector('.hc-stage canvas'), root);
 
@@ -131,6 +197,15 @@
     function setBusy(on){
       sendBtn.disabled = on;
       Array.prototype.forEach.call(chips.querySelectorAll('button'), function(b){ b.disabled = on; });
+    }
+    // Hand every finished sentence in `buf` to the voice; return the unfinished rest.
+    function speakSentences(buf){
+      var re = /([.!?।؟]+["”’)]*)\s+|\n+/g, m, cut = 0;
+      while ((m = re.exec(buf))) {
+        voice.say(buf.slice(cut, m.index + (m[1] ? m[1].length : 0)));
+        cut = re.lastIndex;
+      }
+      return buf.slice(cut);
     }
     function asked(){ return Chat.state().log.filter(function(e){ return e.who === 'me'; }).length; }
     function keepDown(){ answer.scrollTop = answer.scrollHeight; }
@@ -195,6 +270,8 @@
     // Every turn, wherever it was asked (here or in the panel).
     function onTurn(type, d){
       if (type === 'turn') {
+        voice.stop();
+        pending = '';
         if (d.text === asking) input.value = '';
         answer.setAttribute('aria-busy', 'true');
         chips.hidden = true;
@@ -205,17 +282,23 @@
       } else if (type === 'delta') {
         if (mode !== 'speaking') setMode('speaking');
         addText(d.delta);
-        field.pulse(.55 + Math.random() * .45);
+        // With the voice on, the rings follow the spoken words instead.
+        if (!voice.on()) field.pulse(.55 + Math.random() * .45);
+        pending = speakSentences(pending + d.delta);
       } else if (type === 'card') {
         addCard(d.card);
         if (d.card.kind === 'page') setColour(d.svc);
       } else if (type === 'done') {
         answer.removeAttribute('aria-busy');
         setBusy(false);
+        if (pending.trim()) voice.say(pending);
+        pending = '';
         addFullLink();
         asking = '';
-        setMode('idle');
+        if (!voice.speaking()) setMode('idle');
       } else if (type === 'error') {
+        voice.stop();
+        pending = '';
         setBusy(false);
         segEl = null;
         addText(d.message);
@@ -227,6 +310,17 @@
         setMode('idle');
       }
     }
+
+    voice.hooks(
+      function(){ field.pulse(.55 + Math.random() * .45); },
+      function(){ if (!sendBtn.disabled) setMode('idle'); }
+    );
+    if (!voice.supported) spk.hidden = true;
+    spk.setAttribute('aria-pressed', String(voice.on()));
+    spk.addEventListener('click', function(){
+      voice.set(!voice.on());
+      spk.setAttribute('aria-pressed', String(voice.on()));
+    });
 
     // Until chat.js is ready the buttons wait. A disabled default button also
     // blocks Enter, so nothing is sent into the void.
@@ -268,6 +362,10 @@
       // Back/forward cache: chat.js has reloaded the conversation; show where it is now.
       addEventListener('pageshow', function(e){
         if (!e.persisted) return;
+        voice.stop();
+        pending = '';
+        asking = '';
+        answer.removeAttribute('aria-busy');
         answer.innerHTML = hintHTML;
         segEl = null;
         chips.hidden = false;
