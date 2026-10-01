@@ -119,11 +119,19 @@
   function Voice(){
     var synth = window.speechSynthesis;
     var ok = !!synth && typeof window.SpeechSynthesisUtterance === 'function';
-    var on = false, queue = [], busy = false, onWord = function(){}, onDone = function(){};
+    var on = false, unlocked = false, queue = [], cur = null, gaveUp = false;
+    var hold = 0, guard = 0, lull = 0, beat = 0;
+    var onWord = function(){}, onDone = function(){};
     try { on = ok && sessionStorage.getItem(VOICE_KEY) === '1'; } catch (e) {}
-    if (ok) synth.getVoices();   // Chrome loads the list lazily; ask early.
+    if (ok) {
+      synth.getVoices();   // Chrome loads the list lazily; ask early.
+      if (synth.addEventListener) synth.addEventListener('voiceschanged', function(){
+        clearTimeout(hold); hold = 0;
+        if (!cur && queue.length) next();
+      });
+    }
 
-    function lang(text){ return /[\u0900-\u097F]/.test(text) ? 'hi' : /[\u0600-\u06FF]/.test(text) ? 'ar' : 'en'; }
+    function lang(text){ return /[ऀ-ॿ]/.test(text) ? 'hi' : /[؀-ۿ]/.test(text) ? 'ar' : 'en'; }
     function pick(code){
       var all = synth.getVoices().filter(function(v){ return String(v.lang).toLowerCase().indexOf(code) === 0; });
       for (var i = 0; i < PREFER[code].length; i++) {
@@ -131,39 +139,82 @@
       }
       return all[0] || null;
     }
-    // What a person would read aloud: link text without the URL, no markdown marks.
+    // What a person would read aloud: link text without the URL, no page paths, no markdown marks.
     function plain(s){
       return String(s).replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/https?:\/\/\S+/g, '')
+        .replace(/\S*\/\S+\.html\S*/g, '')
         .replace(/[*_`#>]/g, '').replace(/^\s*[-•]\s+/gm, '').replace(/\s+/g, ' ').trim();
     }
+    function timers(){ clearTimeout(guard); clearTimeout(lull); clearInterval(beat); }
+    // Only the current utterance's own end moves the queue on: a late event
+    // from a cancelled one (Chrome reports cancel() as an async error) is ignored.
+    function finish(u){
+      if (u !== cur) return;
+      timers();
+      cur = null;
+      next();
+    }
     function next(){
-      if (busy) return;
+      if (cur) return;
       if (!queue.length) { onDone(); return; }
+      // The voice list can still be loading (Android especially): wait for it, briefly.
+      if (!synth.getVoices().length && !gaveUp) {
+        if (!hold) hold = setTimeout(function(){ hold = 0; gaveUp = true; next(); }, 1500);
+        return;
+      }
       var text = queue.shift(), v = pick(lang(text));
       if (!v) { next(); return; }
-      var u = new SpeechSynthesisUtterance(text);
+      var u = new SpeechSynthesisUtterance(text), heard = false;
       u.voice = v;
       u.lang = v.lang;
-      u.onboundary = function(e){ if (!e.name || e.name === 'word') onWord(); };
-      u.onend = u.onerror = function(){ busy = false; next(); };
-      busy = true;
+      // Some voices (Chrome's network "Google" ones) send no word boundaries:
+      // if none has come shortly after the start, the rings tick on a timer.
+      u.onstart = function(){
+        if (u !== cur) return;
+        lull = setTimeout(function(){ if (!heard && u === cur) beat = setInterval(onWord, 260); }, 400);
+      };
+      u.onboundary = function(e){
+        if (u !== cur || (e.name && e.name !== 'word')) return;
+        heard = true;
+        clearInterval(beat);
+        onWord();
+      };
+      u.onend = u.onerror = function(){ finish(u); };
+      cur = u;   // also keeps the utterance referenced: Chrome can drop onend for a collected one
+      // Chrome sometimes never sends an end at all; don't let the queue jam on it.
+      guard = setTimeout(function(){ finish(u); }, text.length * 120 + 3000);
       synth.speak(u);
     }
     return {
       supported: ok,
       on: function(){ return on; },
       set: function(yes){
-        on = ok && !!yes;
+        var want = ok && !!yes;
+        if (!want) this.stop();
+        on = want;
         try { sessionStorage.setItem(VOICE_KEY, on ? '1' : '0'); } catch (e) {}
-        if (!on) this.stop();
+      },
+      // iOS speaks only after speak() has run inside a user gesture: call this from clicks.
+      unlock: function(){
+        if (!ok || !on || unlocked) return;
+        unlocked = true;
+        try { synth.speak(new SpeechSynthesisUtterance('')); } catch (e) {}
       },
       say: function(sentence){
         if (!on) return;
         var s = plain(sentence);
         if (s) { queue.push(s); next(); }
       },
-      stop: function(){ queue = []; busy = false; if (ok) synth.cancel(); },
-      speaking: function(){ return busy || queue.length > 0; },
+      stop: function(){
+        var was = cur;
+        queue = [];
+        cur = null;
+        timers();
+        clearTimeout(hold); hold = 0;
+        if (ok && (on || was)) synth.cancel();
+        if (was) onDone();
+      },
+      speaking: function(){ return !!cur || queue.length > 0; },
       hooks: function(word, done){ onWord = word; onDone = done; }
     };
   }
@@ -199,14 +250,19 @@
       Array.prototype.forEach.call(chips.querySelectorAll('button'), function(b){ b.disabled = on; });
     }
     // Hand every finished sentence in `buf` to the voice; return the unfinished rest.
+    // "1. Export orders" and "e.g. Tally" are not sentence ends.
+    var NOT_AN_END = /(^|\s)(\d+|e\.g|i\.e|etc|vs|approx|no|mr|ms|dr)[.]$/i;
     function speakSentences(buf){
       var re = /([.!?।؟]+["”’)]*)\s+|\n+/g, m, cut = 0;
       while ((m = re.exec(buf))) {
-        voice.say(buf.slice(cut, m.index + (m[1] ? m[1].length : 0)));
+        var end = m.index + (m[1] ? m[1].length : 0), head = buf.slice(cut, end);
+        if (m[1] && NOT_AN_END.test(head)) continue;
+        voice.say(head);
         cut = re.lastIndex;
       }
       return buf.slice(cut);
     }
+
     function asked(){ return Chat.state().log.filter(function(e){ return e.who === 'me'; }).length; }
     function keepDown(){ answer.scrollTop = answer.scrollHeight; }
 
@@ -282,8 +338,8 @@
       } else if (type === 'delta') {
         if (mode !== 'speaking') setMode('speaking');
         addText(d.delta);
-        // With the voice on, the rings follow the spoken words instead.
-        if (!voice.on()) field.pulse(.55 + Math.random() * .45);
+        // While a voice is speaking, the rings follow it instead.
+        if (!voice.on() || !voice.speaking()) field.pulse(.55 + Math.random() * .45);
         pending = speakSentences(pending + d.delta);
       } else if (type === 'card') {
         addCard(d.card);
@@ -319,6 +375,7 @@
     spk.setAttribute('aria-pressed', String(voice.on()));
     spk.addEventListener('click', function(){
       voice.set(!voice.on());
+      voice.unlock();
       spk.setAttribute('aria-pressed', String(voice.on()));
     });
 
@@ -330,11 +387,11 @@
 
     chips.addEventListener('click', function(e){
       var b = e.target.closest('.hc-chip');
-      if (Chat && b && !b.disabled) { asking = b.textContent.trim(); Chat.send(b.textContent); }
+      if (Chat && b && !b.disabled) { asking = b.textContent.trim(); voice.unlock(); Chat.send(b.textContent); }
     });
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      if (Chat) { asking = input.value.trim(); Chat.send(input.value); }
+      if (Chat) { asking = input.value.trim(); voice.unlock(); Chat.send(input.value); }
     });
 
     function placeholder(){ input.placeholder = small.matches ? PLACEHOLDER.small : PLACEHOLDER.wide; }
@@ -360,6 +417,7 @@
       setBusy(Chat.busy());
       restore();
       // Back/forward cache: chat.js has reloaded the conversation; show where it is now.
+      addEventListener('pagehide', function(){ voice.stop(); });
       addEventListener('pageshow', function(e){
         if (!e.persisted) return;
         voice.stop();
