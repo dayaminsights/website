@@ -103,6 +103,22 @@
 
   var launch, dot, nudge, panel, logEl, chipsEl, form, input, sendBtn, typing, busy = false;
 
+  // ===== Listeners: the homepage hero (hero.js) mirrors every turn =====
+  // send() stays the one place a turn happens; anything else on the page
+  // (today only the hero console) watches it through these broadcasts.
+  var listeners = [], hero = null;
+  function emit(type, data){
+    listeners.forEach(function(fn){ try { fn(type, data); } catch (e) {} });
+  }
+  function svcOf(card){ return card && card.kind === 'page' ? ((CARDS[card.page] || {}).svc || '') : ''; }
+  // The visitor's latest question and everything that answered it.
+  function last(){
+    for (var i = state.log.length - 1; i >= 0; i--) {
+      if (state.log[i].who === 'me') return { question: state.log[i].text, items: state.log.slice(i + 1) };
+    }
+    return null;
+  }
+
   function build(){
     var css = document.createElement('link');
     css.rel = 'stylesheet';
@@ -371,6 +387,7 @@
     chipsEl.hidden = true;
     var meBubble = addBubble('me', text);
     state.log.push({ who: 'me', text: text });
+    emit('turn', { text: text });
     input.value = '';
     autosize();
     save();
@@ -382,7 +399,7 @@
 
     // The reply streams into `bot`; `botEntry` is its log entry, held by reference
     // because a lead-email failure note can land in the log mid-stream.
-    var bot = null, botEntry = null, botText = '', answered = false, gotDone = false;
+    var bot = null, botEntry = null, botText = '', answered = false, gotDone = false, failure = null;
     function closeBot(){ bot = null; botEntry = null; }
     logEl.setAttribute('aria-busy', 'true');
     showTyping(true);
@@ -401,11 +418,13 @@
         botEntry.text = botText;
         bot.innerHTML = md(botText);
         scrollLog();
+        emit('delta', { delta: d.delta });
       },
       card: function(d){
         closeBot();
         showTyping(false);
         addCard(d);
+        emit('card', { card: d, svc: svcOf(d) });
         showTyping(true);
       },
       lead: function(d){ sendLead(d); },
@@ -418,7 +437,9 @@
       if (!gotDone) throw { code: 'unavailable' };
     }).catch(function(err){
       showTyping(false);
-      fail((err && err.code) || 'unavailable', text, answered ? null : meBubble);
+      var code = (err && err.code) || 'unavailable';
+      // `text` is what to put back for a retry: nothing if part of a reply already landed.
+      failure = { code: code, text: answered ? '' : text, message: fail(code, text, answered ? null : meBubble) };
     }).then(function(){
       showTyping(false);
       logEl.removeAttribute('aria-busy');
@@ -426,23 +447,27 @@
       sendBtn.disabled = false;
       save();
       if (!isOpen()) setUnread(true);
+      emit(failure ? 'error' : 'done', failure || {});
     });
   }
 
   function contactHref(){ return document.getElementById('contact') ? '#contact' : '/index.html#contact'; }
 
   // The turn did not complete. Keep the visitor's words and always leave a way to a person.
+  // Returns the message it showed, so the hero console can show the same words.
   function fail(code, text, meBubble){
+    var msg;
     if (code === 'reset') {
       state = fresh();
       state.used = true;
       state.nudged = true;
       state.open = isOpen();
       logEl.innerHTML = '';
-      note('Sorry, I had to restart our chat. Could you send that again?');
+      msg = 'Sorry, I had to restart our chat. Could you send that again?';
+      note(msg);
       input.value = text;
       autosize();
-      return;
+      return msg;
     }
     if (meBubble) {
       meBubble.remove();
@@ -452,10 +477,12 @@
       input.value = text;
       autosize();
     }
-    note(code === 'rate_limited' || code === 'limit_reached'
+    msg = code === 'rate_limited' || code === 'limit_reached'
       ? 'That’s more messages than I can take right now. The quickest way on from here is a person: WhatsApp us, or [use the contact form](' + contactHref() + ').'
-      : 'I can’t answer right now. You can reach a person on WhatsApp, or [use the contact form](' + contactHref() + ').');
+      : 'I can’t answer right now. You can reach a person on WhatsApp, or [use the contact form](' + contactHref() + ').';
+    note(msg);
     addCard({ kind: 'whatsapp', summary: '' });
+    return msg;
   }
 
   // ===== Leads: the same FormSubmit endpoint as the contact form =====
@@ -624,7 +651,16 @@
       var s = load();
       if (s) { state = s; restore(); }
     });
-    window.DayamChat = { md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; } };
+    window.DayamChat = {
+      md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; },
+      send: send, last: last, cardNode: cardNode, svc: svcOf,
+      busy: function(){ return busy; },
+      open: function(){ track('chat_open', { source: 'hero' }); setOpen(true); },
+      on: function(fn){ listeners.push(fn); },
+      setHero: function(api){ hero = api; }
+    };
+    // chat.js starts late (after load, when idle); hero.js waits for this.
+    document.dispatchEvent(new Event('dayamchat:ready'));
   }
 
   function whenIdle(fn){
