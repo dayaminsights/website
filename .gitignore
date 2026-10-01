@@ -11,3 +11,4 @@ node_modules/
 
 # Audit paperwork — the repo is public and everything committed is served
 docs/seo/
+.superpowers/
