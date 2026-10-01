@@ -890,10 +890,12 @@ Replace the contents of `assets/js/hero.js` with:
 
   var root = document.getElementById('heroConsole');
   if (!root) return;
+  // Hiding the whole stage (not just the console) leaves no empty grid cell or gap.
+  var stage = root.closest('.hero-stage') || root;
   // chat.js (deferred, earlier in the page) sets this only once it knows it will
   // start. Without it the console would be a dead input, so it goes.
   if (!window.DayamChatLoading || !window.HTMLCanvasElement || !('IntersectionObserver' in window)) {
-    root.hidden = true;
+    stage.hidden = true;
     return;
   }
 
@@ -1125,7 +1127,7 @@ Replace the contents of `assets/js/hero.js` with:
 
     function wire(){
       Chat = window.DayamChat;
-      if (!Chat || !Chat.on) { root.hidden = true; return; }
+      if (!Chat || !Chat.on) { stage.hidden = true; return; }
       Chat.on(onTurn);
       Chat.setHero({
         visible: function(){ return visible; },
