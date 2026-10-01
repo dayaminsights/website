@@ -134,7 +134,7 @@
 <!-- The mark signs the first page of a visit only; later pages open on the
      finished mark (see .mark-seen in site.css). -->
 <script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/site.css?v=20260920a">
+<link rel="stylesheet" href="assets/css/site.css?v=20261001a">
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
      no-JS path is given the finished frame of everything, including the
@@ -154,7 +154,7 @@
   .proc-line i{transform:scaleX(1)!important}
   .bp .draw{stroke-dashoffset:0!important}
   :is(.section-head,.climb-head > div):not(.page-hero *) > :is(.eyebrow,.title,p,.hero-cta){opacity:1!important;clip-path:none!important;transform:none!important}
-  .hs-signal{display:none}
+  .hero-stage{display:none}
 </style></noscript>
 <!-- ============================================================
      FACTS STILL TO SUPPLY
@@ -276,18 +276,38 @@
       </div>
     </div>
 
-    <!-- The things we build, drawn as one system in the order of the slogan:
-         See, Automate, Grow — with the chatbot beside Automate, because it is
-         the service page buyers search for by name. The blue square is the
-         signal: it walks the rows once, then rests on the one being read. -->
+    <!-- The agent console: the site chatbot, in the hero. It ships visible so it
+         never pops in above the headline; without JS a noscript rule hides it,
+         and hero.js hides it when chat.js is switched off, so there is never a
+         dead input. Its buttons wait until chat.js is ready. The field behind
+         it reacts as the agent reads and answers, in the colour of the service
+         the answer points to. One conversation with the panel.
+         Spec: docs/superpowers/specs/2026-10-01-hero-agent-console-design.md -->
     <div class="hero-stage">
-      <nav class="hero-system" aria-label="What we build">
-        <span class="hs-signal" aria-hidden="true"></span>
-        <a class="hs-row svc-see" href="dashboards.html"><b>See</b><span class="hs-body"><span class="hs-name">Dashboards &amp; analytics</span><span class="hs-line">One live view of sales, stock and cash.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row svc-auto" href="automation.html"><b>Automate</b><span class="hs-body"><span class="hs-name">Workflow automation</span><span class="hs-line">The repetitive steps between your tools, done without a person.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row svc-auto" href="ai-chatbot.html"><b>Answer</b><span class="hs-body"><span class="hs-name">AI chatbot</span><span class="hs-line">Customer questions answered on your site and WhatsApp, from your own stock and prices.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-        <a class="hs-row svc-grow" href="websites.html"><b>Grow</b><span class="hs-body"><span class="hs-name">Websites &amp; digital</span><span class="hs-line">A site that turns visitors into enquiries.</span></span><i class="arrow" aria-hidden="true">&rarr;</i></a>
-      </nav>
+      <div class="hc" id="heroConsole" role="region" aria-label="Ask our AI agent" data-mode="idle">
+        <div class="hc-stage">
+          <canvas aria-hidden="true"></canvas>
+          <p class="hc-status"><i aria-hidden="true"></i><span class="hc-status-text">Listening</span></p>
+        </div>
+        <div class="hc-answer" aria-live="polite">
+          <p class="hc-hint">Ask about your own business: orders, stock, enquiries, reports.</p>
+        </div>
+        <div class="hc-chips">
+          <button type="button" class="hc-chip">We re-type every order into Tally</button>
+          <button type="button" class="hc-chip">I can&rsquo;t see sales and stock in one place</button>
+          <button type="button" class="hc-chip">Customers ask the same questions all day</button>
+          <button type="button" class="hc-chip">Our site gets visits, not enquiries</button>
+        </div>
+        <form class="hc-ask">
+          <label class="hc-sr" for="hcInput">Ask our AI agent</label>
+          <input id="hcInput" class="hc-input" type="text" maxlength="1000" autocomplete="off" enterkeyhint="send" placeholder="What&rsquo;s slowing your business down?">
+          <button type="button" class="hc-voice" aria-pressed="false" aria-label="Read replies aloud">
+            <svg class="off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg>
+            <svg class="on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/></svg>
+          </button>
+          <button type="submit" class="hc-send" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+        </form>
+      </div>
     </div>
 
     <div class="hero-trust">
@@ -607,7 +627,8 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20260919c"></script>
-<script src="assets/js/chat.js?v=20260920a" defer></script>
+<script src="assets/js/site.js?v=20261001a"></script>
+<script src="assets/js/chat.js?v=20261001a" defer></script>
+<script src="assets/js/hero.js?v=20261001a" defer></script>
 </body>
 </html>

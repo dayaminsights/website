@@ -203,7 +203,7 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 /* The arrow belongs to buttons and to the homepage index rows. On a text link
    the underline already says "this goes somewhere"; an arrow on every link
    was template chrome (premium pass). */
-a:not(.btn,.hs-row) .arrow{display:none}
+a:not(.btn) .arrow{display:none}
 /* "Ask us": the chat, in the header on every page. The one filled button in the
    bar, so it is where the eye lands; the form CTA beside it is outlined. Same
    look as the corner launcher (navy, the blue signal square, the label), so the
@@ -322,29 +322,73 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .hero-logos .hl{display:inline-flex;align-items:center;gap:7px;font-family:var(--font-ui);font-size:var(--fs-micro);font-weight:600;letter-spacing:-.01em;color:var(--ink-2)}
 .hero-logos .hl svg{width:15px;height:15px;color:var(--muted-2);flex:0 0 auto}
 
-/* An open index, not a boxed menu on graph paper (premium pass): one ink rule
-   above, hairlines between, the signal square walking the left margin. The
-   drafting-grid backdrop that used to sit behind it is gone. */
-.hero-system{position:relative;z-index:1;display:block;border-top:1px solid var(--ink);border-bottom:1px solid var(--line)}
-.hs-row{position:relative;display:grid;grid-template-columns:clamp(84px,7vw,104px) minmax(0,1fr) 20px;gap:var(--sp-4);align-items:baseline;
-  padding:clamp(18px,1.9vw,26px) 0 clamp(18px,1.9vw,26px) 28px;border-bottom:1px solid var(--line);color:var(--ink);transition:background-color var(--t-fast) var(--ease)}
-.hs-row:last-child{border-bottom:0}
-.hs-row b{font-size:var(--fs-small);font-weight:600;letter-spacing:-.005em;color:var(--ink-2);transition:color var(--t-fast) var(--ease)}
-.hs-body{display:block;min-width:0}
-.hs-name{display:block;font-size:clamp(17px,1.45vw,21px);font-weight:600;letter-spacing:-.012em;line-height:1.25}
-.hs-line{display:block;margin-top:3px;font-size:var(--fs-small);line-height:1.45;color:var(--muted)}
-.hs-row .arrow{font-style:normal;color:var(--ink);justify-self:end;transition:transform var(--t-hover) var(--ease-cine),color var(--t-fast) var(--ease)}
-@media (hover:hover) and (pointer:fine){.hs-row:hover{background:var(--surface)}}
-@media (hover:hover) and (pointer:fine){.hs-row:hover b{color:var(--ink)}}
-@media (hover:hover) and (pointer:fine){.hs-row:hover .arrow{transform:translateX(6px);color:var(--accent)}}
-.hs-row:focus-visible{outline:2px solid var(--focus);outline-offset:-2px}
-/* Press: the hover tint, snapped on at once (a full-width row doesn’t scale).
-   Release eases off on the row’s own transition. */
-.hs-row:active{background-color:var(--surface);transition-duration:0s}
-/* The signal: the blue square from the mark, in the index’s left margin, beside the row being read. */
-.hs-signal{position:absolute;left:0;top:0;z-index:2;width:11px;height:11px;background:var(--accent);opacity:0;
-  transition:transform 300ms var(--ease-out),opacity 200ms var(--ease)}
-.hs-signal.on{opacity:1}
+/* ===== Hero: the agent console =====
+   The site chatbot in the hero, as a navy panel like the site's other mocks:
+   the signal field (canvas, drawn by hero.js), the latest exchange, four
+   starter questions and the input. On desktop the console holds one height
+   so the copy beside it never moves while a reply streams in.
+   Spec: docs/superpowers/specs/2026-10-01-hero-agent-console-design.md */
+.hc{--hc-line:rgba(159,176,200,.16);--hc-line-2:rgba(159,176,200,.28);--hc-dim:#7D8FAA;
+  position:relative;display:flex;flex-direction:column;height:600px;background:var(--panel);border:1px solid var(--panel);color:var(--on-panel);
+  animation:heroFrame 500ms var(--ease) 700ms both}
+.hc[hidden]{display:none}
+.hero-stage:has(> .hc[hidden]){display:none}
+.hc-stage{position:relative;flex:0 0 300px;border-bottom:1px solid var(--hc-line)}
+.hc-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
+.hc-status{position:absolute;left:20px;top:16px;margin:0;display:flex;align-items:center;gap:10px;font-family:var(--font-ui);font-size:13px;color:var(--on-panel-muted)}
+.hc-status i{width:7px;height:7px;background:var(--hc-dim)}
+.hc[data-mode=thinking] .hc-status i{background:var(--accent);animation:hcBlink 600ms steps(2) infinite}
+.hc[data-mode=speaking] .hc-status i{background:var(--accent)}
+@keyframes hcBlink{50%{opacity:.25}}
+.hc-answer{flex:1 1 auto;min-height:0;overflow-y:auto;overscroll-behavior:contain;padding:20px 24px 8px;font-size:16.5px;line-height:1.5}
+.hc-hint{margin:0;color:var(--on-panel-muted)}
+.hc-q{margin:0 0 6px;font-size:14px;color:var(--on-panel-muted)}
+.hc-text p{margin:0}
+.hc-text p+p,.hc-text p+ul,.hc-text ul+p{margin-top:8px}
+.hc-text ul{margin:0;padding-left:18px}
+.hc-text a{color:var(--on-panel);text-decoration:underline;text-underline-offset:3px}
+/* The agent's page cards (chat.js cardNode), turned over for the navy panel. */
+.hc .dc-card{width:100%;margin-top:12px;background:transparent;border:1px solid var(--hc-line-2);border-left:3px solid var(--svc);color:var(--on-panel)}
+.hc .dc-card-plain,.hc .dc-card-wa{--svc:var(--on-panel-muted)}
+.hc .dc-card-r{color:var(--on-panel-muted)}
+.hc .dc-card-go{color:var(--svc)}
+.hc .dc-card-plain .dc-card-go,.hc .dc-card-wa .dc-card-go{color:var(--on-panel)}
+.hc-full{display:block;margin:12px 0 4px;padding:0;border:0;background:none;color:var(--on-panel);font:500 14px var(--font-ui);text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--hc-line-2);cursor:pointer}
+.hc-chips{display:flex;flex-wrap:wrap;gap:8px;padding:10px 24px 16px}
+.hc-chips[hidden]{display:none}
+.hc-chip{min-height:36px;padding:0 12px;border:1px solid var(--hc-line-2);background:transparent;color:var(--on-panel-muted);font:500 13.5px/1.2 var(--font-ui);text-align:left;cursor:pointer;transition:color var(--t-fast) var(--ease),border-color var(--t-fast) var(--ease)}
+@media (hover:hover) and (pointer:fine){.hc-chip:hover:not(:disabled){color:var(--on-panel);border-color:var(--on-panel-muted)}}
+.hc-chip:disabled{opacity:.5;cursor:default}
+.hc-ask{display:flex;align-items:stretch;flex:0 0 58px;border-top:1px solid var(--hc-line)}
+.hc-input{flex:1 1 auto;min-width:0;padding:0 24px;border:0;border-radius:0;background:transparent;color:var(--on-panel);font:400 16px var(--font-ui);caret-color:var(--accent)}
+.hc-input::placeholder{color:var(--hc-dim);opacity:1}
+.hc-input:focus{outline:none}
+.hc-input:focus-visible{outline:2px solid var(--focus-invert);outline-offset:-2px}
+.hc-voice,.hc-send{flex:0 0 58px;display:grid;place-items:center;border:0;cursor:pointer}
+.hc-voice{background:transparent;color:var(--on-panel-muted);border-left:1px solid var(--hc-line)}
+.hc-voice[hidden]{display:none}
+.hc-voice[aria-pressed=true]{background:var(--panel-2);color:var(--on-panel)}
+.hc-voice .on,.hc-voice[aria-pressed=true] .off{display:none}
+.hc-voice[aria-pressed=true] .on{display:block}
+.hc-send{background:var(--accent-hover);color:#fff}
+.hc-send:disabled{background:var(--panel-2);color:var(--hc-dim);cursor:default}
+.hc :is(.hc-chip,.hc-voice,.hc-send,.hc-full,.dc-card):focus-visible{outline:2px solid var(--focus-invert);outline-offset:-2px}
+.hc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+@media(max-width:1000px){
+  .hc{height:auto}
+  .hc-answer{flex:none;max-height:260px}
+}
+@media(max-width:599px){
+  .hc-stage{flex-basis:240px}
+  .hc-status{left:16px;top:12px}
+  .hc-answer{padding:16px 16px 6px;font-size:15.5px}
+  .hc-chips{flex-wrap:nowrap;overflow-x:auto;padding:10px 16px 14px;scrollbar-width:none}
+  .hc-chips::-webkit-scrollbar{display:none}
+  .hc-chip{flex:none;white-space:nowrap}
+  .hc-input{padding:0 16px}
+  .hc-voice,.hc-send{flex-basis:52px}
+}
+
 
 /* ===== Hero entrance =====
    One choreographed sequence on load, driven by CSS animation rather than the
@@ -453,8 +497,6 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
   .hero-video{margin-top:var(--sp-6)}
   .hv-toggle{right:var(--sp-2);bottom:var(--sp-2);width:32px;height:32px}
 }
-.hero-system{animation:heroFrame 500ms var(--ease) 700ms both}
-.hs-row{animation:heroRise 520ms var(--ease-out) both}
 /* The mark signs the page before the headline speaks: the blue square switches on,
    the D is drawn outward from its curve (a stroke mask sweeping both ways from the
    rightmost point), both stems rise from the baseline, the curl unfolds from the stem.
@@ -474,27 +516,17 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
    .mark-seen after the first page, so moving between pages shows the finished
    mark instead of replaying the signature every time. */
 .mark-seen .mark :is(.mk-dot,.mk-draw,.mk-stem,.mk-curl){animation:none}
-.hs-row:nth-child(2){animation-delay:900ms}
-.hs-row:nth-child(3){animation-delay:980ms}
-.hs-row:nth-child(4){animation-delay:1060ms}
-.hs-row:nth-child(5){animation-delay:1140ms}
 
 @media(max-width:1000px){
   .hero{padding-block:clamp(28px,4vw,48px) clamp(40px,5vw,56px)}
   .hero-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:var(--sp-6)}
-  .hero-copy{grid-column:1;grid-row:1}
-  .hero-stage{grid-column:1;grid-row:2;align-self:auto}
+  /* Console first on one column (owner, 2026-10-01): the agent is what the hero is for.
+     min-width:0 stops the phone's one-line chip row from widening the 1fr track. */
+  .hero-stage{grid-column:1;grid-row:1;align-self:auto;min-width:0}
+  .hero-copy{grid-column:1;grid-row:2}
   .hero-trust{grid-column:1;grid-row:3}
   .hero h1{font-size:min(calc((100vw - 2 * var(--gutter)) / 11.3),60px)}
   .hero p.sub{max-width:none}
-}
-@media(max-width:640px){
-  .hs-row{grid-template-columns:minmax(0,1fr) 20px;row-gap:2px;padding:14px 0 14px 22px}
-  .hs-row b{grid-column:1}
-  .hs-body{grid-column:1}
-  .hs-row .arrow{grid-column:2;grid-row:1 / span 2;align-self:center}
-  .hs-line{display:none}
-  .hs-signal{width:9px;height:9px;left:0}
 }
 @media(max-height:560px) and (orientation:landscape){
   .hero{padding-block:var(--sp-4) var(--sp-5)}
@@ -1667,13 +1699,10 @@ section:has(> .cta-band)::after{background:var(--svc)}
 .res-list .res-lines{gap:var(--sp-5)}
 .res-meta .sector{color:var(--svc-ink);font-weight:600}
 
-/* Homepage: the three rows and cards each wear their service. The card’s
-   still sits on its tint and multiplies into it, so a pale wireframe reads
-   as that service’s colour instead of grey. */
-.hs-row b{color:var(--svc-ink)}
+/* Homepage: the cards each wear their service. The card’s still sits on
+   its tint and multiplies into it, so a pale wireframe reads as that
+   service’s colour instead of grey. */
 @media (hover:hover) and (pointer:fine){
-  .hs-row:hover b{color:var(--svc-ink)}
-  .hs-row:hover .arrow{color:var(--svc-ink)}
   .vcard:hover{border-color:var(--svc)}
 }
 .vcard:focus-visible,.vcard:active{border-color:var(--svc)}
