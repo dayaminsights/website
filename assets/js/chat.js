@@ -11,6 +11,8 @@
   var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var ENDPOINT = LOCAL ? 'http://localhost:8787/chat' : PROD_ENDPOINT;
   if (!ENDPOINT || !window.fetch || !window.JSON || !document.currentScript) return;
+  // Read by hero.js, which runs next: the widget will start (after load, when idle).
+  window.DayamChatLoading = true;
 
   var SCRIPT = document.currentScript;
   var FORM_ACTION = 'https://formsubmit.co/ajax/dayaminsights@gmail.com';
