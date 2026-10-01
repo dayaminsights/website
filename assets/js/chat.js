@@ -554,7 +554,7 @@
       if (formIn) hideNudge();
       tuck();
     }).observe(form);
-    var heroEl = document.querySelector('.hero-stage, .page-hero .hero-video');
+    var heroEl = document.querySelector('.ah, .page-hero .hero-video');
     if (heroEl) new IntersectionObserver(function(es){
       heroIn = es[0].isIntersecting;
       tuck();

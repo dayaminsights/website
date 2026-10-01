@@ -134,7 +134,7 @@
 <!-- The mark signs the first page of a visit only; later pages open on the
      finished mark (see .mark-seen in site.css). -->
 <script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/site.css?v=20261001e">
+<link rel="stylesheet" href="assets/css/site.css?v=20261002b">
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
      no-JS path is given the finished frame of everything, including the
@@ -154,7 +154,7 @@
   .proc-line i{transform:scaleX(1)!important}
   .bp .draw{stroke-dashoffset:0!important}
   :is(.section-head,.climb-head > div):not(.page-hero *) > :is(.eyebrow,.title,p,.hero-cta){opacity:1!important;clip-path:none!important;transform:none!important}
-  .hero-stage{display:none}
+  .ah{display:none}
 </style></noscript>
 <!-- ============================================================
      FACTS STILL TO SUPPLY
@@ -258,8 +258,41 @@
 
 <main id="main">
 
-<!-- HERO -->
-<section class="hero wrap" id="top" aria-labelledby="h-hero">
+<!-- HERO: the agent. The site chatbot is the whole first screen: the orb
+     (hero.js draws it) and the conversation under it, opening on one question.
+     Without JS a noscript rule hides it, and hero.js hides it when chat.js is
+     switched off, so the page then starts at the headline below. The buttons
+     wait until chat.js is ready. One conversation with the corner panel.
+     Spec: docs/superpowers/specs/2026-10-01-hero-agent-console-design.md -->
+<section class="ah" id="top" aria-label="Ask our AI agent">
+  <div class="ah-orb"><canvas aria-hidden="true"></canvas></div>
+  <div class="hc" id="heroConsole" data-mode="idle">
+    <p class="hc-sr" role="status"><span class="hc-status-text">Listening</span></p>
+    <p class="ah-hello" aria-hidden="true"><span class="ah-hello-text">How may I help you?</span><span class="ah-caret"></span></p>
+    <div class="hc-answer" aria-live="polite"></div>
+    <form class="hc-ask">
+      <label class="hc-sr" for="hcInput">How may I help you?</label>
+      <input id="hcInput" class="hc-input" type="text" maxlength="1000" autocomplete="off" enterkeyhint="send" placeholder="Ask me anything">
+      <span class="hc-kbd" aria-hidden="true"><span>Enter</span>to ask</span>
+      <button type="button" class="hc-voice" aria-pressed="false" aria-label="Read replies aloud">
+        <svg class="off" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg>
+        <svg class="on" viewBox="0 0 24 24" width="19" height="19" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/></svg>
+      </button>
+      <button type="submit" class="hc-send" disabled aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+    </form>
+    <div class="hc-chips">
+      <span class="hc-try" aria-hidden="true">Or try</span>
+      <button type="button" class="hc-chip" data-q="We re-type every order into Tally" disabled>Re-typing orders</button>
+      <button type="button" class="hc-chip" data-q="I can&rsquo;t see sales and stock in one place" disabled>Sales and stock in one view</button>
+      <button type="button" class="hc-chip" data-q="Customers ask the same questions all day" disabled>Repeat customer questions</button>
+      <button type="button" class="hc-chip" data-q="Our site gets visits, not enquiries" disabled>A site that brings enquiries</button>
+    </div>
+  </div>
+</section>
+
+<!-- INTRO: the promise, under the agent. The h1 and its paragraph are the
+     page's SEO copy and stay word for word. -->
+<section class="hero wrap" id="intro" aria-labelledby="h-hero">
   <div class="hero-grid">
     <div class="hero-copy">
       <!-- Three masked lines: the headline is the one place on this page where the
@@ -269,55 +302,22 @@
         <span class="ln"><span>need you to run</span></span>
         <span class="ln"><span>every little thing<span class="accent">.</span></span></span>
       </h1>
+    </div>
+    <div class="hero-side">
       <p class="sub">Website development, workflow automation, AI chatbots and business dashboards for growing businesses in Dubai, the UAE and India &mdash; at a fixed price, in accounts you own.</p>
       <div class="hero-cta">
         <a href="#contact" class="btn btn-primary">Tell us what you need <span class="arrow">&rarr;</span></a>
         <a href="#value" class="link-cta">See where we add value <span class="arrow">&rarr;</span></a>
       </div>
-    </div>
-
-    <!-- The agent console: the site chatbot, in the hero. It ships visible so it
-         never pops in above the headline; without JS a noscript rule hides it,
-         and hero.js hides it when chat.js is switched off, so there is never a
-         dead input. Its buttons wait until chat.js is ready. The field behind
-         it reacts as the agent reads and answers, in the colour of the service
-         the answer points to. One conversation with the panel.
-         Spec: docs/superpowers/specs/2026-10-01-hero-agent-console-design.md -->
-    <div class="hero-stage">
-      <div class="hc" id="heroConsole" role="region" aria-label="Ask our AI agent" data-mode="idle">
-        <div class="hc-stage">
-          <canvas aria-hidden="true"></canvas>
-          <p class="hc-status"><i aria-hidden="true"></i><span class="hc-status-text">Listening</span><span class="hc-meta">Replies in seconds</span></p>
+      <div class="hero-trust">
+        <p class="ht-cap">For growing businesses that have outgrown spreadsheets, manual processes and disconnected tools:</p>
+        <div class="hero-logos">
+          <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 9h18M5 9v11h14V9M3 9l2-5h14l2 5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Retail</span>
+          <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 20V9l6 4V9l6 4V4h6v16z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Manufacturing</span>
+          <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M2 8h11v9H2zM13 11h5l3 3v3h-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="6" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/></svg>Distribution</span>
+          <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Clinics</span>
+          <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Services</span>
         </div>
-        <div class="hc-answer" aria-live="polite">
-          <p class="hc-hint">Tell me what&rsquo;s slowing the business down. I&rsquo;ll tell you what we&rsquo;d fix first.</p>
-        </div>
-        <div class="hc-chips">
-          <button type="button" class="hc-chip" disabled><span>We re-type every order into Tally</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          <button type="button" class="hc-chip" disabled><span>I can&rsquo;t see sales and stock in one place</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          <button type="button" class="hc-chip" disabled><span>Customers ask the same questions all day</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-          <button type="button" class="hc-chip" disabled><span>Our site gets visits, not enquiries</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        </div>
-        <form class="hc-ask">
-          <label class="hc-sr" for="hcInput">Ask our AI agent</label>
-          <input id="hcInput" class="hc-input" type="text" maxlength="1000" autocomplete="off" enterkeyhint="send" placeholder="What&rsquo;s slowing your business down?">
-          <button type="button" class="hc-voice" aria-pressed="false" aria-label="Read replies aloud">
-            <svg class="off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg>
-            <svg class="on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/></svg>
-          </button>
-          <button type="submit" class="hc-send" disabled aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
-        </form>
-      </div>
-    </div>
-
-    <div class="hero-trust">
-      <p class="ht-cap">For growing businesses that have outgrown spreadsheets, manual processes and disconnected tools:</p>
-      <div class="hero-logos">
-        <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 9h18M5 9v11h14V9M3 9l2-5h14l2 5" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Retail</span>
-        <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M3 20V9l6 4V9l6 4V4h6v16z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Manufacturing</span>
-        <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M2 8h11v9H2zM13 11h5l3 3v3h-8z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="6" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/><circle cx="17" cy="19" r="1.6" stroke="currentColor" stroke-width="1.8"/></svg>Distribution</span>
-        <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M4 4h16v16H4zM12 8v8M8 12h8" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Clinics</span>
-        <span class="hl"><svg aria-hidden="true" viewBox="0 0 24 24" fill="none"><path d="M6 3h9l4 4v14H6zM15 3v4h4M9 12h6M9 16h6" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Services</span>
       </div>
     </div>
   </div>
@@ -627,8 +627,8 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20261001b"></script>
-<script src="assets/js/chat.js?v=20261001f" defer></script>
-<script src="assets/js/hero.js?v=20261001g" defer></script>
+<script src="assets/js/site.js?v=20261002a"></script>
+<script src="assets/js/chat.js?v=20261002b" defer></script>
+<script src="assets/js/hero.js?v=20261002a" defer></script>
 </body>
 </html>

@@ -1,16 +1,17 @@
-/* Homepage hero: the agent console. The site chatbot (chat.js, window.DayamChat)
-   driven from the hero, with the signal field drawn behind the conversation:
-   a grid of squares whose centre breathes, which sweeps while the agent reads
-   the question and sends a ring out with every piece of the reply, in the
-   colour of the service the answer points to.
+/* Homepage hero: the agent. The site chatbot (chat.js, window.DayamChat) is the
+   whole first screen: an orb made of the logo's square, and under it the
+   conversation. The orb assembles on load, leans toward the pointer, lights
+   the squares under it, quickens as the visitor types, sweeps while the agent
+   reads, and while it answers a voice ring and waves of light follow each word.
+   Speeds ease and angles only accumulate, so nothing ever jumps.
    Spec: docs/superpowers/specs/2026-10-01-hero-agent-console-design.md */
 (function(){
   'use strict';
 
   var root = document.getElementById('heroConsole');
   if (!root) return;
-  // Hiding the whole stage (not just the console) leaves no empty grid cell or gap.
-  var stage = root.closest('.hero-stage') || root;
+  // Hiding the whole hero (not just the console) leaves the page starting at the headline.
+  var stage = root.closest('.ah') || root;
   // chat.js (deferred, earlier in the page) sets this only once it knows it will
   // start. Without it the console would be a dead input, so it goes.
   if (!window.DayamChatLoading || !window.HTMLCanvasElement || !('IntersectionObserver' in window)) {
@@ -19,82 +20,133 @@
   }
 
   var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var small = window.matchMedia('(max-width: 599px)');
-  // Field colour per service class, as "r,g,b": the --see, --auto and --grow tokens.
-  var RGB = { 'svc-see': '30,123,255', 'svc-auto': '255,154,31', 'svc-grow': '22,179,100' };
-  var BLUE = '30,123,255';
+  var fine = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
   var STATUS = { idle: 'Listening', thinking: 'Reading your question', speaking: 'Answering' };
-  var PLACEHOLDER = { wide: 'What’s slowing your business down?', small: 'Ask about your business' };
+  // The input suggests these in turn; Enter on an empty box asks the one shown.
+  var EXAMPLES = [
+    'We re-type every order into Tally',
+    'I can’t see sales and stock in one place',
+    'Customers ask the same questions all day',
+    'Our site gets visits, not enquiries'
+  ];
 
-  // ===== Field =====
+  // ===== Orb =====
   // `host` gets data-field="running" while the loop runs and "still" otherwise,
   // so the loop's state can be checked from outside.
-  function Field(cv, host){
-    var ctx = cv.getContext('2d'), W = 0, H = 0, D = 0, t = 0, last = 0, raf = 0, on = false;
-    var mode = 'idle', energy = 0, target = 0, rgb = BLUE, rings = [], idleAt = 0;
+  function Orb(cv, host, area){
+    var ctx = cv.getContext('2d'), W = 0, H = 0, D = 0, raf = 0, on = false, last = 0;
+    var BLUE = [47, 123, 255], HI = [141, 182, 255], WHITE = [235, 242, 255];
+    var N = 520, P = [], BARS = 96;
+    for (var i = 0; i < N; i++) {
+      var y = 1 - (i / (N - 1)) * 2, r = Math.sqrt(1 - y * y), th = i * 2.399963;
+      P.push({ x: Math.cos(th) * r, y: y, z: Math.sin(th) * r, key: i % 23 === 0, sx: Math.random() * 2 - 1, sy: Math.random() * 2 - 1, d: Math.random() * .5 });
+    }
+    var S = { mode: 'idle', t: 0, born: reduce ? 9 : 0, energy: 0, nudge: 0, think: 0, speak: 0, ang: 0, arc0: 0, arc1: 0,
+      tx: 0, ty: 0, vx: 0, vy: 0, gx: 0, gy: 0, px: .5, py: .5, near: false, ripples: [], bv: [], bt: [], lastPulse: 0,
+      ph: [Math.random() * 6.28, Math.random() * 6.28, Math.random() * 6.28] };
+    for (var b = 0; b < BARS; b++) { S.bv.push(0); S.bt.push(0); }
 
+    function rgba(c, a){ return 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')'; }
+    function lerp(a, b, k){ return a + (b - a) * k; }
+    function easeOut(x){ return 1 - Math.pow(1 - x, 4); }
     function size(){
       var d = Math.min(2, window.devicePixelRatio || 1);
       if (cv.clientWidth === W && cv.clientHeight === H && d === D) return;
-      D = d;
-      W = cv.clientWidth; H = cv.clientHeight;
+      D = d; W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W * d); cv.height = Math.round(H * d);
       ctx.setTransform(d, 0, 0, d, 0, 0);
     }
-    // Brightness at distance `dist` from the centre from every ring still travelling.
-    function ringsAt(dist){
-      var v = 0;
-      for (var i = 0; i < rings.length; i++) {
-        var age = t - rings[i].t0, x = dist - age * 240;
-        v += rings[i].a * Math.exp(-x * x / 288) * Math.exp(-age * 1.1);
-      }
-      return v * .75;
+
+    function step(dt){
+      S.t += dt; S.born += dt;
+      // moods ease in and out over about a second, never switch
+      S.think = lerp(S.think, S.mode === 'thinking' ? 1 : 0, Math.min(1, dt * 1.6));
+      S.speak = lerp(S.speak, S.mode === 'speaking' ? 1 : 0, Math.min(1, dt * 1.2));
+      // a voice-like envelope: slow overlapping waves with random phases, plus a nudge per word
+      var t = S.t, env = .5 + .5 * (Math.sin(t * 1.15 + S.ph[0]) * .5 + Math.sin(t * 1.9 + S.ph[1]) * .3 + Math.sin(t * .55 + S.ph[2]) * .2);
+      S.nudge *= Math.pow(.25, dt);
+      S.energy = lerp(S.energy, Math.min(1, S.speak * (.45 + env * .55) + S.nudge * .5 + S.think * .2), Math.min(1, dt * 3));
+      // the tilt follows the pointer on a spring: it leans in, with a little weight
+      S.vx += ((S.gx * .9 - S.tx) * 30 - S.vx * 8) * dt; S.vy += ((S.gy * .7 - S.ty) * 30 - S.vy * 8) * dt;
+      S.tx += S.vx * dt; S.ty += S.vy * dt;
+      // speeds change; angles only ever accumulate, so nothing jumps
+      var e = S.energy;
+      S.ang += dt * (.2 + S.think * .45 + e * .25);
+      S.arc0 += dt * (.25 + S.think * 1.1 + e * 1.2);
+      S.arc1 -= dt * .18;
+      for (var b = 0; b < BARS; b++) { S.bt[b] *= Math.pow(.12, dt); S.bv[b] = lerp(S.bv[b], S.bt[b], Math.min(1, dt * 9)); }
+      S.ripples = S.ripples.filter(function(r){ return S.t - r.t0 < 1.6; });
     }
+
     function draw(){
+      size();
       ctx.clearRect(0, 0, W, H);
-      // The grid is laid from the centre out, so the core sits exactly on a cell.
-      var cell = 18, cx = Math.round(W / 2), cy = Math.round(H * .46), sweep = t * 3.2;
-      var reach = Math.max(W, H) * .58, ox = cx % cell, oy = cy % cell;
-      for (var py = oy; py < H + cell; py += cell) for (var px = ox; px < W + cell; px += cell) {
-        var dx = px - cx, dy = py - cy, d = Math.sqrt(dx * dx + dy * dy);
-        var v = ringsAt(d);
-        if (mode === 'thinking' && !reduce) {
-          var da = Math.abs(((Math.atan2(dy, dx) - sweep) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
-          v += Math.max(0, 1 - da * 2.2) * Math.max(0, 1 - d / (reach * .9)) * .75;
+      var e = S.energy, t = S.t, cx = W / 2, cy = H / 2, R = Math.max(36, Math.min(H / 2 - 6, W / 2 - 6) / 1.7);
+      var g = ctx.createRadialGradient(cx, cy, 0, cx, cy, R * 1.72);
+      g.addColorStop(0, rgba(BLUE, .2 + e * .4)); g.addColorStop(.5, rgba(BLUE, .05 + e * .12)); g.addColorStop(1, rgba(BLUE, 0));
+      ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
+      var grow = easeOut(Math.min(1, S.born / 1.4));
+      ctx.globalAlpha = grow;
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.42, 0, Math.PI * 2); ctx.lineWidth = 1; ctx.strokeStyle = 'rgba(178,196,230,.14)'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.7, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(178,196,230,.08)'; ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.7, S.arc0, S.arc0 + .55 + e * .5); ctx.lineWidth = 2; ctx.strokeStyle = rgba(HI, .9); ctx.stroke();
+      ctx.beginPath(); ctx.arc(cx, cy, R * 1.42, S.arc1, S.arc1 + 1.1); ctx.lineWidth = 1.5; ctx.strokeStyle = rgba(BLUE, .6); ctx.stroke();
+      ctx.globalAlpha = 1;
+      // the voice ring: bars ease toward the shape each word sets, then settle
+      var r0 = R * 1.3, maxL = R * .22;
+      for (var b = 0; b < BARS; b++) {
+        var a = b / BARS * 6.283 - 1.5708, L = 2 + S.bv[b] * maxL + S.speak * 2;
+        ctx.beginPath(); ctx.moveTo(cx + Math.cos(a) * r0, cy + Math.sin(a) * r0); ctx.lineTo(cx + Math.cos(a) * (r0 + L), cy + Math.sin(a) * (r0 + L));
+        ctx.lineWidth = 2.2; ctx.strokeStyle = rgba(S.bv[b] > .35 ? HI : BLUE, (.14 + S.bv[b] * .85) * grow); ctx.stroke();
+      }
+      var ry = S.ang + S.tx * 1.1, rx = .35 + S.ty * .9, cr = Math.cos(ry), sr = Math.sin(ry), cX = Math.cos(rx), sX = Math.sin(rx);
+      // it breathes: a slow swell that deepens while it talks
+      var rad = R * (1 + e * .09 + Math.sin(t * 1.1) * .012), k = Math.max(.8, Math.min(1.6, R / 120));
+      var mx = S.px * W, my = S.py * H, lightR = R * .55;
+      for (var i = 0; i < N; i++) {
+        var p = P[i], x = p.x * cr - p.z * sr, z = p.x * sr + p.z * cr, y = p.y * cX - z * sX; z = p.y * sX + z * cX;
+        var depth = (z + 1) / 2, px = cx + x * rad, py = cy + y * rad;
+        // each square drifts on its own slow beat, more while it talks: a ripple, not a shake
+        var w = 1 + e * .06 * Math.sin(t * 2.2 + p.d * 37);
+        px = cx + (px - cx) * w; py = cy + (py - cy) * w;
+        // assembly: each square flies in from where it was scattered
+        var in_ = easeOut(Math.max(0, Math.min(1, (S.born - p.d) / 1.1)));
+        if (in_ < 1) { px = (cx + p.sx * W * .6) * (1 - in_) + px * in_; py = (cy + p.sy * H * .6) * (1 - in_) + py * in_; }
+        var s = (1.4 + depth * 3.2) * k, alpha = ((p.key ? .3 : .12) + depth * .8) * in_, c = depth > .55 ? WHITE : BLUE;
+        // waves of light travel outward across the face and fade
+        if (S.ripples.length && depth > .2) {
+          var dn = Math.sqrt((px - cx) * (px - cx) + (py - cy) * (py - cy)) / rad, v = 0;
+          for (var j = 0; j < S.ripples.length; j++) { var rp = S.ripples[j], age = S.t - rp.t0, q = dn - age * 1.1; v += rp.a * Math.exp(-q * q / .03) * Math.exp(-age * 1.4); }
+          v = Math.min(1.2, v) * (.4 + depth * .6);
+          if (v > .02) { var push = 1 + v * .1; px = cx + (px - cx) * push; py = cy + (py - cy) * push; s *= 1 + v * 1.3; alpha = Math.min(1, alpha + v); if (v > .12) c = HI; if (v > .45) c = WHITE; }
         }
-        v += Math.max(0, 1 - d / (58 + energy * 30)) * (.55 + energy * .45);              // the halo round the core
-        v += Math.max(0, Math.sin(dx * .016 + t * .55) * Math.cos(dy * .021 - t * .4)) * .16; // the slow drift
-        v += .05 + .03 * Math.sin(px * .04 + py * .07 + t * .8);                          // the breath
-        v = Math.min(1, v) * Math.max(0, 1 - d / reach);
-        var s = 1.5 + v * 6.5;
-        ctx.fillStyle = v > .3 ? 'rgba(' + rgb + ',' + (.18 + v * .82) + ')' : 'rgba(159,176,200,' + (.07 + v * .8) + ')';
+        if (S.near && depth > .45) { var dx = px - mx, dy = py - my, d2 = dx * dx + dy * dy; if (d2 < lightR * lightR) { var l = 1 - Math.sqrt(d2) / lightR; s *= 1 + l * .9; c = HI; alpha = Math.min(1, alpha + l * .5); } }
+        ctx.fillStyle = rgba(c, alpha);
         ctx.fillRect(px - s / 2, py - s / 2, s, s);
       }
-      // The core: the logo's square, lit. It swells with each word.
-      var c = 12 + energy * 8 + (mode === 'thinking' && !reduce ? 2 * Math.sin(t * 9) : 0);
-      ctx.save();
-      ctx.shadowColor = 'rgba(' + rgb + ',.85)';
-      ctx.shadowBlur = 22 + energy * 30;
-      ctx.fillStyle = 'rgb(' + rgb + ')';
-      ctx.fillRect(cx - c / 2, cy - c / 2, c, c);
-      ctx.restore();
     }
+
     function frame(now){
       raf = 0;
       var dt = last ? Math.min(.05, (now - last) / 1000) : 0;
-      last = now; t += dt;
-      target *= Math.pow(.02, dt);
-      energy += (target - energy) * Math.min(1, dt * 12);
-      if (mode === 'idle' && t - idleAt > 3.2) { idleAt = t; rings.push({ t0: t, a: .25 }); }
-      rings = rings.filter(function(r){ return t - r.t0 < 3; });
+      last = now;
+      step(dt);
       draw();
       if (on) raf = requestAnimationFrame(frame);
     }
 
-    size();
+    if (fine) {
+      area.addEventListener('pointermove', function(e){
+        var bx = cv.getBoundingClientRect();
+        S.px = (e.clientX - bx.left) / bx.width; S.py = (e.clientY - bx.top) / bx.height;
+        S.near = S.px > 0 && S.px < 1 && S.py > 0 && S.py < 1;
+        S.gx = e.clientX / innerWidth - .5; S.gy = e.clientY / innerHeight - .5;
+      }, { passive: true });
+      area.addEventListener('pointerleave', function(){ S.near = false; S.gx = 0; S.gy = 0; });
+    }
     draw();
     host.setAttribute('data-field', 'still');
-    addEventListener('resize', function(){ size(); draw(); }, { passive: true });
+    addEventListener('resize', function(){ if (!on) draw(); }, { passive: true });
 
     return {
       // Loop only while on screen, and never under reduced motion (one still frame instead).
@@ -104,14 +156,18 @@
         if (!on && raf) { cancelAnimationFrame(raf); raf = 0; }
         host.setAttribute('data-field', on ? 'running' : 'still');
       },
-      mode: function(m){ mode = m; if (!on) draw(); },
+      mode: function(m){ S.mode = m; if (!on) draw(); },
+      // A wave of light and a new shape for the voice ring. Pulses closer than
+      // 110 ms merge into one, so fast typing never flickers.
       pulse: function(a){
         if (reduce) return;
-        target = Math.min(1, a);
-        rings.push({ t0: t, a: a });
-        if (rings.length > 40) rings.shift();
-      },
-      colour: function(c){ rgb = c; if (!on) draw(); }
+        var now = performance.now();
+        if (S.ripples.length && now - S.lastPulse < 110) { var r = S.ripples[S.ripples.length - 1]; r.a = Math.max(r.a, a); return; }
+        S.lastPulse = now; S.ripples.push({ t0: S.t, a: a }); if (S.ripples.length > 12) S.ripples.shift();
+        var o1 = Math.random() * 6.28, o2 = Math.random() * 6.28, f1 = 2 + Math.floor(Math.random() * 3), f2 = 5 + Math.floor(Math.random() * 4);
+        for (var b = 0; b < BARS; b++) { var th = b / BARS * 6.283; S.bt[b] = Math.max(S.bt[b], a * (.45 + .35 * Math.sin(th * f1 + o1) + .2 * Math.sin(th * f2 + o2))); }
+        S.nudge = Math.min(1, S.nudge + a * .25);
+      }
     };
   }
 
@@ -234,6 +290,7 @@
     };
   }
 
+
   // ===== Console =====
   // Drawn at once; wired to the conversation when chat.js is ready.
   (function(){
@@ -245,25 +302,27 @@
     var input = root.querySelector('.hc-input');
     var sendBtn = root.querySelector('.hc-send');
     var spk = root.querySelector('.hc-voice');
-    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '', pending = '';
-    var question = '', page = '';
+    var helloText = root.querySelector('.ah-hello-text');
+    var mode = 'idle', visible = false, msg = null, segEl = null, segText = '', asking = '', pending = '';
+    var question = '', page = '', shown = '', stick = true;
     var voice = Voice();
-    var hintHTML = answer.innerHTML;
-    var field = Field(root.querySelector('.hc-stage canvas'), root);
+    var orb = Orb(stage.querySelector('.ah-orb canvas'), root, stage);
 
     function setMode(m){
       mode = m;
       root.setAttribute('data-mode', m);
       statusEl.textContent = STATUS[m];
-      field.mode(m);
+      orb.mode(m);
     }
-    function setColour(svc){
-      root.setAttribute('data-svc', svc || '');
-      field.colour(RGB[svc] || BLUE);
-    }
+    // The orb keeps the one brand blue; the service is recorded for styling and tests.
+    function setColour(svc){ root.setAttribute('data-svc', svc || ''); }
     function setBusy(on){
       sendBtn.disabled = on;
       Array.prototype.forEach.call(chips.querySelectorAll('button'), function(b){ b.disabled = on; });
+    }
+    function talking(on){
+      root.classList.toggle('is-talking', on);
+      if (on) { clearTimeout(phTimer); input.placeholder = 'Ask a follow-up'; }
     }
     // Hand every finished sentence in `buf` to the voice; return the unfinished rest.
     // "1. Export orders" and "e.g. Tally" are not sentence ends.
@@ -278,26 +337,44 @@
       }
       return buf.slice(cut);
     }
+    // One wave per word, spaced like speech, so a streamed chunk reads as words, not a burst.
+    function pulseWords(text){
+      var words = String(text).split(/\s+/).filter(Boolean).slice(0, 14);
+      words.forEach(function(w, i){
+        setTimeout(function(){ orb.pulse(.35 + Math.min(.45, w.replace(/\W/g, '').length * .05)); }, i * 75);
+      });
+    }
 
-    function asked(){ return Chat.state().log.filter(function(e){ return e.who === 'me'; }).length; }
-    function keepDown(){ answer.scrollTop = answer.scrollHeight; }
+    // The thread follows the reply only while the reader is at the bottom;
+    // scrolling up to reread leaves them where they are.
+    answer.addEventListener('scroll', function(){ stick = answer.scrollHeight - answer.scrollTop - answer.clientHeight < 40; }, { passive: true });
+    function keepDown(force){ if (force) stick = true; if (stick) answer.scrollTop = answer.scrollHeight; }
 
-    // The answer area holds the latest exchange only: the question, then the
-    // reply as text segments with any cards between them.
+    // The conversation: the visitor's words on the right, the agent's under the
+    // square, its page card and the next step after each answer.
     function showQuestion(text){
-      answer.innerHTML = '';
-      segEl = null;
+      talking(true);
       var q = document.createElement('p');
       q.className = 'hc-q';
       q.textContent = text;
       answer.appendChild(q);
       question = text;
+      var m = document.createElement('div');
+      m.className = 'hc-msg';
+      m.innerHTML = '<div class="hc-body"><span class="hc-typing" aria-hidden="true"><i></i><i></i><i></i></span></div>';
+      answer.appendChild(m);
+      msg = m.querySelector('.hc-body');
+      segEl = null;
+      keepDown(true);
     }
+    function dropTyping(){ var d = msg && msg.querySelector('.hc-typing'); if (d) d.remove(); }
     function addText(delta){
+      if (!msg) showQuestion(question);
+      dropTyping();
       if (!segEl) {
         segEl = document.createElement('div');
         segEl.className = 'hc-text';
-        answer.appendChild(segEl);
+        msg.appendChild(segEl);
         segText = '';
       }
       segText += delta;
@@ -305,15 +382,18 @@
       keepDown();
     }
     function addCard(card){
+      if (!msg) return;
+      dropTyping();
       segEl = null;
-      answer.appendChild(Chat.cardNode(card));
+      msg.appendChild(Chat.cardNode(card));
       keepDown();
     }
     // After every answer: the next step, in the visitor's terms. The plan link
     // presets the contact form to the service the agent pointed at.
     var INTENT = { dashboards: 'Dashboards & reporting', automation: 'Workflow automation', ai_assistants: 'An AI assistant', chatbot: 'An AI assistant', websites: 'A website' };
     function addNext(){
-      if (answer.querySelector('.hc-next')) return;
+      if (!msg) return;
+      Array.prototype.forEach.call(answer.querySelectorAll('.hc-next'), function(n){ n.remove(); });
       var bar = document.createElement('div');
       bar.className = 'hc-next';
       var go = document.createElement('a');
@@ -329,27 +409,18 @@
       wa.textContent = 'WhatsApp a person';
       bar.appendChild(go);
       bar.appendChild(wa);
-      answer.appendChild(bar);
-      keepDown();
-    }
-    function addFullLink(){
-      if (asked() < 2 || answer.querySelector('.hc-full')) return;
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'hc-full';
-      b.textContent = 'See full conversation';
-      b.addEventListener('click', function(){ Chat.open(); });
-      answer.appendChild(b);
+      msg.appendChild(bar);
       keepDown();
     }
 
     // A returning visitor (the conversation follows them between pages) sees
-    // where they left off, not the empty prompt.
+    // where they left off, not the empty greeting.
     function restore(){
       var prev = Chat.last();
       if (!prev) return;
       chips.hidden = true;
       showQuestion(prev.question);
+      dropTyping();
       prev.items.forEach(function(e){
         if (e.error) return;
         if (e.who === 'card') {
@@ -361,7 +432,14 @@
         }
       });
       addNext();
-      addFullLink();
+    }
+    function reset(){
+      answer.innerHTML = '';
+      msg = null; segEl = null; question = ''; page = '';
+      talking(false);
+      chips.hidden = false;
+      setColour('');
+      cyclePH();
     }
 
     // Every turn, wherever it was asked (here or in the panel).
@@ -369,7 +447,7 @@
       if (type === 'turn') {
         voice.stop();
         pending = '';
-        if (d.text === asking) input.value = '';
+        if (d.text === asking) { input.value = ''; form.classList.remove('filled'); }
         answer.setAttribute('aria-busy', 'true');
         chips.hidden = true;
         page = '';
@@ -380,8 +458,8 @@
       } else if (type === 'delta') {
         if (mode !== 'speaking') setMode('speaking');
         addText(d.delta);
-        // While a voice is speaking, the rings follow it instead.
-        if (!voice.on() || !voice.speaking()) field.pulse(.55 + Math.random() * .45);
+        // While a voice is speaking, the orb follows the spoken words instead.
+        if (!voice.on() || !voice.speaking()) pulseWords(d.delta);
         pending = speakSentences(pending + d.delta);
       } else if (type === 'card') {
         addCard(d.card);
@@ -389,10 +467,10 @@
       } else if (type === 'done') {
         answer.removeAttribute('aria-busy');
         setBusy(false);
+        dropTyping();
         if (pending.trim()) voice.say(pending);
         pending = '';
         addNext();
-        addFullLink();
         asking = '';
         if (!voice.speaking()) setMode('idle');
       } else if (type === 'error') {
@@ -403,8 +481,7 @@
         addText(d.message);
         // The panel adds a WhatsApp card here; the hero's own next step already carries one.
         if (d.code !== 'reset') addNext();
-        addFullLink();
-        if (d.text && d.text === asking) input.value = d.text;
+        if (d.text && d.text === asking) { input.value = d.text; form.classList.add('filled'); }
         asking = '';
         answer.removeAttribute('aria-busy');
         setMode('idle');
@@ -412,7 +489,7 @@
     }
 
     voice.hooks(
-      function(){ field.pulse(.55 + Math.random() * .45); },
+      function(){ orb.pulse(.5); },
       function(){ if (!sendBtn.disabled) setMode('idle'); }
     );
     if (!voice.supported) spk.hidden = true;
@@ -429,30 +506,80 @@
     setMode('idle');
     setBusy(true);
 
+    function ask(text){
+      if (!Chat || sendBtn.disabled) return;
+      text = String(text || '').trim();
+      if (!text) return;
+      asking = text;
+      voice.unlock();
+      Chat.send(text);
+    }
     chips.addEventListener('click', function(e){
       var b = e.target.closest('.hc-chip');
-      if (Chat && b && !b.disabled) { asking = b.textContent.trim(); voice.unlock(); Chat.send(b.textContent); }
+      if (b && !b.disabled) ask(b.getAttribute('data-q') || b.textContent);
     });
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      if (Chat) { asking = input.value.trim(); voice.unlock(); Chat.send(input.value); }
+      // An empty box asks the question it is suggesting: one key to a first answer.
+      ask(input.value.trim() || (!root.classList.contains('is-talking') ? shown : ''));
+    });
+    input.addEventListener('input', function(){
+      form.classList.toggle('filled', !!input.value);
+      orb.pulse(.22);
     });
 
-    function placeholder(){ input.placeholder = small.matches ? PLACEHOLDER.small : PLACEHOLDER.wide; }
-    placeholder();
-    if (small.addEventListener) small.addEventListener('change', placeholder);
+    // The greeting writes itself in once the orb has assembled.
+    var hello = helloText.textContent;
+    if (!reduce) {
+      helloText.textContent = '';
+      setTimeout(function(){
+        var i = 0;
+        (function tick(){ helloText.textContent = hello.slice(0, ++i); if (i < hello.length) setTimeout(tick, 34 + Math.random() * 40); })();
+      }, 700);
+    }
 
-    // "Visible" for the header button and the nudge means a quarter of the console
-    // is on screen; the field runs whenever any of it is.
+    // The placeholder suggests real questions in turn.
+    var ex = 0, phTimer = 0;
+    function cyclePH(){
+      clearTimeout(phTimer);
+      if (root.classList.contains('is-talking') || input.value) return;
+      shown = EXAMPLES[ex++ % EXAMPLES.length];
+      if (reduce) { input.placeholder = shown; phTimer = setTimeout(cyclePH, 3800); return; }
+      var i = 0;
+      (function type(){ input.placeholder = shown.slice(0, ++i); if (i < shown.length) phTimer = setTimeout(type, 28); else phTimer = setTimeout(cyclePH, 3200); })();
+    }
+    phTimer = setTimeout(cyclePH, 1600);
+
+    // Type anywhere on the hero: printable keys go to the agent, Enter asks.
+    document.addEventListener('keydown', function(e){
+      if (!visible || e.metaKey || e.ctrlKey || e.altKey || e.defaultPrevented) return;
+      var a = document.activeElement, tag = a && a.tagName;
+      if (tag === 'INPUT' || tag === 'TEXTAREA' || tag === 'SELECT' || tag === 'BUTTON' || tag === 'A' || (a && a.isContentEditable)) return;
+      if (document.querySelector('.dc-panel:not([hidden])')) return;
+      if (e.key === 'Enter') { e.preventDefault(); if (form.requestSubmit) form.requestSubmit(); return; }
+      if (e.key.length === 1) input.focus({ preventScroll: true });
+    });
+
+    // "Visible" for the header button, the nudge and type-anywhere means a quarter
+    // of the hero is on screen; the orb runs whenever any of it is.
     new IntersectionObserver(function(es){
       var e = es[es.length - 1];
       visible = e.intersectionRatio >= .25;
-      field.run(e.isIntersecting);
-    }, { threshold: [0, .25] }).observe(root);
+      orb.run(e.isIntersecting);
+    }, { threshold: [0, .25] }).observe(stage);
+
+    // The header turns navy while it sits over the hero, and back once the page moves on.
+    var toneRaf = 0;
+    function tone(){
+      toneRaf = 0;
+      document.documentElement.classList.toggle('on-dark', !stage.hidden && stage.getBoundingClientRect().bottom > 72);
+    }
+    addEventListener('scroll', function(){ if (!toneRaf) toneRaf = requestAnimationFrame(tone); }, { passive: true });
+    tone();
 
     function wire(){
       Chat = window.DayamChat;
-      if (!Chat || !Chat.on) { stage.hidden = true; return; }
+      if (!Chat || !Chat.on) { stage.hidden = true; tone(); return; }
       Chat.on(onTurn);
       Chat.setHero({
         visible: function(){ return visible; },
@@ -460,24 +587,21 @@
       });
       setBusy(Chat.busy());
       restore();
-      // Back/forward cache: chat.js has reloaded the conversation; show where it is now.
       addEventListener('pagehide', function(){ voice.stop(); });
+      // Back/forward cache: chat.js has reloaded the conversation; show where it is now.
       addEventListener('pageshow', function(e){
         if (!e.persisted) return;
         voice.stop();
         pending = '';
         asking = '';
         answer.removeAttribute('aria-busy');
-        answer.innerHTML = hintHTML;
-        segEl = null;
-        chips.hidden = false;
-        setColour('');
+        reset();
         restore();
         setBusy(Chat.busy());
         setMode('idle');
       });
     }
-    document.addEventListener('dayamchat:failed', function(){ stage.hidden = true; }, { once: true });
+    document.addEventListener('dayamchat:failed', function(){ stage.hidden = true; tone(); }, { once: true });
     if (window.DayamChat && window.DayamChat.send) wire();
     else document.addEventListener('dayamchat:ready', wire, { once: true });
   })();
