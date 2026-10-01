@@ -213,7 +213,7 @@
     if (card.kind === 'page') {
       var meta = CARDS[card.page] || { label: 'Read more', svc: '' };
       a = el('a', 'dc-card ' + (meta.svc || 'dc-card-plain'));
-      a.href = card.href;
+      a.href = safeHref(card.href) || '/';
       a.setAttribute('data-page', card.page);
       a.appendChild(el('span', 'dc-card-k', meta.label));
       if (card.reason) a.appendChild(el('span', 'dc-card-r', card.reason));
@@ -483,7 +483,9 @@
       ? 'That’s more messages than I can take right now. The quickest way on from here is a person: WhatsApp us, or [use the contact form](' + contactHref() + ').'
       : 'I can’t answer right now. You can reach a person on WhatsApp, or [use the contact form](' + contactHref() + ').';
     note(msg);
+    state.log[state.log.length - 1].error = true;
     addCard({ kind: 'whatsapp', summary: '' });
+    state.log[state.log.length - 1].error = true;
     return msg;
   }
 
@@ -642,6 +644,7 @@
   }
 
   function init(){
+    try {
     build();
     wireOpeners();
     restore();
@@ -663,6 +666,11 @@
     };
     // chat.js starts late (after load, when idle); hero.js waits for this.
     document.dispatchEvent(new Event('dayamchat:ready'));
+    } catch (e) {
+      // hero.js hides its console rather than leave a dead input.
+      document.dispatchEvent(new Event('dayamchat:failed'));
+      throw e;
+    }
   }
 
   function whenIdle(fn){

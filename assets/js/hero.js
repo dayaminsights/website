@@ -30,11 +30,13 @@
   // `host` gets data-field="running" while the loop runs and "still" otherwise,
   // so the loop's state can be checked from outside.
   function Field(cv, host){
-    var ctx = cv.getContext('2d'), W = 0, H = 0, t = 0, last = 0, raf = 0, on = false;
+    var ctx = cv.getContext('2d'), W = 0, H = 0, D = 0, t = 0, last = 0, raf = 0, on = false;
     var mode = 'idle', energy = 0, target = 0, rgb = BLUE, rings = [], idleAt = 0;
 
     function size(){
       var d = Math.min(2, window.devicePixelRatio || 1);
+      if (cv.clientWidth === W && cv.clientHeight === H && d === D) return;
+      D = d;
       W = cv.clientWidth; H = cv.clientHeight;
       cv.width = Math.round(W * d); cv.height = Math.round(H * d);
       ctx.setTransform(d, 0, 0, d, 0, 0);
@@ -112,7 +114,8 @@
     var form = root.querySelector('.hc-ask');
     var input = root.querySelector('.hc-input');
     var sendBtn = root.querySelector('.hc-send');
-    var mode = 'idle', visible = false, segEl = null, segText = '';
+    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '';
+    var hintHTML = answer.innerHTML;
     var field = Field(root.querySelector('.hc-stage canvas'), root);
 
     function setMode(m){
@@ -177,6 +180,7 @@
       chips.hidden = true;
       showQuestion(prev.question);
       prev.items.forEach(function(e){
+        if (e.error) return;
         if (e.who === 'card') {
           addCard(e.card);
           if (e.card.kind === 'page') setColour(Chat.svc(e.card));
@@ -191,7 +195,8 @@
     // Every turn, wherever it was asked (here or in the panel).
     function onTurn(type, d){
       if (type === 'turn') {
-        input.value = '';
+        if (d.text === asking) input.value = '';
+        answer.setAttribute('aria-busy', 'true');
         chips.hidden = true;
         showQuestion(d.text);
         setColour('');
@@ -205,15 +210,20 @@
         addCard(d.card);
         if (d.card.kind === 'page') setColour(d.svc);
       } else if (type === 'done') {
+        answer.removeAttribute('aria-busy');
         setBusy(false);
         addFullLink();
+        asking = '';
         setMode('idle');
       } else if (type === 'error') {
         setBusy(false);
         segEl = null;
         addText(d.message);
         if (d.code !== 'reset') addCard({ kind: 'whatsapp', summary: '' });
-        if (d.text) input.value = d.text;
+        addFullLink();
+        if (d.text && d.text === asking) input.value = d.text;
+        asking = '';
+        answer.removeAttribute('aria-busy');
         setMode('idle');
       }
     }
@@ -226,11 +236,11 @@
 
     chips.addEventListener('click', function(e){
       var b = e.target.closest('.hc-chip');
-      if (Chat && b && !b.disabled) Chat.send(b.textContent);
+      if (Chat && b && !b.disabled) { asking = b.textContent.trim(); Chat.send(b.textContent); }
     });
     form.addEventListener('submit', function(e){
       e.preventDefault();
-      if (Chat) Chat.send(input.value);
+      if (Chat) { asking = input.value.trim(); Chat.send(input.value); }
     });
 
     function placeholder(){ input.placeholder = small.matches ? PLACEHOLDER.small : PLACEHOLDER.wide; }
@@ -240,8 +250,9 @@
     // "Visible" for the header button and the nudge means a quarter of the console
     // is on screen; the field runs whenever any of it is.
     new IntersectionObserver(function(es){
-      visible = es[0].intersectionRatio >= .25;
-      field.run(es[0].isIntersecting);
+      var e = es[es.length - 1];
+      visible = e.intersectionRatio >= .25;
+      field.run(e.isIntersecting);
     }, { threshold: [0, .25] }).observe(root);
 
     function wire(){
@@ -254,7 +265,19 @@
       });
       setBusy(Chat.busy());
       restore();
+      // Back/forward cache: chat.js has reloaded the conversation; show where it is now.
+      addEventListener('pageshow', function(e){
+        if (!e.persisted) return;
+        answer.innerHTML = hintHTML;
+        segEl = null;
+        chips.hidden = false;
+        setColour('');
+        restore();
+        setBusy(Chat.busy());
+        setMode('idle');
+      });
     }
+    document.addEventListener('dayamchat:failed', function(){ stage.hidden = true; }, { once: true });
     if (window.DayamChat && window.DayamChat.send) wire();
     else document.addEventListener('dayamchat:ready', wire, { once: true });
   })();
