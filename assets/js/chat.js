@@ -438,8 +438,8 @@
     }).catch(function(err){
       showTyping(false);
       var code = (err && err.code) || 'unavailable';
-      // `text` is what to put back for a retry: nothing if part of a reply already landed.
-      failure = { code: code, text: answered ? '' : text, message: fail(code, text, answered ? null : meBubble) };
+      // `text` is what to put back for a retry: nothing if part of a reply already landed (a reset always gives it back, as the panel does).
+      failure = { code: code, text: (code === 'reset' || !answered) ? text : '', message: fail(code, text, answered ? null : meBubble) };
     }).then(function(){
       showTyping(false);
       logEl.removeAttribute('aria-busy');
