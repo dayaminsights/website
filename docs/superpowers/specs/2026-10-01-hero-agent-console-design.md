@@ -62,7 +62,7 @@ The console comes first, directly under the nav; the h1 follows it. Field 240px 
 The hero, the header button and the corner launcher all drive the same chat session. On the homepage, while the console is on screen:
 - the header *Talk to our AI agent* button focuses the hero input instead of opening the panel;
 - the page nudge is held back;
-- on phones the launcher stays tucked (`.dc-tucked`, re-pointed from `.hero-system` to the console).
+- on phones the launcher stays tucked (`.dc-tucked`; `watchPage()` in `chat.js` already observes `.hero-stage`, which now holds the console, so this needs no change).
 
 Once the console scrolls out of view, all three behave as they do today, and the panel holds the whole conversation, including what was asked in the hero.
 
