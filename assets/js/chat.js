@@ -645,27 +645,27 @@
 
   function init(){
     try {
-    build();
-    wireOpeners();
-    restore();
-    watchPage();
-    armNudge();
-    // Back/forward cache: another page may have moved the conversation on.
-    addEventListener('pageshow', function(e){
-      if (!e.persisted) return;
-      var s = load();
-      if (s) { state = s; restore(); }
-    });
-    window.DayamChat = {
-      md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; },
-      send: send, last: last, cardNode: cardNode, svc: svcOf,
-      busy: function(){ return busy; },
-      open: function(){ track('chat_open', { source: 'hero' }); setOpen(true); },
-      on: function(fn){ listeners.push(fn); },
-      setHero: function(api){ hero = api; }
-    };
-    // chat.js starts late (after load, when idle); hero.js waits for this.
-    document.dispatchEvent(new Event('dayamchat:ready'));
+      build();
+      wireOpeners();
+      restore();
+      watchPage();
+      armNudge();
+      // Back/forward cache: another page may have moved the conversation on.
+      addEventListener('pageshow', function(e){
+        if (!e.persisted) return;
+        var s = load();
+        if (s) { state = s; restore(); }
+      });
+      window.DayamChat = {
+        md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; },
+        send: send, last: last, cardNode: cardNode, svc: svcOf,
+        busy: function(){ return busy; },
+        open: function(){ track('chat_open', { source: 'hero' }); setOpen(true); },
+        on: function(fn){ listeners.push(fn); },
+        setHero: function(api){ hero = api; }
+      };
+      // chat.js starts late (after load, when idle); hero.js waits for this.
+      document.dispatchEvent(new Event('dayamchat:ready'));
     } catch (e) {
       // hero.js hides its console rather than leave a dead input.
       document.dispatchEvent(new Event('dayamchat:failed'));
