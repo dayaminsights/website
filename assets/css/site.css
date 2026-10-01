@@ -332,7 +332,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
   position:relative;display:flex;flex-direction:column;height:600px;background:var(--panel);border:1px solid var(--panel);color:var(--on-panel);
   animation:heroFrame 500ms var(--ease) 700ms both}
 .hc[hidden]{display:none}
-.hero-stage:has(> .hc[hidden]){display:none}
+.hero-stage[hidden]{display:none}
 .hc-stage{position:relative;flex:0 0 300px;border-bottom:1px solid var(--hc-line)}
 .hc-stage canvas{position:absolute;inset:0;width:100%;height:100%;display:block}
 .hc-status{position:absolute;left:20px;top:16px;margin:0;display:flex;align-items:center;gap:10px;font-family:var(--font-ui);font-size:13px;color:var(--on-panel-muted)}
@@ -373,7 +373,7 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 .hc-send{background:var(--accent-hover);color:#fff}
 .hc-send:disabled{background:var(--panel-2);color:var(--hc-dim);cursor:default}
 .hc :is(.hc-chip,.hc-voice,.hc-send,.hc-full,.dc-card):focus-visible{outline:2px solid var(--focus-invert);outline-offset:-2px}
-.hc-sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.hc-sr{position:absolute;width:1px;height:1px;margin:-1px;padding:0;border:0;overflow:hidden;clip:rect(0 0 0 0);clip-path:inset(50%);white-space:nowrap}
 @media(max-width:1000px){
   .hc{height:auto}
   .hc-answer{flex:none;max-height:260px}
@@ -519,12 +519,13 @@ section#next.pad{padding-block:clamp(48px,5vw,72px)}
 
 @media(max-width:1000px){
   .hero{padding-block:clamp(28px,4vw,48px) clamp(40px,5vw,56px)}
-  .hero-grid{grid-template-columns:1fr;grid-template-rows:auto auto auto;row-gap:var(--sp-6)}
+  .hero-grid{grid-template-columns:1fr;grid-template-rows:none;row-gap:var(--sp-6)}
   /* Console first on one column (owner, 2026-10-01): the agent is what the hero is for.
-     min-width:0 stops the phone's one-line chip row from widening the 1fr track. */
-  .hero-stage{grid-column:1;grid-row:1;align-self:auto;min-width:0}
-  .hero-copy{grid-column:1;grid-row:2}
-  .hero-trust{grid-column:1;grid-row:3}
+     min-width:0 stops the phone's one-line chip row from widening the 1fr track.
+     Placed by order, not row numbers, so a hidden stage leaves no gap. */
+  .hero-stage{grid-column:1;grid-row:auto;order:-1;align-self:auto;min-width:0}
+  .hero-copy{grid-column:1;grid-row:auto}
+  .hero-trust{grid-column:1;grid-row:auto}
   .hero h1{font-size:min(calc((100vw - 2 * var(--gutter)) / 11.3),60px)}
   .hero p.sub{max-width:none}
 }

@@ -134,7 +134,7 @@
 <!-- The mark signs the first page of a visit only; later pages open on the
      finished mark (see .mark-seen in site.css). -->
 <script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/site.css?v=20261001a">
+<link rel="stylesheet" href="assets/css/site.css?v=20261001b">
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
      no-JS path is given the finished frame of everything, including the
@@ -293,10 +293,10 @@
           <p class="hc-hint">Ask about your own business: orders, stock, enquiries, reports.</p>
         </div>
         <div class="hc-chips">
-          <button type="button" class="hc-chip">We re-type every order into Tally</button>
-          <button type="button" class="hc-chip">I can&rsquo;t see sales and stock in one place</button>
-          <button type="button" class="hc-chip">Customers ask the same questions all day</button>
-          <button type="button" class="hc-chip">Our site gets visits, not enquiries</button>
+          <button type="button" class="hc-chip" disabled>We re-type every order into Tally</button>
+          <button type="button" class="hc-chip" disabled>I can&rsquo;t see sales and stock in one place</button>
+          <button type="button" class="hc-chip" disabled>Customers ask the same questions all day</button>
+          <button type="button" class="hc-chip" disabled>Our site gets visits, not enquiries</button>
         </div>
         <form class="hc-ask">
           <label class="hc-sr" for="hcInput">Ask our AI agent</label>
@@ -305,7 +305,7 @@
             <svg class="off" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 9l4 6M21 9l-4 6"/></svg>
             <svg class="on" viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 9h4l5-4v14l-5-4H4zM17 8a5 5 0 0 1 0 8M19.5 5.5a9 9 0 0 1 0 13"/></svg>
           </button>
-          <button type="submit" class="hc-send" aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button type="submit" class="hc-send" disabled aria-label="Send"><svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </form>
       </div>
     </div>
