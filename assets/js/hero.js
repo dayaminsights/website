@@ -131,7 +131,7 @@
       });
     }
 
-    function lang(text){ return /[ऀ-ॿ]/.test(text) ? 'hi' : /[؀-ۿ]/.test(text) ? 'ar' : 'en'; }
+    function lang(text){ return /[\u0900-\u097F]/.test(text) ? 'hi' : /[\u0600-\u06FF]/.test(text) ? 'ar' : 'en'; }
     function pick(code){
       var all = synth.getVoices().filter(function(v){ return String(v.lang).toLowerCase().indexOf(code) === 0; });
       for (var i = 0; i < PREFER[code].length; i++) {
@@ -148,10 +148,11 @@
     function timers(){ clearTimeout(guard); clearTimeout(lull); clearInterval(beat); }
     // Only the current utterance's own end moves the queue on: a late event
     // from a cancelled one (Chrome reports cancel() as an async error) is ignored.
-    function finish(u){
+    function finish(u, stuck){
       if (u !== cur) return;
       timers();
       cur = null;
+      if (stuck) synth.cancel();   // a jammed engine would hold every later sentence behind it
       next();
     }
     function next(){
@@ -171,6 +172,8 @@
       // if none has come shortly after the start, the rings tick on a timer.
       u.onstart = function(){
         if (u !== cur) return;
+        clearTimeout(guard);
+        guard = setTimeout(function(){ finish(u, true); }, text.length * 120 + 2000);
         lull = setTimeout(function(){ if (!heard && u === cur) beat = setInterval(onWord, 260); }, 400);
       };
       u.onboundary = function(e){
@@ -181,8 +184,9 @@
       };
       u.onend = u.onerror = function(){ finish(u); };
       cur = u;   // also keeps the utterance referenced: Chrome can drop onend for a collected one
-      // Chrome sometimes never sends an end at all; don't let the queue jam on it.
-      guard = setTimeout(function(){ finish(u); }, text.length * 120 + 3000);
+      // Chrome sometimes never starts, or never sends an end; don't let the queue jam on it.
+      // This waits for the start; onstart re-arms it to the length of the sentence.
+      guard = setTimeout(function(){ finish(u, true); }, 4000);
       synth.speak(u);
     }
     return {
@@ -206,12 +210,12 @@
         if (s) { queue.push(s); next(); }
       },
       stop: function(){
-        var was = cur;
+        var was = cur, busy = !!(cur || queue.length || hold);
         queue = [];
         cur = null;
         timers();
         clearTimeout(hold); hold = 0;
-        if (ok && (on || was)) synth.cancel();
+        if (ok && busy) synth.cancel();
         if (was) onDone();
       },
       speaking: function(){ return !!cur || queue.length > 0; },
@@ -251,7 +255,7 @@
     }
     // Hand every finished sentence in `buf` to the voice; return the unfinished rest.
     // "1. Export orders" and "e.g. Tally" are not sentence ends.
-    var NOT_AN_END = /(^|\s)(\d+|e\.g|i\.e|etc|vs|approx|no|mr|ms|dr)[.]$/i;
+    var NOT_AN_END = /(^|\s)(\d+|e\.g|i\.e|etc|vs|approx|mr|ms|dr)[.]$/i;
     function speakSentences(buf){
       var re = /([.!?।؟]+["”’)]*)\s+|\n+/g, m, cut = 0;
       while ((m = re.exec(buf))) {
