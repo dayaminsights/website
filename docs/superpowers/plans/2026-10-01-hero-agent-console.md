@@ -1344,14 +1344,14 @@ In `start()` in `assets/js/hero.js`:
 (a) Find:
 
 ```js
-    var mode = 'idle', visible = false, segEl = null, segText = '';
+    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '';
 ```
 
 Replace with:
 
 ```js
     var spk = root.querySelector('.hc-voice');
-    var mode = 'idle', visible = false, segEl = null, segText = '', pending = '';
+    var mode = 'idle', visible = false, segEl = null, segText = '', asking = '', pending = '';
     var voice = Voice();
 ```
 
@@ -1383,7 +1383,8 @@ Insert directly above it:
       if (type === 'turn') {
         voice.stop();
         pending = '';
-        input.value = '';
+        if (d.text === asking) input.value = '';
+        answer.setAttribute('aria-busy', 'true');
         chips.hidden = true;
         showQuestion(d.text);
         setColour('');
@@ -1399,10 +1400,12 @@ Insert directly above it:
         addCard(d.card);
         if (d.card.kind === 'page') setColour(d.svc);
       } else if (type === 'done') {
+        answer.removeAttribute('aria-busy');
         setBusy(false);
         if (pending.trim()) voice.say(pending);
         pending = '';
         addFullLink();
+        asking = '';
         if (!voice.speaking()) setMode('idle');
       } else if (type === 'error') {
         voice.stop();
@@ -1411,7 +1414,10 @@ Insert directly above it:
         segEl = null;
         addText(d.message);
         if (d.code !== 'reset') addCard({ kind: 'whatsapp', summary: '' });
-        if (d.text) input.value = d.text;
+        addFullLink();
+        if (d.text && d.text === asking) input.value = d.text;
+        asking = '';
+        answer.removeAttribute('aria-busy');
         setMode('idle');
       }
     }
@@ -1430,7 +1436,7 @@ Insert directly above it:
 
 - [ ] **Step 5: Bump hero.js's version**
 
-In `index.html`, change `assets/js/hero.js?v=20261001b` to `assets/js/hero.js?v=20261001c`.
+In `index.html`, change `assets/js/hero.js?v=20261001c` to `assets/js/hero.js?v=20261001d`.
 
 - [ ] **Step 6: Run the hero suite**
 
@@ -1567,8 +1573,8 @@ Replace `open('index.html'` in that line with `open('websites.html'` (the homepa
 
 Run:
 ```bash
-sed -i 's/chat\.js?v=20261001b/chat.js?v=20261001c/' *.html
-grep -c 'chat\.js?v=20261001c' *.html
+sed -i 's/chat\.js?v=20261001c/chat.js?v=20261001d/' *.html
+grep -c 'chat\.js?v=20261001d' *.html
 ```
 Expected: `1` for each of the 9 pages.
 
