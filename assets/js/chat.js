@@ -554,11 +554,11 @@
       if (formIn) hideNudge();
       tuck();
     }).observe(form);
-    var hero = document.querySelector('.hero-stage, .page-hero .hero-video');
-    if (hero) new IntersectionObserver(function(es){
+    var heroEl = document.querySelector('.hero-stage, .page-hero .hero-video');
+    if (heroEl) new IntersectionObserver(function(es){
       heroIn = es[0].isIntersecting;
       tuck();
-    }).observe(hero);
+    }).observe(heroEl);
   }
 
   // ===== Nudge: once per visit, after 20 s or half the page =====

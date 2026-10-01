@@ -200,7 +200,7 @@ header.nav.scrolled{border-bottom-color:var(--line);box-shadow:var(--shadow-sm)}
 @media (hover:hover) and (pointer:fine){.btn-ghost:hover{background:var(--ink);border-color:var(--ink);color:var(--on-panel)}}
 .btn .arrow{transition:transform var(--t-hover) var(--ease-cine)}
 @media (hover:hover) and (pointer:fine){.btn:hover .arrow{transform:translateX(5px)}}
-/* The arrow belongs to buttons and to the homepage index rows. On a text link
+/* Only buttons carry the arrow. On a text link
    the underline already says "this goes somewhere"; an arrow on every link
    was template chrome (premium pass). */
 a:not(.btn) .arrow{display:none}

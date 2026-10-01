@@ -1,7 +1,7 @@
 # Hero agent console — design
 
 Date: 2026-10-01
-Status: awaiting review
+Status: built (branch hero-agent-console, 2026-10-01); PROJECT_NOTES.md describes what shipped
 Scope: the homepage hero (`index.html#top`). The right-hand `.hero-system` index is replaced by a live console for the existing site chatbot, with an animated "signal field" that reacts while the agent thinks and answers, and optional spoken replies through the browser's own voices. The Worker (`chat-worker/`) does not change.
 
 ## Why
@@ -51,7 +51,7 @@ The console comes first, directly under the nav; the h1 follows it. Field 240px 
 - Speaker toggle, `aria-pressed`, label *Read replies aloud*. Off on arrival; the choice is kept in `sessionStorage` for the visit.
 - When on, replies are read **one sentence per utterance** as sentences complete in the stream. This avoids Chrome cutting long Google-voice utterances off at ~15 s and lets speech start before the reply finishes.
 - Markdown symbols and URLs are stripped before speaking; card text is not spoken.
-- **Voice choice per reply language** (detected from the text's script: Devanagari → Hindi, Arabic script → Arabic, otherwise English; Hinglish in Latin script is read with the English voice):
+- **Voice choice per sentence** (language detected from each sentence's script: Devanagari → Hindi, Arabic script → Arabic, otherwise English; Hinglish in Latin script is read with the English voice):
   - English: *Google UK English Female* → *Google US English* → any voice with "Natural" in its name and an `en` lang → any `en` voice.
   - Hindi: *Google हिन्दी* → any `hi` voice.
   - Arabic: any `ar` voice.
@@ -86,10 +86,10 @@ A returning visitor (session already has a conversation) sees the latest questio
 | Event | Payload | Hero does |
 |---|---|---|
 | `turn` | `{ text }` | Shows the question, clears the answer, status *Reading your question*, sweep beam, cancels speech. |
-| `delta` | `{ delta, text }` (`text` = reply so far) | Renders `md(text)`, ring (voice off), queues completed sentences for voice. |
+| `delta` | `{ delta }` | Appends `delta` to the current text segment (rendered with `md()`), so cards can sit between segments; ring (voice off); queues completed sentences for voice. |
 | `card` | `{ card, svc }` | Appends `cardNode(card)`, sets field colour from `svc`. |
 | `done` | `{}` | Status *Listening*, re-enables send, flushes any last sentence to voice. |
-| `error` | `{ code, text }` | Shows the panel's failure message and WhatsApp card, puts `text` back in the input, status *Listening*. |
+| `error` | `{ code, text, message }` | Shows `message` (the panel's markdown failure message) and WhatsApp card; `text` is the question to put back in the input (empty if part of a reply landed; always given back after a reset); status *Listening*. |
 
 These map one-to-one onto the Worker's existing SSE events (`text`, `card`, `done`, `error`); `lead` is not broadcast (the hero has nothing to show for it).
 
