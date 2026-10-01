@@ -448,7 +448,7 @@
       busy = false;
       sendBtn.disabled = false;
       save();
-      if (!isOpen()) setUnread(true);
+      if (!isOpen() && !(hero && hero.visible())) setUnread(true);
       emit(failure ? 'error' : 'done', failure || {});
     });
   }
@@ -571,8 +571,8 @@
     }
     function fire(){
       if (fired) return;
-      // Over the form: try again once it has scrolled away.
-      if (formOnScreen()) { clearTimeout(t); t = setTimeout(fire, 6000); return; }
+      // Over the form, or with the hero console in view: try again once it has scrolled away.
+      if (formOnScreen() || (hero && hero.visible())) { clearTimeout(t); t = setTimeout(fire, 6000); return; }
       fired = true;
       clearTimeout(t);
       removeEventListener('scroll', onScroll);
@@ -630,6 +630,8 @@
         var toggle = document.getElementById('navToggle');
         if (toggle && toggle.getAttribute('aria-expanded') === 'true') toggle.click();
         if (isOpen()) { setOpen(false); return; }
+        // On the homepage the agent is already in the hero: go there instead of opening a second view.
+        if (hero && hero.visible()) { track('chat_open', { source: 'nav-hero' }); hero.focus(); return; }
         track('chat_open', { source: b.closest('.mm-cta') ? 'menu' : 'nav' });
         setOpen(true);
       });
