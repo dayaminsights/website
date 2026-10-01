@@ -76,7 +76,7 @@ A returning visitor (session already has a conversation) sees the latest questio
 |---|---|
 | `assets/js/chat.js` | Adds `window.DayamChat`: `send(text)`, `on(listener)`, `open()`, `md(text)`, `cardNode(card)`, `last()`, `busy()`, and `setHero(api)` for the homepage behaviour above. `send()` keeps its current behaviour (panel log, history, `sig`, leads, failures) and additionally broadcasts each step to listeners. |
 | `assets/js/hero.js` (new) | Loaded on `index.html` only. Three sections: **Field** (canvas renderer, states, rings, colour), **Console** (chips, input, latest-exchange view, full-conversation link), **Voice** (voice choice, sentence queue, boundary pulses). |
-| `index.html` | `.hero-stage` content replaced by the console markup, shipped `hidden`. `hero.js` script tag with a version query like the other assets. |
+| `index.html` | `.hero-stage` content replaced by the console markup. It ships visible, so it never pops in above the headline on phones once chat.js starts (after load); a `<noscript>` rule hides it without JS, `hero.js` hides it when chat.js is off, and its buttons stay disabled until chat.js is ready. `hero.js` script tag with a version query like the other assets. |
 | `assets/css/site.css` | Console styles; console-first order in the single-column hero; `.hero-system` / `.hs-*` rules deleted. |
 | `assets/js/site.js` | `hsWalk` deleted. |
 | `PROJECT_NOTES.md` | Hero section and `index.html` page notes rewritten. |
@@ -101,7 +101,7 @@ These map one-to-one onto the Worker's existing SSE events (`text`, `card`, `don
 | Situation | Behaviour |
 |---|---|
 | Worker down, rate-limited, or stalls (20 s, existing `STALL_MS`) | Same message and WhatsApp card as the panel; the question returns to the input; field idle. |
-| `chat.js` off (empty `ENDPOINT`), no `fetch`, or no JS | Console stays `hidden`; the hero is the copy column alone. |
+| `chat.js` off (empty `ENDPOINT`), no `fetch`, or no JS | Console hidden (by `hero.js`, or the `<noscript>` rule); the hero is the copy column alone. |
 | Send while a reply streams | Disabled until `done`, as in the panel. |
 | Message sent from the panel while the hero is visible | The hero shows it too. |
 | Long reply, or the agent asking for contact details | Answer area scrolls inside; newest text in view; full-conversation link from turn two. |
