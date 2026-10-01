@@ -244,7 +244,7 @@
     var isContact = href.indexOf('mailto:') === 0 || href.indexOf('wa.me') !== -1 || href.indexOf('api.whatsapp.com') !== -1;
     // The header's form CTA is outlined (the chat button beside it is the filled one), so
     // any button in the header or the phone menu counts as a primary click too.
-    var isPrimary = link.classList.contains('btn-primary') || (link.classList.contains('btn') && !!link.closest('.nav-cta, .mm-cta'));
+    var isPrimary = link.classList.contains('btn-primary') || link.hasAttribute('data-intent') || (link.classList.contains('btn') && !!link.closest('.nav-cta, .mm-cta'));
     if (!isContact && !isPrimary) return;
     if (typeof window.gtag === 'function'){
       window.gtag('event', 'generate_lead', {

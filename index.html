@@ -134,7 +134,7 @@
 <!-- The mark signs the first page of a visit only; later pages open on the
      finished mark (see .mark-seen in site.css). -->
 <script>try{if(sessionStorage.getItem('di-mark'))document.documentElement.classList.add('mark-seen');else sessionStorage.setItem('di-mark','1')}catch(e){}</script>
-<link rel="stylesheet" href="assets/css/site.css?v=20261001d">
+<link rel="stylesheet" href="assets/css/site.css?v=20261001e">
 <!-- Scroll reveals across this page hold their pre-state in CSS and are
      released by JS. Without a script that means an invisible page, so the
      no-JS path is given the finished frame of everything, including the
@@ -287,16 +287,16 @@
       <div class="hc" id="heroConsole" role="region" aria-label="Ask our AI agent" data-mode="idle">
         <div class="hc-stage">
           <canvas aria-hidden="true"></canvas>
-          <p class="hc-status"><i aria-hidden="true"></i><span class="hc-status-text">Listening</span></p>
+          <p class="hc-status"><i aria-hidden="true"></i><span class="hc-status-text">Listening</span><span class="hc-meta">Replies in seconds</span></p>
         </div>
         <div class="hc-answer" aria-live="polite">
-          <p class="hc-hint">Ask about your own business: orders, stock, enquiries, reports.</p>
+          <p class="hc-hint">Tell me what&rsquo;s slowing the business down. I&rsquo;ll tell you what we&rsquo;d fix first.</p>
         </div>
         <div class="hc-chips">
-          <button type="button" class="hc-chip" disabled>We re-type every order into Tally</button>
-          <button type="button" class="hc-chip" disabled>I can&rsquo;t see sales and stock in one place</button>
-          <button type="button" class="hc-chip" disabled>Customers ask the same questions all day</button>
-          <button type="button" class="hc-chip" disabled>Our site gets visits, not enquiries</button>
+          <button type="button" class="hc-chip" disabled><span>We re-type every order into Tally</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="hc-chip" disabled><span>I can&rsquo;t see sales and stock in one place</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="hc-chip" disabled><span>Customers ask the same questions all day</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
+          <button type="button" class="hc-chip" disabled><span>Our site gets visits, not enquiries</span><svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></button>
         </div>
         <form class="hc-ask">
           <label class="hc-sr" for="hcInput">Ask our AI agent</label>
@@ -627,8 +627,8 @@
   </div>
 </footer>
 
-<script src="assets/js/site.js?v=20261001a"></script>
-<script src="assets/js/chat.js?v=20261001e" defer></script>
-<script src="assets/js/hero.js?v=20261001f" defer></script>
+<script src="assets/js/site.js?v=20261001b"></script>
+<script src="assets/js/chat.js?v=20261001f" defer></script>
+<script src="assets/js/hero.js?v=20261001g" defer></script>
 </body>
 </html>

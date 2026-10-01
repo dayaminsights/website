@@ -661,6 +661,7 @@
       window.DayamChat = {
         md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; },
         send: send, last: last, cardNode: cardNode, svc: svcOf,
+        whatsapp: function(text){ return WA + encodeURIComponent(text); },
         busy: function(){ return busy; },
         open: function(){ track('chat_open', { source: 'hero' }); setOpen(true); },
         on: function(fn){ listeners.push(fn); },

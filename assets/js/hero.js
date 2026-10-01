@@ -52,21 +52,32 @@
     }
     function draw(){
       ctx.clearRect(0, 0, W, H);
-      var cell = 20, cx = W / 2, cy = H / 2, reach = Math.min(W, H) * .75, sweep = t * 3.2;
-      for (var y = 0; y <= H / cell + 1; y++) for (var x = 0; x <= W / cell + 1; x++) {
-        var px = x * cell, py = y * cell, dx = px - cx, dy = py - cy, d = Math.sqrt(dx * dx + dy * dy);
+      // The grid is laid from the centre out, so the core sits exactly on a cell.
+      var cell = 18, cx = Math.round(W / 2), cy = Math.round(H * .46), sweep = t * 3.2;
+      var reach = Math.max(W, H) * .58, ox = cx % cell, oy = cy % cell;
+      for (var py = oy; py < H + cell; py += cell) for (var px = ox; px < W + cell; px += cell) {
+        var dx = px - cx, dy = py - cy, d = Math.sqrt(dx * dx + dy * dy);
         var v = ringsAt(d);
         if (mode === 'thinking' && !reduce) {
           var da = Math.abs(((Math.atan2(dy, dx) - sweep) % (2 * Math.PI) + 3 * Math.PI) % (2 * Math.PI) - Math.PI);
-          v += Math.max(0, 1 - da * 2.2) * Math.max(0, 1 - d / (reach * .8)) * .7;
+          v += Math.max(0, 1 - da * 2.2) * Math.max(0, 1 - d / (reach * .9)) * .75;
         }
-        v += Math.max(0, 1 - d / (34 + energy * 20)) * (.6 + energy * .4);   // the core
-        v += .04 + .03 * Math.sin(x * .7 + y * 1.3 + t * .8);                // the breath
+        v += Math.max(0, 1 - d / (58 + energy * 30)) * (.55 + energy * .45);              // the halo round the core
+        v += Math.max(0, Math.sin(dx * .016 + t * .55) * Math.cos(dy * .021 - t * .4)) * .16; // the slow drift
+        v += .05 + .03 * Math.sin(px * .04 + py * .07 + t * .8);                          // the breath
         v = Math.min(1, v) * Math.max(0, 1 - d / reach);
-        var s = 2 + v * 6;
-        ctx.fillStyle = v > .28 ? 'rgba(' + rgb + ',' + (.2 + v * .8) + ')' : 'rgba(159,176,200,' + (.06 + v * .9) + ')';
+        var s = 1.5 + v * 6.5;
+        ctx.fillStyle = v > .3 ? 'rgba(' + rgb + ',' + (.18 + v * .82) + ')' : 'rgba(159,176,200,' + (.07 + v * .8) + ')';
         ctx.fillRect(px - s / 2, py - s / 2, s, s);
       }
+      // The core: the logo's square, lit. It swells with each word.
+      var c = 12 + energy * 8 + (mode === 'thinking' && !reduce ? 2 * Math.sin(t * 9) : 0);
+      ctx.save();
+      ctx.shadowColor = 'rgba(' + rgb + ',.85)';
+      ctx.shadowBlur = 22 + energy * 30;
+      ctx.fillStyle = 'rgb(' + rgb + ')';
+      ctx.fillRect(cx - c / 2, cy - c / 2, c, c);
+      ctx.restore();
     }
     function frame(now){
       raf = 0;
@@ -235,6 +246,7 @@
     var sendBtn = root.querySelector('.hc-send');
     var spk = root.querySelector('.hc-voice');
     var mode = 'idle', visible = false, segEl = null, segText = '', asking = '', pending = '';
+    var question = '', page = '';
     var voice = Voice();
     var hintHTML = answer.innerHTML;
     var field = Field(root.querySelector('.hc-stage canvas'), root);
@@ -279,6 +291,7 @@
       q.className = 'hc-q';
       q.textContent = text;
       answer.appendChild(q);
+      question = text;
     }
     function addText(delta){
       if (!segEl) {
@@ -294,6 +307,29 @@
     function addCard(card){
       segEl = null;
       answer.appendChild(Chat.cardNode(card));
+      keepDown();
+    }
+    // After every answer: the next step, in the visitor's terms. The plan link
+    // presets the contact form to the service the agent pointed at.
+    var INTENT = { dashboards: 'Dashboards & reporting', automation: 'Workflow automation', ai_assistants: 'An AI assistant', chatbot: 'An AI assistant', websites: 'A website' };
+    function addNext(){
+      if (answer.querySelector('.hc-next')) return;
+      var bar = document.createElement('div');
+      bar.className = 'hc-next';
+      var go = document.createElement('a');
+      go.className = 'hc-go';
+      go.href = '#contact';
+      go.setAttribute('data-intent', INTENT[page] || 'Not sure yet');
+      go.innerHTML = 'Get a fixed-price plan <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>';
+      var wa = document.createElement('a');
+      wa.className = 'hc-wa';
+      wa.href = Chat.whatsapp('Hi Dayam Insights, I asked your AI agent: ' + (question || 'about my business') + '.');
+      wa.target = '_blank';
+      wa.rel = 'noopener';
+      wa.textContent = 'WhatsApp a person';
+      bar.appendChild(go);
+      bar.appendChild(wa);
+      answer.appendChild(bar);
       keepDown();
     }
     function addFullLink(){
@@ -318,12 +354,13 @@
         if (e.error) return;
         if (e.who === 'card') {
           addCard(e.card);
-          if (e.card.kind === 'page') setColour(Chat.svc(e.card));
+          if (e.card.kind === 'page') { page = e.card.page; setColour(Chat.svc(e.card)); }
         } else if (e.who === 'bot') {
           segEl = null;
           addText(e.text);
         }
       });
+      addNext();
       addFullLink();
     }
 
@@ -335,6 +372,7 @@
         if (d.text === asking) input.value = '';
         answer.setAttribute('aria-busy', 'true');
         chips.hidden = true;
+        page = '';
         showQuestion(d.text);
         setColour('');
         setBusy(true);
@@ -347,12 +385,13 @@
         pending = speakSentences(pending + d.delta);
       } else if (type === 'card') {
         addCard(d.card);
-        if (d.card.kind === 'page') setColour(d.svc);
+        if (d.card.kind === 'page') { page = d.card.page; setColour(d.svc); }
       } else if (type === 'done') {
         answer.removeAttribute('aria-busy');
         setBusy(false);
         if (pending.trim()) voice.say(pending);
         pending = '';
+        addNext();
         addFullLink();
         asking = '';
         if (!voice.speaking()) setMode('idle');
@@ -362,7 +401,8 @@
         setBusy(false);
         segEl = null;
         addText(d.message);
-        if (d.code !== 'reset') addCard({ kind: 'whatsapp', summary: '' });
+        // The panel adds a WhatsApp card here; the hero's own next step already carries one.
+        if (d.code !== 'reset') addNext();
         addFullLink();
         if (d.text && d.text === asking) input.value = d.text;
         asking = '';
