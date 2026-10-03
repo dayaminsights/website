@@ -10,7 +10,7 @@
   var PROD_ENDPOINT = 'https://dayam-chat.dayam-chat-worker.workers.dev/chat';
   var LOCAL = /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
   var ENDPOINT = LOCAL ? 'http://localhost:8787/chat' : PROD_ENDPOINT;
-  if (!ENDPOINT || !window.fetch || !window.JSON || !document.currentScript) return;
+  if (!ENDPOINT || !window.fetch || !window.JSON || !document.currentScript) { document.documentElement.classList.add('no-chat'); return; }
   // Read by hero.js, which runs next: the widget will start (after load, when idle).
   window.DayamChatLoading = true;
 
@@ -658,7 +658,11 @@
         var s = load();
         if (s) { state = s; restore(); }
       });
-      window.DayamChat = {
+      // The header button is drawn from the first paint but the widget starts after
+    // load: a click in between (caught by each page's head script) is answered now.
+    var eb = window.__chatEarly; window.__chatEarly = null;
+    if (eb) setTimeout(function(){ eb.click(); }, 0);
+    window.DayamChat = {
         md: md, parseSSE: parseSSE, safeHref: safeHref, state: function(){ return state; },
         send: send, last: last, cardNode: cardNode, svc: svcOf,
         whatsapp: function(text){ return WA + encodeURIComponent(text); },

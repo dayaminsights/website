@@ -216,6 +216,11 @@ a:not(.btn) .arrow{display:none}
 .nav-cta .btn{min-height:44px;padding:0 16px;font-size:14px;line-height:1.2}
 .nav-ask{gap:9px;padding-inline:14px 16px;line-height:1.2}
 .nav-ask[hidden]{display:none}
+/* With JS on, the agent button is drawn from the first paint, so moving between
+   pages never makes it pop in (chat.js starts after load). If chat.js can't
+   start it marks html.no-chat and the button goes. */
+.js .nav-ask[hidden]{display:inline-flex}
+.no-chat .nav-ask{display:none!important}
 /* The AI mark: a four-point star with straight edges, the blue accent. */
 .nav-ask-ico{flex:none;width:16px;height:16px;fill:var(--accent)}
 @media (hover:hover) and (pointer:fine){.nav-ask:hover .nav-ask-ico{fill:#fff}}
